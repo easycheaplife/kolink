@@ -24,4 +24,11 @@ class VerificationModel extends Model
 		}
 		return false;
 	}
+
+	public function get($email)
+	{
+		return $this->select('code')
+			->where('email', $email)
+			->first();	
+	}
 }

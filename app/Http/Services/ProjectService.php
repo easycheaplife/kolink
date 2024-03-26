@@ -6,18 +6,28 @@ use Illuminate\Support\Facades\Http;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\Log;
 use App\Constants\ErrorCodes;
+use App\Constants\ErrorDescs;
 use App\Models\ProjectModel;
+use App\Http\Services\VerificationService;
 
 class ProjectService extends Service 
 {
-    public function project_new($token, $email, $logo, $twitter_user_name, $name, $desc, $category_id, $website)
+    public function project_new($token, $email, $logo, $twitter_user_name, $name, $desc, $category_id, $website, $code)
 	{
+		$verification_service = new VerificationService;
+		$verification_code = $verification_service->get_code($email);
+		Log::info($verification_code);
+		if ($code != $verification_code)
+		{
+			return $this->error_response($token, ErrorCodes::ERROR_CODE_VERIFICATION_CODE_ERROR,
+				ErrorDescs::ERROR_CODE_VERIFICATION_CODE_ERROR);		
+		}
 		$project_model = new ProjectModel;
-		if ($project_model->insert($token, $email, $logo, $twitter_user_name, 
+		if (!$project_model->insert($token, $email, $logo, $twitter_user_name, 
 			$name, $desc, $category_id, $website))
 		{
-			return $this->error_response($openid, ErrorCodes::ERROR_CODE_DB_ERROR,
-				EerrDescs::ERROR_CODE_DB_ERROR);		
+			return $this->error_response($token, ErrorCodes::ERROR_CODE_DB_ERROR,
+				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
 		return $this->res;
 	}	

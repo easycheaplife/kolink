@@ -38,7 +38,8 @@ class ProjectController extends Controller
 			$validated_data['name'],
 			$validated_data['desc'],
 			$validated_data['category_id'],
-			$validated_data['website']
+			$validated_data['website'],
+			$validated_data['code']
 		);
 	}
 }

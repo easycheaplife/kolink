@@ -14,11 +14,11 @@ class Service
 		$this->res = array('code' => $code, 'message' => '', 'data' => array());
 	}
 
-	protected function error_response($open_id, $error_code, $error_message)
+	protected function error_response($token, $error_code, $error_message)
 	{
 		$this->res['code'] = $error_code;	
 		$this->res['message'] = $error_message;	
-		Log::error("$open_id:" . $error_message);
+		Log::error("$token:" . $error_message);
 		return $this->res;
 	}
 }
