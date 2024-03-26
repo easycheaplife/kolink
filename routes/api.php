@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\ProjectController;
+use App\Http\Controllers\KolController;
 
 /*
 |--------------------------------------------------------------------------
@@ -29,5 +30,9 @@ Route::post('/verification/code', [VerificationController::class, 'code']);
 
 Route::get('/project/new', [ProjectController::class, 'project_new']);
 Route::post('/project/new', [ProjectController::class, 'project_new']);
+
+Route::get('/kol/new', [KolController::class, 'kol_new']);
+Route::post('/kol/new', [KolController::class, 'kol_new']);
+
 
 

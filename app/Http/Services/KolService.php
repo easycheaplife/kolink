@@ -7,13 +7,14 @@ use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\Log;
 use App\Constants\ErrorCodes;
 use App\Constants\ErrorDescs;
-use App\Models\ProjectModel;
+use App\Models\KolModel;
 use App\Http\Services\VerificationService;
 
 
-class ProjectService extends Service 
+class KolService extends Service 
 {
-    public function project_new($token, $email, $logo, $twitter_user_name, $name, $desc, $category_id, $website, $code)
+	public function kol_new($token, $email, $twitter_user_name, $twitter_followers, $twitter_subscriptions, 
+		$region_id, $category_id, $website, $language_id, $code)
 	{
 		$verification_service = new VerificationService;
 		$verification_code = $verification_service->get_code($email);
@@ -22,9 +23,9 @@ class ProjectService extends Service
 			return $this->error_response($token, ErrorCodes::ERROR_CODE_VERIFICATION_CODE_ERROR,
 				ErrorDescs::ERROR_CODE_VERIFICATION_CODE_ERROR);		
 		}
-		$project_model = new ProjectModel;
-		if (!$project_model->insert($token, $email, $logo, $twitter_user_name, 
-			$name, $desc, $category_id, $website))
+		$kol_model = new KolModel;
+		if (!$kol_model->insert($token, $email, $twitter_user_name, $twitter_followers, $twitter_subscriptions, 
+			$region_id, $category_id, $website, $language_id))
 		{
 			return $this->error_response($token, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
