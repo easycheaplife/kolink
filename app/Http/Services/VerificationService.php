@@ -16,6 +16,8 @@ class VerificationService extends Service
 	{
 		$verification_model = new VerificationModel;
 		$code  = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
+		$verification_model->insert($email, $code);
+
 		$headers = array('From' => env('MAIL_FROM_ADDRESS'));
 		mail($email, 'Verification Code', "$code", $headers);
 		return $this->res;
