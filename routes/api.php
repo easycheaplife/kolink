@@ -6,6 +6,8 @@ use App\Http\Controllers\TestController;
 use App\Http\Controllers\VerificationController;
 use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\KolController;
+use App\Http\Controllers\ProjectTaskController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -33,6 +35,9 @@ Route::post('/project/new', [ProjectController::class, 'project_new']);
 
 Route::get('/kol/new', [KolController::class, 'kol_new']);
 Route::post('/kol/new', [KolController::class, 'kol_new']);
+
+Route::get('/project/task/new', [ProjectTaskController::class, 'project_task_new']);
+Route::post('/project/task/new', [ProjectTaskController::class, 'project_task_new']);
 
 
 
