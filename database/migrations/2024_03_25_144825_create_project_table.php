@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('token', 64);
             $table->string('email', 64);
             $table->string('logo', 64);
+            $table->string('twitter_user_name', 64);
             $table->string('name', 64);
             $table->string('desc', 64);
             $table->string('website', 128);

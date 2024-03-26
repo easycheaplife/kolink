@@ -16,12 +16,12 @@ class VerificationModel extends Model
 		try {
 			$this->email = $email;
 			$this->code = $code;
-			$this->save();
+			return $this->save();
 		}
-		catch (UniqueConstraintViolationException $e)
+		catch (Exception $e)
 		{
 			Log::info($e->getMessage());
 		}
+		return false;
 	}
-
 }

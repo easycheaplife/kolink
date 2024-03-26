@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\TestController;
 use App\Http\Controllers\VerificationController;
+use App\Http\Controllers\ProjectController;
 
 /*
 |--------------------------------------------------------------------------
@@ -22,6 +23,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 Route::get('/test', [TestController::class, 'index']);
+
 Route::get('/verification/code', [VerificationController::class, 'code']);
 Route::post('/verification/code', [VerificationController::class, 'code']);
+
+Route::get('/project/new', [ProjectController::class, 'project_new']);
+Route::post('/project/new', [ProjectController::class, 'project_new']);
+
 

@@ -13,7 +13,7 @@ class VerificationController extends Controller
 	{
 		try {
 			$validated_data = $request->validate([
-				'email' => 'required|string',
+				'email' => 'required|email',
 			]);
 		}
 		catch (ValidationException $e)
