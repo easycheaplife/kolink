@@ -43,4 +43,19 @@ class ProjectController extends Controller
 			$validated_data['code']
 		);
 	}
+
+	public function find_kol(Request $request)
+	{
+		$region_id = $request->input('$region_id', 0);
+		$category_id = $request->input('$category_id', 0);
+		$language_id = $request->input('$language_id', 0);
+		$channel_id = $request->input('$channel_id', 0);
+		$service = new ProjectService();
+		return $service->find_kol(
+			$region_id,
+			$language_id,
+			$category_id,
+			$channel_id
+		);
+	}
 }
