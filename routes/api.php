@@ -34,9 +34,6 @@ Route::post('/verification/code', [VerificationController::class, 'code']);
 Route::get('/project/new', [ProjectController::class, 'project_new']);
 Route::post('/project/new', [ProjectController::class, 'project_new']);
 
-Route::get('/project/find_kol/list', [ProjectController::class, 'find_kol']);
-Route::post('/project/find_kol/list', [ProjectController::class, 'find_kol']);
-
 Route::get('/project/task/new', [ProjectTaskController::class, 'task_new']);
 Route::post('/project/task/new', [ProjectTaskController::class, 'task_new']);
 
@@ -51,6 +48,9 @@ Route::post('/project/task/view', [ProjectTaskViewController::class, 'task_view'
 
 Route::get('/kol/new', [KolController::class, 'kol_new']);
 Route::post('/kol/new', [KolController::class, 'kol_new']);
+
+Route::get('/kol/list', [KolController::class, 'kol_list']);
+Route::post('/kol/list', [KolController::class, 'kol_list']);
 
 
 

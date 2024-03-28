@@ -33,7 +33,7 @@ class KolService extends Service
 		return $this->res;
 	}	
 
-    public function find_kol($region_id, $category_id, $language_id, $channel_id)
+    public function kol_list($region_id, $category_id, $language_id, $channel_id)
 	{
 		$kol_model = new KolModel;
 		$kols = $kol_model->get($region_id, $category_id, $language_id, $channel_id);	

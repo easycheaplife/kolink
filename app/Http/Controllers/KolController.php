@@ -47,4 +47,20 @@ class KolController extends Controller
 			$validated_data['code']
 		);
 	}
+
+	public function kol_list(Request $request)
+	{
+		$region_id = $request->input('$region_id', 0);
+		$category_id = $request->input('$category_id', 0);
+		$language_id = $request->input('$language_id', 0);
+		$channel_id = $request->input('$channel_id', 0);
+		$service = new KolService();
+		return $service->kol_list(
+			$region_id,
+			$language_id,
+			$category_id,
+			$channel_id
+		);
+	}
+
 }

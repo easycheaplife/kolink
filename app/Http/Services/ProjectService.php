@@ -8,7 +8,6 @@ use Illuminate\Support\Facades\Log;
 use App\Constants\ErrorCodes;
 use App\Constants\ErrorDescs;
 use App\Models\ProjectModel;
-use App\Http\Services\KolService;
 
 
 class ProjectService extends Service 
@@ -30,12 +29,6 @@ class ProjectService extends Service
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
 		return $this->res;
-	}	
-
-    public function find_kol($region_id, $category_id, $language_id, $channel_id)
-	{
-		$kol_service = new KolService;
-		return $kol_service->find_kol($region_id, $category_id, $language_id, $channel_id);
 	}	
 
 }
