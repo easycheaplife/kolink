@@ -10,7 +10,7 @@ use App\Http\Services\ProjectTaskService;
 
 class ProjectTaskController extends Controller
 {
-	public function project_task_new(Request $request)
+	public function task_new(Request $request)
 	{
 		try {
 			$validated_data = $request->validate([
@@ -36,7 +36,7 @@ class ProjectTaskController extends Controller
 				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
 		}
 		$service = new ProjectTaskService();
-		return $service->project_new(
+		return $service->task_new(
 			$validated_data['project_id'],
 			$validated_data['title'],
 			$validated_data['desc'],
@@ -51,6 +51,42 @@ class ProjectTaskController extends Controller
 			$validated_data['blockchain_id'],
 			$validated_data['token_id'],
 			$validated_data['reward_min']
+		);
+	}
+
+	public function task_list(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'project_id' => 'required|integer'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new ProjectTaskService();
+		return $service->task_list(
+			$validated_data['project_id']
+		);
+	}
+
+	public function task_detail(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'task_id' => 'required|integer'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new ProjectTaskService();
+		return $service->task_detail(
+			$validated_data['task_id']
 		);
 	}
 }

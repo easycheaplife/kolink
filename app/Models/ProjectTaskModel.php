@@ -37,4 +37,14 @@ class ProjectTaskModel extends Model
 		return false;
 	}
 
+	public function get($project_id)
+	{
+		return $this->where('project_id', $project_id)->get();
+	}
+
+	public function detail($task_id)
+	{
+		return $this->where('id', $task_id)->first();
+	}
+
 }

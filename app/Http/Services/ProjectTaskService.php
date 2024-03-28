@@ -8,11 +8,12 @@ use Illuminate\Support\Facades\Log;
 use App\Constants\ErrorCodes;
 use App\Constants\ErrorDescs;
 use App\Models\ProjectTaskModel;
+use App\Http\Services\ProjectTaskViewService;
 
 
 class ProjectTaskService extends Service 
 {
-	public function project_new($project_id, $title, $desc, $social_platform_id, $kol_max, $kol_min_followers, 
+	public function task_new($project_id, $title, $desc, $social_platform_id, $kol_max, $kol_min_followers, 
 		$kol_like_min, $kol_socre_min, $start_time, $applition_ddl_time, $upload_ddl_time, $blockchain_id,
 		$token_id, $reward_min)
 	{
@@ -27,4 +28,26 @@ class ProjectTaskService extends Service
 		return $this->res;
 	}	
 
+	public function task_list($project_id)
+	{
+		$project_task_model = new ProjectTaskModel;
+		$tasks = $project_task_model->get($project_id);
+		foreach($tasks as $task)
+		{
+			$this->res['data'][] = $task;
+		}
+		return $this->res;
+	}
+
+	public function task_detail($task_id)
+	{
+		$project_task_model = new ProjectTaskModel;
+		$task = $project_task_model->detail($task_id);
+
+		$task_view_service = new ProjectTaskViewService;
+		$task['viewer'] = $task_view_service->get_task_viewer($task['id']);
+		// TODO: viewer,applications
+		$this->res['data'] = $task;
+		return $this->res;
+	}
 }
