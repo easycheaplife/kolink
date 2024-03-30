@@ -8,6 +8,7 @@ use App\Http\Controllers\ProjectController;
 use App\Http\Controllers\KolController;
 use App\Http\Controllers\ProjectTaskController;
 use App\Http\Controllers\ProjectTaskViewController;
+use App\Http\Controllers\ProjectTaskApplicationController;
 
 
 /*
@@ -45,6 +46,16 @@ Route::post('/project/task/detail', [ProjectTaskController::class, 'task_detail'
 
 Route::get('/project/task/view', [ProjectTaskViewController::class, 'task_view']);
 Route::post('/project/task/view', [ProjectTaskViewController::class, 'task_view']);
+
+Route::get('/project/task/application', [ProjectTaskApplicationController::class, 'task_application']);
+Route::post('/project/task/application', [ProjectTaskApplicationController::class, 'task_application']);
+
+Route::get('/project/task/application/detail', [ProjectTaskApplicationController::class, 'task_application_detail']);
+Route::post('/project/task/application/detail', [ProjectTaskApplicationController::class, 'task_application_detail']);
+
+Route::get('/project/task/application/cancel', [ProjectTaskApplicationController::class, 'task_application_cancel']);
+Route::post('/project/task/application/cancel', [ProjectTaskApplicationController::class, 'task_application_cancel']);
+
 
 Route::get('/kol/new', [KolController::class, 'kol_new']);
 Route::post('/kol/new', [KolController::class, 'kol_new']);

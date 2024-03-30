@@ -11,11 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('project_task_viewer', function (Blueprint $table) {
+        Schema::create('project_task_application', function (Blueprint $table) {
             $table->id();
-            $table->integer('kol_id');
             $table->integer('task_id');
-            $table->string('avatar', 64);
+            $table->integer('kol_id');
+            $table->float('quotation');
+            $table->integer('status')->default(0);
+            $table->string('reason')->default('');
+            $table->string('comment')->default('');
             $table->timestamps();
 			$table->unique(['kol_id', 'task_id']);
         });
@@ -26,6 +29,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('project_task_viewer');
+        Schema::dropIfExists('project_task_application');
     }
 };
