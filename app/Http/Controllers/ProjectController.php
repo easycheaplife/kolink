@@ -62,4 +62,19 @@ class ProjectController extends Controller
 		);
 	}
 
+	public function project_list(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new projectService();
+		return $service->project_list();
+	}
+
 }

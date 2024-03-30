@@ -35,4 +35,9 @@ class ProjectModel extends Model
 		return $this->where('id', $project_id)->first();
 	}
 
+	public function list()
+	{
+		return $this->all();
+	}
+
 }
