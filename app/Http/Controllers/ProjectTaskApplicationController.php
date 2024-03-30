@@ -10,7 +10,7 @@ use App\Http\Services\ProjectTaskApplicationService;
 
 class ProjectTaskApplicationController extends Controller
 {
-	public function task_application(Request $request)
+	public function task_application_new(Request $request)
 	{
 		try {
 			$validated_data = $request->validate([
@@ -26,7 +26,7 @@ class ProjectTaskApplicationController extends Controller
 				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
 		}
 		$service = new ProjectTaskApplicationService();
-		return $service->task_application(
+		return $service->task_application_new(
 			$validated_data['kol_id'],
 			$validated_data['task_id'],
 			$validated_data['quotation'],
@@ -95,5 +95,52 @@ class ProjectTaskApplicationController extends Controller
 			$validated_data['reason']
 		);
 	}
+
+	public function task_application_review(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'project_id' => 'required|integer',
+				'application_id' => 'required|integer',
+				'status' => 'required|integer'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new ProjectTaskApplicationService();
+		return $service->task_application_review(
+			$validated_data['project_id'],
+			$validated_data['application_id'],
+			$validated_data['status']
+		);
+	}
+
+	public function task_application_upload(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'kol_id' => 'required|integer',
+				'application_id' => 'required|integer',
+				'verification' => 'required|integer',
+				'comment' => 'required|string'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new ProjectTaskApplicationService();
+		return $service->task_application_upload(
+			$validated_data['kol_id'],
+			$validated_data['application_id'],
+			$validated_data['verification'],
+			$validated_data['comment']
+		);
+	}
+
 
 }

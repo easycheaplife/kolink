@@ -53,8 +53,8 @@ Route::post('/project/task/detail', [ProjectTaskController::class, 'task_detail'
 Route::get('/project/task/view', [ProjectTaskViewController::class, 'task_view']);
 Route::post('/project/task/view', [ProjectTaskViewController::class, 'task_view']);
 
-Route::get('/project/task/application', [ProjectTaskApplicationController::class, 'task_application']);
-Route::post('/project/task/application', [ProjectTaskApplicationController::class, 'task_application']);
+Route::get('/project/task/application/new', [ProjectTaskApplicationController::class, 'task_application_new']);
+Route::post('/project/task/application/new', [ProjectTaskApplicationController::class, 'task_application_new']);
 
 Route::get('/project/task/application/detail', [ProjectTaskApplicationController::class, 'task_application_detail']);
 Route::post('/project/task/application/detail', [ProjectTaskApplicationController::class, 'task_application_detail']);
@@ -64,6 +64,12 @@ Route::post('/project/task/application/cancel', [ProjectTaskApplicationControlle
 
 Route::get('/project/task/application/edit', [ProjectTaskApplicationController::class, 'task_application_edit']);
 Route::post('/project/task/application/edit', [ProjectTaskApplicationController::class, 'task_application_edit']);
+
+Route::get('/project/task/application/review', [ProjectTaskApplicationController::class, 'task_application_review']);
+Route::post('/project/task/application/review', [ProjectTaskApplicationController::class, 'task_application_review']);
+
+Route::get('/project/task/application/upload', [ProjectTaskApplicationController::class, 'task_application_upload']);
+Route::post('/project/task/application/upload', [ProjectTaskApplicationController::class, 'task_application_upload']);
 
 Route::get('/kol/new', [KolController::class, 'kol_new']);
 Route::post('/kol/new', [KolController::class, 'kol_new']);

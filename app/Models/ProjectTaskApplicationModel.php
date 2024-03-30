@@ -42,4 +42,12 @@ class ProjectTaskApplicationModel extends Model
 		return $this->where('id', $application_id)->update(['quotation' => $quotation, 'reason' => $reason]);
 	}
 
+	public function update_verification_and_comment_and_status($application_id, $verification, $comment, $status)
+	{
+		return $this->where('id', $application_id)->update([
+			'verification' => $verification, 
+			'comment' => $comment,
+			'status' => $status]);
+	}
+
 }
