@@ -8,6 +8,6 @@ return [
 		'declined' => 3,
 		'accept' => 4,
 		'upload' => 5,
-		'finished' => 6
+		'finish' => 6
 	),
 ];

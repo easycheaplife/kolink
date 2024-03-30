@@ -16,6 +16,8 @@ class ErrorCodes
 	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_REVIEW = 7;
 	const ERROR_CODE_TASK_APPLICATION_STATUS_CODE_ERROR = 8;
 	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_UPLOAD = 9;
+	const ERROR_CODE_PROJECT_IS_NOT_YOURS = 10;
+	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_FINISH = 11;
 }
 
 class ErrorDescs
@@ -30,5 +32,7 @@ class ErrorDescs
 	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_REVIEW = 'current task application status can not review!';
 	const ERROR_CODE_TASK_APPLICATION_STATUS_CODE_ERROR = 'input param status error, only panding,accept,declined are allowed.';
 	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_UPLOAD = 'current task application status can not upload!';
+	const ERROR_CODE_PROJECT_IS_NOT_YOURS = 'project is not yours!';
+	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_FINISH = 'current task application status can not finish!';
 }
 

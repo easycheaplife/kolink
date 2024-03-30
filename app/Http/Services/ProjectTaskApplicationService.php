@@ -106,8 +106,8 @@ class ProjectTaskApplicationService extends Service
 		}
 		if ($project_id != $task_detail['data']['project_id'])
 		{
-			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_IS_NOT_YOURS,
-				ErrorDescs::ERROR_CODE_TASK_APPLICATION_IS_NOT_YOURS);		
+			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_PROJECT_IS_NOT_YOURS,
+				ErrorDescs::ERROR_CODE_PROJECT_IS_NOT_YOURS);		
 		}
 		if ($application_detail['status'] != config('config.task_status')['application'])
 		{
@@ -122,7 +122,7 @@ class ProjectTaskApplicationService extends Service
 		return $this->res;
 	}
 
-	public function task_application_upload($kol_id, $application_id, $verification, $comment)
+	public function task_application_upload($kol_id, $application_id, $verification)
 	{
 		$application_model = new ProjectTaskApplicationModel;
 		$application_detail = $application_model->get($application_id);	
@@ -141,12 +141,48 @@ class ProjectTaskApplicationService extends Service
 			return $this->error_response($application_id, ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_UPLOAD,
 				ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_UPLOAD);		
 		}
-		if (!$application_model->update_verification_and_comment_and_status($application_id, $verification, $comment, config('config.task_status')['upload']))
+		if (!$application_model->update_verification_and_status($application_id, $verification, config('config.task_status')['upload']))
 		{
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
 		return $this->res;
 	}
+
+	public function task_application_finish($project_id, $application_id, $comment)
+	{
+		$application_model = new ProjectTaskApplicationModel;
+		$application_detail = $application_model->get($application_id);	
+		if (empty($application_detail))
+		{
+			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_IS_MISSING,
+				ErrorDescs::ERROR_CODE_TASK_APPLICATION_IS_MISSING);		
+		}
+		$task_service = new ProjectTaskService;
+		$task_detail = $task_service->task_detail($application_detail['task_id']);
+		if (empty($task_detail))
+		{
+			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_IS_MISSING,
+				ErrorDescs::ERROR_CODE_TASK_APPLICATION_IS_MISSING);		
+		}
+		if ($project_id != $task_detail['data']['project_id'])
+		{
+			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_PROJECT_IS_NOT_YOURS,
+				ErrorDescs::ERROR_CODE_PROJECT_IS_NOT_YOURS);		
+		}
+		if ($application_detail['status'] != config('config.task_status')['upload'])
+		{
+			return $this->error_response($application_id, ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_FINISH,
+				ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_FINISH);		
+		}
+		if (!$application_model->update_comment_and_status($application_id, $comment,  config('config.task_status')['finish']))
+		{
+			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_DB_ERROR,
+				ErrorDescs::ERROR_CODE_DB_ERROR);		
+		}
+		return $this->res;
+	}
+
+
 
 }

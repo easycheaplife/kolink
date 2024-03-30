@@ -71,6 +71,9 @@ Route::post('/project/task/application/review', [ProjectTaskApplicationControlle
 Route::get('/project/task/application/upload', [ProjectTaskApplicationController::class, 'task_application_upload']);
 Route::post('/project/task/application/upload', [ProjectTaskApplicationController::class, 'task_application_upload']);
 
+Route::get('/project/task/application/finish', [ProjectTaskApplicationController::class, 'task_application_finish']);
+Route::post('/project/task/application/finish', [ProjectTaskApplicationController::class, 'task_application_finish']);
+
 Route::get('/kol/new', [KolController::class, 'kol_new']);
 Route::post('/kol/new', [KolController::class, 'kol_new']);
 
