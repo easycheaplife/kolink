@@ -56,7 +56,7 @@ class ProjectTaskApplicationController extends Controller
 	{
 		try {
 			$validated_data = $request->validate([
-				'kol_id' => 'required|string',
+				'kol_id' => 'required|integer',
 				'application_id' => 'required|integer'
 			]);
 		}
@@ -71,4 +71,29 @@ class ProjectTaskApplicationController extends Controller
 			$validated_data['application_id']
 		);
 	}
+
+	public function task_application_edit(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'kol_id' => 'required|integer',
+				'application_id' => 'required|integer',
+				'quotation' => 'required|integer',
+				'reason' => 'required|string'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new ProjectTaskApplicationService();
+		return $service->task_application_edit(
+			$validated_data['kol_id'],
+			$validated_data['application_id'],
+			$validated_data['quotation'],
+			$validated_data['reason']
+		);
+	}
+
 }

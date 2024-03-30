@@ -36,11 +36,18 @@ class KolService extends Service
     public function kol_list($region_id, $category_id, $language_id, $channel_id)
 	{
 		$kol_model = new KolModel;
-		$kols = $kol_model->get($region_id, $category_id, $language_id, $channel_id);	
+		$kols = $kol_model->list($region_id, $category_id, $language_id, $channel_id);	
 		foreach ($kols as $kol)
 		{
 			$this->res['data'][] = $kol;	
 		}
+		return $this->res;
+	}
+
+    public function kol_detail($kol_id)
+	{
+		$kol_model = new KolModel;
+		$this->res['data'] = $kol_model->get($kol_id);
 		return $this->res;
 	}
 

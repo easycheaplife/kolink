@@ -31,4 +31,11 @@ class ProjectService extends Service
 		return $this->res;
 	}	
 
+    public function project_detail($project_id)
+	{
+		$project_model = new ProjectModel;
+		$this->res['data'] = $project_model->get($project_id);
+		return $this->res;
+	}
+
 }

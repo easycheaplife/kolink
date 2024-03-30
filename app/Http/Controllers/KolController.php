@@ -63,4 +63,22 @@ class KolController extends Controller
 		);
 	}
 
+	public function kol_detail(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'kol_id' => 'required|integer'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new KolService();
+		return $service->kol_detail(
+			$validated_data['kol_id']
+		);
+	}
+
 }

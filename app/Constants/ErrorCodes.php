@@ -12,6 +12,7 @@ class ErrorCodes
 	const ERROR_CODE_VERIFICATION_CODE_ERROR = 3;
 	const ERROR_CODE_TASK_APPLICATION_IS_MISSING = 4;
 	const ERROR_CODE_TASK_APPLICATION_IS_NOT_YOURS = 5;
+	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_EDIT = 6;
 }
 
 class ErrorDescs
@@ -22,6 +23,6 @@ class ErrorDescs
 	const ERROR_CODE_VERIFICATION_CODE_ERROR = 'verification code error!';
 	const ERROR_CODE_TASK_APPLICATION_IS_MISSING = 'task application is missing!';
 	const ERROR_CODE_TASK_APPLICATION_IS_NOT_YOURS = 'task application is not yours, you cann not cancel!';
-
+	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_EDIT = 'current task application status cant not edit!';
 }
 

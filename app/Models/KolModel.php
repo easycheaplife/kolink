@@ -36,7 +36,7 @@ class KolModel extends Model
 		return false;
 	}
 
-	public function get($region_id, $category_id, $language_id, $channel_id)
+	public function list($region_id, $category_id, $language_id, $channel_id)
 	{
 		$query = DB::table($this->table);
 		if ($region_id != 0) {
@@ -52,6 +52,11 @@ class KolModel extends Model
 			$query->where('channel_id', $channel_id);
 		}
 		return $query->orderByDesc('updated_at')->get();
+	}
+
+	public function get($kol_id)
+	{
+		return $this->where('id', $kol_id)->first();
 	}
 
 }

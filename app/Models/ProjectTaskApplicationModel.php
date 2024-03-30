@@ -36,4 +36,10 @@ class ProjectTaskApplicationModel extends Model
 	{
 		return $this->where('id', $application_id)->update(['status' => $status]);
 	}
+
+	public function update_quotation_and_reason($application_id, $quotation, $reason)
+	{
+		return $this->where('id', $application_id)->update(['quotation' => $quotation, 'reason' => $reason]);
+	}
+
 }

@@ -35,6 +35,9 @@ Route::post('/verification/code', [VerificationController::class, 'code']);
 Route::get('/project/new', [ProjectController::class, 'project_new']);
 Route::post('/project/new', [ProjectController::class, 'project_new']);
 
+Route::get('/project/detail', [ProjectController::class, 'project_detail']);
+Route::post('/project/detail', [ProjectController::class, 'project_detail']);
+
 Route::get('/project/task/new', [ProjectTaskController::class, 'task_new']);
 Route::post('/project/task/new', [ProjectTaskController::class, 'task_new']);
 
@@ -56,9 +59,14 @@ Route::post('/project/task/application/detail', [ProjectTaskApplicationControlle
 Route::get('/project/task/application/cancel', [ProjectTaskApplicationController::class, 'task_application_cancel']);
 Route::post('/project/task/application/cancel', [ProjectTaskApplicationController::class, 'task_application_cancel']);
 
+Route::get('/project/task/application/edit', [ProjectTaskApplicationController::class, 'task_application_edit']);
+Route::post('/project/task/application/edit', [ProjectTaskApplicationController::class, 'task_application_edit']);
 
 Route::get('/kol/new', [KolController::class, 'kol_new']);
 Route::post('/kol/new', [KolController::class, 'kol_new']);
+
+Route::get('/kol/detail', [KolController::class, 'kol_detail']);
+Route::post('/kol/detail', [KolController::class, 'kol_detail']);
 
 Route::get('/kol/list', [KolController::class, 'kol_list']);
 Route::post('/kol/list', [KolController::class, 'kol_list']);

@@ -30,4 +30,9 @@ class ProjectModel extends Model
 		return false;
 	}
 
+	public function get($project_id)
+	{
+		return $this->where('id', $project_id)->first();
+	}
+
 }

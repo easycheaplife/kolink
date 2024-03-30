@@ -44,4 +44,22 @@ class ProjectController extends Controller
 		);
 	}
 
+	public function project_detail(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'project_id' => 'required|integer'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new projectService();
+		return $service->project_detail(
+			$validated_data['project_id']
+		);
+	}
+
 }
