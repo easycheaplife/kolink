@@ -95,4 +95,30 @@ class ProjectController extends Controller
 		return $service->project_index($validated_data['kol_id'],  $validated_data['days']);
 	}
 
+	public function project_setting(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'project_id' => 'required|integer',
+				'email' => 'required|email',
+				'logo' => 'required|string',
+				'name' => 'required|string',
+				'desc' => 'required|string'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new ProjectService();
+		return $service->project_setting(
+			$validated_data['project_id'],
+			$validated_data['name'],
+			$validated_data['desc'],
+			$validated_data['logo'],
+			$validated_data['email']
+		);
+	}
+
 }

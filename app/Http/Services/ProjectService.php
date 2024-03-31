@@ -11,7 +11,6 @@ use App\Models\ProjectModel;
 use App\Http\Services\ProjectTaskApplicationService;
 
 
-
 class ProjectService extends Service 
 {
     public function project_new($token, $email, $logo, $twitter_user_name, $name, $desc, $category_id, $website, $code)
@@ -53,6 +52,17 @@ class ProjectService extends Service
 		$this->res['data']['upcoming_task_list'] = $application_service->upcoming_task_list($kol_id);
 		$project_model = new ProjectModel;
 		$this->res['data']['top_project'] = $project_model->top_project();
+		return $this->res;
+	}
+
+	public function project_setting($project_id, $name, $desc, $logo, $email)
+	{
+		$project_model = new ProjectModel;
+		if (!$project_model->setting($project_id, $name, $desc, $logo, $email))
+		{
+			return $this->error_response($token, ErrorCodes::ERROR_CODE_DB_ERROR,
+				ErrorDescs::ERROR_CODE_DB_ERROR);		
+		}
 		return $this->res;
 	}
 

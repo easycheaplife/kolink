@@ -41,6 +41,9 @@ Route::post('/project/new', [ProjectController::class, 'project_new']);
 Route::get('/project/list', [ProjectController::class, 'project_list']);
 Route::post('/project/list', [ProjectController::class, 'project_list']);
 
+Route::get('/project/setting', [ProjectController::class, 'project_setting']);
+Route::post('/project/setting', [ProjectController::class, 'project_setting']);
+
 Route::get('/project/detail', [ProjectController::class, 'project_detail']);
 Route::post('/project/detail', [ProjectController::class, 'project_detail']);
 

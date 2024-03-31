@@ -45,4 +45,13 @@ class ProjectModel extends Model
 		return $this->all();
 	}
 
+	public function setting($project_id, $name, $desc, $logo, $email)
+	{
+		return $this->where('id', $project_id)->update([
+			'desc' => $desc, 
+			'name' => $name, 
+			'logo' => $logo, 
+			'email' => $email]);
+	}
+
 }
