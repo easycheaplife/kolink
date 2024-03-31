@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
+
 
 class ProjectTaskViewModel extends Model
 {
@@ -29,6 +31,15 @@ class ProjectTaskViewModel extends Model
 	public function get($task_id)
 	{
 		return $this->where('task_id', $task_id)->get();
+	}
+
+	public function trending_task()
+	{
+		return DB::table($this->table)
+			->select('task_id', DB::raw('COUNT(task_id) as view_count'))
+			->groupBy('task_id')
+			->orderByDesc('view_count')
+			->get();	
 	}
 
 }

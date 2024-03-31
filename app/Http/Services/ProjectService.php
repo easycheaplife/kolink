@@ -9,6 +9,7 @@ use App\Constants\ErrorCodes;
 use App\Constants\ErrorDescs;
 use App\Models\ProjectModel;
 use App\Http\Services\ProjectTaskApplicationService;
+use App\Http\Services\ProjectTaskViewService;
 
 
 class ProjectService extends Service 
@@ -49,9 +50,28 @@ class ProjectService extends Service
 	public function project_index($kol_id, $days)
 	{
 		$application_service = new ProjectTaskApplicationService;				
-		$this->res['data']['upcoming_task_list'] = $application_service->upcoming_task_list($kol_id);
+		$this->res['data']['upcoming_task'] = $application_service->upcoming_task_list($kol_id);
 		$project_model = new ProjectModel;
 		$this->res['data']['top_project'] = $project_model->top_project();
+		$view_service = new ProjectTaskViewService;
+		$trending_task = $view_service->trending_task();
+		$task_ids = [];
+		$trending_task_tmp = [];
+		if (!empty($trending_task))
+		{
+			foreach ($trending_task as $task)
+			{
+				$task_ids[] = $task->task_id;	
+				$trending_task_tmp[$task->task_id] = $task->view_count;
+			}
+			$task_service = new ProjectTaskService;
+			$tasks = $task_service->kol_task_list($task_ids);
+			foreach ($tasks as $task)
+			{
+				$task['view_count'] = $trending_task_tmp[$task['id']];
+			}
+			$this->res['data']['trending_task'] = $tasks;
+		}
 		return $this->res;
 	}
 

@@ -28,4 +28,11 @@ class ProjectTaskViewService extends Service
 		$view_model = new ProjectTaskViewModel;
 		return $view_model->get($task_id);	
 	}
+
+	public function trending_task()
+	{
+		$view_model = new ProjectTaskViewModel;
+		return $view_model->trending_task();	
+	}
+
 }
