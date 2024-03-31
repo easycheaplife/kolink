@@ -32,6 +32,9 @@ Route::get('/test', [TestController::class, 'index']);
 Route::get('/verification/code', [VerificationController::class, 'code']);
 Route::post('/verification/code', [VerificationController::class, 'code']);
 
+Route::get('/project/index', [ProjectController::class, 'project_index']);
+Route::post('/project/index', [ProjectController::class, 'project_index']);
+
 Route::get('/project/new', [ProjectController::class, 'project_new']);
 Route::post('/project/new', [ProjectController::class, 'project_new']);
 

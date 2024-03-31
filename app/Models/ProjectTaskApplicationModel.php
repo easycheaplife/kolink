@@ -66,4 +66,11 @@ class ProjectTaskApplicationModel extends Model
 		return $this->where('task_id', $task_id)->get();
 	}
 
+	public function upcoming_task_list($kol_id)
+	{
+		return $this->where('status', '<', config("config.task_status")['finish'])
+			->where('kol_id', $kol_id)
+			->get();	
+	}
+
 }

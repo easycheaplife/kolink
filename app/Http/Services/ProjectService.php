@@ -8,6 +8,8 @@ use Illuminate\Support\Facades\Log;
 use App\Constants\ErrorCodes;
 use App\Constants\ErrorDescs;
 use App\Models\ProjectModel;
+use App\Http\Services\ProjectTaskApplicationService;
+
 
 
 class ProjectService extends Service 
@@ -38,10 +40,19 @@ class ProjectService extends Service
 		return $this->res;
 	}
 
-    public function project_list()
+    public function project_list($token)
 	{
 		$project_model = new ProjectModel;
-		$this->res['data'] = $project_model->list();
+		$this->res['data'] = $project_model->list($token);
+		return $this->res;
+	}
+
+	public function project_index($kol_id, $days)
+	{
+		$application_service = new ProjectTaskApplicationService;				
+		$this->res['data']['upcoming_task_list'] = $application_service->upcoming_task_list($kol_id);
+		$project_model = new ProjectModel;
+		$this->res['data']['top_project'] = $project_model->top_project();
 		return $this->res;
 	}
 

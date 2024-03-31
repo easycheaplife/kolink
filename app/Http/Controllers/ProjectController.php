@@ -66,6 +66,7 @@ class ProjectController extends Controller
 	{
 		try {
 			$validated_data = $request->validate([
+				'token' => 'required|string'
 			]);
 		}
 		catch (ValidationException $e)
@@ -74,7 +75,24 @@ class ProjectController extends Controller
 				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
 		}
 		$service = new projectService();
-		return $service->project_list();
+		return $service->project_list($validated_data['token']);
+	}
+
+	public function project_index(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'kol_id' => 'required|integer',
+				'days' => 'required|integer'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new projectService();
+		return $service->project_index($validated_data['kol_id'],  $validated_data['days']);
 	}
 
 }
