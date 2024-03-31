@@ -60,4 +60,10 @@ class ProjectTaskApplicationModel extends Model
 	{
 		return $this->select('task_id')->where('kol_id', $kol_id)->get();
 	}
+
+	public function list($task_id)
+	{
+		return $this->where('task_id', $task_id)->get();
+	}
+
 }

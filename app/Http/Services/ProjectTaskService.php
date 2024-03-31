@@ -46,7 +46,10 @@ class ProjectTaskService extends Service
 
 		$task_view_service = new ProjectTaskViewService;
 		$task['viewer'] = $task_view_service->get_task_viewer($task['id']);
-		// TODO: viewer,applications
+
+		$task_application_service = new ProjectTaskApplicationService;
+		$task['application'] = $task_application_service->task_list($task['id']);
+
 		$this->res['data'] = $task;
 		return $this->res;
 	}
