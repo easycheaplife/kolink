@@ -83,6 +83,5 @@ Route::post('/kol/detail', [KolController::class, 'kol_detail']);
 Route::get('/kol/list', [KolController::class, 'kol_list']);
 Route::post('/kol/list', [KolController::class, 'kol_list']);
 
-
-
-
+Route::get('/kol/task/list', [KolController::class, 'kol_task_list']);
+Route::post('/kol/task/list', [KolController::class, 'kol_task_list']);

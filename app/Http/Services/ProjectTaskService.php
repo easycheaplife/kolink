@@ -50,4 +50,11 @@ class ProjectTaskService extends Service
 		$this->res['data'] = $task;
 		return $this->res;
 	}
+
+	public function kol_task_list($task_ids)
+	{
+		$project_task_model = new ProjectTaskModel;
+		$tasks = $project_task_model->get_tasks($task_ids);
+		return $tasks;
+	}
 }

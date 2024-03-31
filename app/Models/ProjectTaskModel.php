@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Log;
+
 
 class ProjectTaskModel extends Model
 {
@@ -40,6 +42,11 @@ class ProjectTaskModel extends Model
 	public function get($project_id)
 	{
 		return $this->where('project_id', $project_id)->get();
+	}
+
+	public function get_tasks($task_ids)
+	{
+		return $this->whereIn('id', $task_ids)->get();
 	}
 
 	public function detail($task_id)

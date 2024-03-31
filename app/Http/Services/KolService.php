@@ -9,6 +9,8 @@ use App\Constants\ErrorCodes;
 use App\Constants\ErrorDescs;
 use App\Models\KolModel;
 use App\Http\Services\VerificationService;
+use App\Http\Services\ProjectTaskApplicationService;
+use App\Http\Services\ProjectTaskService;
 
 
 class KolService extends Service 
@@ -48,6 +50,20 @@ class KolService extends Service
 	{
 		$kol_model = new KolModel;
 		$this->res['data'] = $kol_model->get($kol_id);
+		return $this->res;
+	}
+
+	public function kol_task_list($kol_id)
+	{
+		$application_service = new ProjectTaskApplicationService;
+		$tasks = $application_service->kol_task_list($kol_id);	
+		$task_ids = [];
+		foreach ($tasks as $task)
+		{
+			$task_ids[] = $task['task_id'];	
+		}
+		$task_service = new ProjectTaskService;
+		$this->res['data'] = $task_service->kol_task_list($task_ids);
 		return $this->res;
 	}
 

@@ -183,6 +183,9 @@ class ProjectTaskApplicationService extends Service
 		return $this->res;
 	}
 
-
-
+	public function kol_task_list($kol_id)
+	{
+		$application_model = new ProjectTaskApplicationModel;
+		return $application_model->kol_task_list($kol_id);	
+	}
 }

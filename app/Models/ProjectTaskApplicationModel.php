@@ -56,4 +56,8 @@ class ProjectTaskApplicationModel extends Model
 			'status' => $status]);
 	}
 
+	public function kol_task_list($kol_id)
+	{
+		return $this->select('task_id')->where('kol_id', $kol_id)->get();
+	}
 }
