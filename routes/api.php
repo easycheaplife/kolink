@@ -9,6 +9,7 @@ use App\Http\Controllers\KolController;
 use App\Http\Controllers\ProjectTaskController;
 use App\Http\Controllers\ProjectTaskViewController;
 use App\Http\Controllers\ProjectTaskApplicationController;
+use App\Http\Controllers\ConfigController;
 
 
 /*
@@ -91,3 +92,7 @@ Route::post('/kol/list', [KolController::class, 'kol_list']);
 
 Route::get('/kol/task/list', [KolController::class, 'kol_task_list']);
 Route::post('/kol/task/list', [KolController::class, 'kol_task_list']);
+
+Route::get('/config/list', [ConfigController::class, 'list']);
+Route::post('/config/list', [ConfigController::class, 'list']);
+
