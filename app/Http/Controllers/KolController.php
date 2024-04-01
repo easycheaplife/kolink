@@ -50,6 +50,8 @@ class KolController extends Controller
 
 	public function kol_list(Request $request)
 	{
+		$page = $request->input('page', 0);
+		$size = $request->input('size', config('config.default_page_size'));
 		$region_id = $request->input('$region_id', 0);
 		$category_id = $request->input('$category_id', 0);
 		$language_id = $request->input('$language_id', 0);
@@ -59,7 +61,9 @@ class KolController extends Controller
 			$region_id,
 			$language_id,
 			$category_id,
-			$channel_id
+			$channel_id,
+			$page,
+			$size
 		);
 	}
 
@@ -83,6 +87,8 @@ class KolController extends Controller
 
 	public function kol_task_list(Request $request)
 	{
+		$page = $request->input('page', 0);
+		$size = $request->input('size', config('config.default_page_size'));
 		try {
 			$validated_data = $request->validate([
 				'kol_id' => 'required|integer'
@@ -95,7 +101,9 @@ class KolController extends Controller
 		}
 		$service = new KolService();
 		return $service->kol_task_list(
-			$validated_data['kol_id']
+			$validated_data['kol_id'],
+			$page,
+			$size
 		);
 	}
 

@@ -64,6 +64,8 @@ class ProjectController extends Controller
 
 	public function project_list(Request $request)
 	{
+		$page = $request->input('page', 0);
+		$size = $request->input('size', config('config.default_page_size'));
 		try {
 			$validated_data = $request->validate([
 				'token' => 'required|string'
@@ -75,7 +77,7 @@ class ProjectController extends Controller
 				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
 		}
 		$service = new projectService();
-		return $service->project_list($validated_data['token']);
+		return $service->project_list($validated_data['token'], $page, $size);
 	}
 
 	public function project_index(Request $request)

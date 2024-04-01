@@ -56,6 +56,8 @@ class ProjectTaskController extends Controller
 
 	public function task_list(Request $request)
 	{
+		$page = $request->input('page', 0);
+		$size = $request->input('size', config('config.default_page_size'));
 		try {
 			$validated_data = $request->validate([
 				'project_id' => 'required|integer'
@@ -68,7 +70,9 @@ class ProjectTaskController extends Controller
 		}
 		$service = new ProjectTaskService();
 		return $service->task_list(
-			$validated_data['project_id']
+			$validated_data['project_id'],
+			$page,
+			$size
 		);
 	}
 

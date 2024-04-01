@@ -39,9 +39,12 @@ class ProjectTaskModel extends Model
 		return false;
 	}
 
-	public function get($project_id)
+	public function list($project_id, $page, $size)
 	{
-		return $this->where('project_id', $project_id)->get();
+		return $this->where('project_id', $project_id)
+			->skip($page * $size)
+			->take($size)
+			->get();
 	}
 
 	public function get_tasks($task_ids)

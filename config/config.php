@@ -40,4 +40,5 @@ return [
 		'French' => 2,
 		'Other' => 3
 	),
+	'default_page_size' => 10,
 ];

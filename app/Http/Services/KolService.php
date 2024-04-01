@@ -35,10 +35,10 @@ class KolService extends Service
 		return $this->res;
 	}	
 
-    public function kol_list($region_id, $category_id, $language_id, $channel_id)
+    public function kol_list($region_id, $category_id, $language_id, $channel_id, $page, $size)
 	{
 		$kol_model = new KolModel;
-		$kols = $kol_model->list($region_id, $category_id, $language_id, $channel_id);	
+		$kols = $kol_model->list($region_id, $category_id, $language_id, $channel_id, $page, $size);	
 		foreach ($kols as $kol)
 		{
 			$this->res['data'][] = $kol;	
@@ -53,10 +53,10 @@ class KolService extends Service
 		return $this->res;
 	}
 
-	public function kol_task_list($kol_id)
+	public function kol_task_list($kol_id, $page, $size)
 	{
 		$application_service = new ProjectTaskApplicationService;
-		$tasks = $application_service->kol_task_list($kol_id);	
+		$tasks = $application_service->kol_task_list($kol_id, $page, $size);	
 		$task_ids = [];
 		foreach ($tasks as $task)
 		{

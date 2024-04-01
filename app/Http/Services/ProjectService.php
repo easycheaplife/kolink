@@ -40,10 +40,10 @@ class ProjectService extends Service
 		return $this->res;
 	}
 
-    public function project_list($token)
+    public function project_list($token, $page, $size)
 	{
 		$project_model = new ProjectModel;
-		$this->res['data'] = $project_model->list($token);
+		$this->res['data'] = $project_model->list($token, $page, $size);
 		return $this->res;
 	}
 

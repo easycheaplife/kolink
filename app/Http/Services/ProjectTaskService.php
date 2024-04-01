@@ -28,10 +28,10 @@ class ProjectTaskService extends Service
 		return $this->res;
 	}	
 
-	public function task_list($project_id)
+	public function task_list($project_id, $page, $size)
 	{
 		$project_task_model = new ProjectTaskModel;
-		$tasks = $project_task_model->get($project_id);
+		$tasks = $project_task_model->list($project_id, $page, $size);
 		foreach($tasks as $task)
 		{
 			$this->res['data'][] = $task;

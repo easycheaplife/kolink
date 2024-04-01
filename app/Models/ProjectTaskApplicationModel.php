@@ -56,9 +56,12 @@ class ProjectTaskApplicationModel extends Model
 			'status' => $status]);
 	}
 
-	public function kol_task_list($kol_id)
+	public function kol_task_list($kol_id, $page, $size)
 	{
-		return $this->select('task_id')->where('kol_id', $kol_id)->get();
+		return $this->select('task_id')->where('kol_id', $kol_id)
+			->skip($page * $size)
+			->take($size)
+			->get();
 	}
 
 	public function list($task_id)
