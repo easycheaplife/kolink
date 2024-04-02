@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('name', 64);
             $table->string('desc', 64);
             $table->string('website', 128);
-            $table->integer('category_id');
+            $table->string('category_id');
             $table->timestamps();
         });
     }

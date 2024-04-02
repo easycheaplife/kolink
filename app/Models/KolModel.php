@@ -42,7 +42,7 @@ class KolModel extends Model
 		if ($region_id != 0) {
 			$query->where('region_id', $regionId);
 		}
-		if ($category_id != 0) {
+		if ($category_id != '') {
 			$query->where('category_id', $category_id);
 		}
 		if ($language_id != 0) {

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Validation\ValidationException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use App\Constants\ErrorCodes;
 use App\Http\Services\KolService;
 
@@ -21,7 +22,7 @@ class KolController extends Controller
 				'twitter_followers' => 'required|integer',
 				'twitter_subscriptions' => 'required|integer',
 				'region_id' => 'required|integer',
-				'category_id' => 'required|integer',
+				'category_id' => 'required|string',
 				'language_id' => 'required|integer',
 				'channel_id' => 'required|integer',
 				'code' => 'required|integer'
@@ -52,10 +53,10 @@ class KolController extends Controller
 	{
 		$page = $request->input('page', 0);
 		$size = $request->input('size', config('config.default_page_size'));
-		$region_id = $request->input('$region_id', 0);
-		$category_id = $request->input('$category_id', 0);
-		$language_id = $request->input('$language_id', 0);
-		$channel_id = $request->input('$channel_id', 0);
+		$region_id = $request->input('region_id', 0);
+		$category_id = $request->input('category_id', '');
+		$language_id = $request->input('language_id', 0);
+		$channel_id = $request->input('channel_id', 0);
 		$service = new KolService();
 		return $service->kol_list(
 			$region_id,

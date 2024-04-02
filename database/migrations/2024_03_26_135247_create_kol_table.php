@@ -19,9 +19,9 @@ return new class extends Migration
             $table->string('twitter_avatar', 64);
             $table->integer('twitter_followers');
             $table->integer('twitter_subscriptions');
-            $table->integer('region_id');
-            $table->integer('language_id');
-            $table->integer('category_id');
+            $table->integer('region_id')->default(0);
+            $table->integer('language_id')->default(0);
+            $table->string('category_id')->default('');
             $table->integer('channel_id')->default(0);
             $table->float('monetary_score')->default(0.0);
             $table->float('engagement_score')->default(0.0);

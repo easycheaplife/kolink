@@ -20,7 +20,7 @@ class ProjectController extends Controller
 				'twitter_user_name' => 'required|string',
 				'name' => 'required|string',
 				'desc' => 'required|string',
-				'category_id' => 'required|integer',
+				'category_id' => 'required|string',
 				'website' => 'required|string',
 				'code' => 'required|integer'
 			]);
