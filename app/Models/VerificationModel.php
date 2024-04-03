@@ -29,6 +29,7 @@ class VerificationModel extends Model
 	{
 		return $this->select('code')
 			->where('email', $email)
+			->orderByDesc('created_at')
 			->first();	
 	}
 }

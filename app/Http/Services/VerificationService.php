@@ -22,6 +22,7 @@ class VerificationService extends Service
 		}
 		$headers = array('From' => env('MAIL_FROM_ADDRESS'));
 		mail($email, 'Verification Code', "$code", $headers);
+		$this->res['data']['code'] = $code;
 		return $this->res;
 	}	
 

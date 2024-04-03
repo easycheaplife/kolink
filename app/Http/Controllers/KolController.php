@@ -13,6 +13,7 @@ class KolController extends Controller
 {
 	public function kol_new(Request $request)
 	{
+		$channel_id = $request->input('channel_id', 0);
 		try {
 			$validated_data = $request->validate([
 				'token' => 'required|string',
@@ -24,7 +25,6 @@ class KolController extends Controller
 				'region_id' => 'required|integer',
 				'category_id' => 'required|string',
 				'language_id' => 'required|integer',
-				'channel_id' => 'required|integer',
 				'code' => 'required|integer'
 			]);
 		}
@@ -44,7 +44,7 @@ class KolController extends Controller
 			$validated_data['region_id'],
 			$validated_data['category_id'],
 			$validated_data['language_id'],
-			$validated_data['channel_id'],
+			$channel_id,
 			$validated_data['code']
 		);
 	}
