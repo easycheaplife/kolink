@@ -25,13 +25,15 @@ class KolService extends Service
 			return $this->error_response($token, ErrorCodes::ERROR_CODE_VERIFICATION_CODE_ERROR,
 				ErrorDescs::ERROR_CODE_VERIFICATION_CODE_ERROR);		
 		}
+		$last_insert_id = 0;
 		$kol_model = new KolModel;
 		if (!$kol_model->insert($token, $email, $twitter_user_name, $twitter_avatar, $twitter_followers, 
-			$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id))
+			$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id, $last_insert_id))
 		{
 			return $this->error_response($token, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
+		$this->res['id'] = $last_insert_id;
 		return $this->res;
 	}	
 
@@ -50,6 +52,13 @@ class KolService extends Service
 	{
 		$kol_model = new KolModel;
 		$this->res['data'] = $kol_model->get($kol_id);
+		return $this->res;
+	}
+
+    public function login($token)
+	{
+		$kol_model = new KolModel;
+		$this->res['data'] = $kol_model->login($token);
 		return $this->res;
 	}
 

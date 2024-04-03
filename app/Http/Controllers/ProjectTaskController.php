@@ -12,18 +12,18 @@ class ProjectTaskController extends Controller
 {
 	public function task_new(Request $request)
 	{
+		$kol_max = $request->input('kol_max', 0);
+		$kol_min_followers = $request->input('kol_min_followers', 0);
+		$kol_like_min = $request->input('kol_like_min', 0);
+		$kol_score_min = $request->input('kol_score_min', 0);
+		$applition_ddl_time = $request->input('applition_ddl_time', 0);
 		try {
 			$validated_data = $request->validate([
 				'project_id' => 'required|integer',
 				'title' => 'required|string',
 				'desc' => 'required|string',
 				'social_platform_id' => 'required|integer',
-				'kol_max' => 'required|integer',
-				'kol_min_followers' => 'required|integer',
-				'kol_like_min' => 'required|integer',
-				'kol_socre_min' => 'required|integer',
 				'start_time' => 'required|integer',
-				'applition_ddl_time' => 'required|integer',
 				'upload_ddl_time' => 'required|integer',
 				'blockchain_id' => 'required|integer',
 				'token_id' => 'required|integer',
@@ -41,12 +41,12 @@ class ProjectTaskController extends Controller
 			$validated_data['title'],
 			$validated_data['desc'],
 			$validated_data['social_platform_id'],
-			$validated_data['kol_max'],
-			$validated_data['kol_min_followers'],
-			$validated_data['kol_like_min'],
-			$validated_data['kol_socre_min'],
+			$kol_max,
+			$kol_min_followers,
+			$kol_like_min,
+			$kol_score_min,
 			$validated_data['start_time'],
-			$validated_data['applition_ddl_time'],
+			$applition_ddl_time,
 			$validated_data['upload_ddl_time'],
 			$validated_data['blockchain_id'],
 			$validated_data['token_id'],

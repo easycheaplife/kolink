@@ -48,6 +48,9 @@ Route::post('/project/setting', [ProjectController::class, 'project_setting']);
 Route::get('/project/detail', [ProjectController::class, 'project_detail']);
 Route::post('/project/detail', [ProjectController::class, 'project_detail']);
 
+Route::get('/project/login', [ProjectController::class, 'login']);
+Route::post('/project/login', [ProjectController::class, 'login']);
+
 Route::get('/project/task/new', [ProjectTaskController::class, 'task_new']);
 Route::post('/project/task/new', [ProjectTaskController::class, 'task_new']);
 
@@ -86,6 +89,9 @@ Route::post('/kol/new', [KolController::class, 'kol_new']);
 
 Route::get('/kol/detail', [KolController::class, 'kol_detail']);
 Route::post('/kol/detail', [KolController::class, 'kol_detail']);
+
+Route::get('/kol/login', [KolController::class, 'login']);
+Route::post('/kol/login', [KolController::class, 'login']);
 
 Route::get('/kol/list', [KolController::class, 'kol_list']);
 Route::post('/kol/list', [KolController::class, 'kol_list']);

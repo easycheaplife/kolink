@@ -86,6 +86,24 @@ class KolController extends Controller
 		);
 	}
 
+	public function login(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'token' => 'required|string'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new KolService();
+		return $service->login(
+			$validated_data['token']
+		);
+	}
+
 	public function kol_task_list(Request $request)
 	{
 		$page = $request->input('page', 0);

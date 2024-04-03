@@ -12,7 +12,7 @@ class ProjectTaskModel extends Model
     use HasFactory;
 	protected $table = 'project_task';
 	public function insert($project_id, $title, $desc, $social_platform_id, $kol_max, $kol_min_followers,
-		$kol_like_min, $kol_socre_min, $start_time, $applition_ddl_time, $upload_ddl_time, $blockchain_id,
+		$kol_like_min, $kol_score_min, $start_time, $applition_ddl_time, $upload_ddl_time, $blockchain_id,
 		$token_id, $reward_min)
 	{
 		try {
@@ -23,7 +23,7 @@ class ProjectTaskModel extends Model
 			$this->kol_max = $kol_max;
 			$this->kol_min_followers = $kol_min_followers;
 			$this->kol_like_min = $kol_like_min;
-			$this->kol_socre_min = $kol_socre_min;
+			$this->kol_score_min = $kol_score_min;
 			$this->start_time = $start_time;
 			$this->applition_ddl_time = $applition_ddl_time;
 			$this->upload_ddl_time = $upload_ddl_time;

@@ -20,7 +20,7 @@ return new class extends Migration
             $table->integer('kol_max');
             $table->integer('kol_min_followers');
             $table->integer('kol_like_min');
-            $table->integer('kol_socre_min');
+            $table->integer('kol_score_min');
             $table->integer('start_time');
             $table->integer('applition_ddl_time');
             $table->integer('upload_ddl_time');

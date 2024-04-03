@@ -14,7 +14,7 @@ class KolModel extends Model
 	protected $table = 'kol';
 
 	public function insert($token, $email, $twitter_user_name, $twitter_avatar,  $twitter_followers, 
-		$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id)
+		$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id, &$last_insert_id)
 	{
 		try {
 			$this->token = $token;
@@ -27,7 +27,9 @@ class KolModel extends Model
 			$this->category_id = $category_id;
 			$this->language_id = $language_id;
 			$this->channel_id = $channel_id;
-			return $this->save();
+			$ret = $this->save();
+			$last_insert_id = DB::connection()->getPdo()->lastInsertId();
+			return $ret;
 		}
 		catch (Exception $e)
 		{
@@ -60,6 +62,11 @@ class KolModel extends Model
 	public function get($kol_id)
 	{
 		return $this->where('id', $kol_id)->first();
+	}
+
+	public function login($token)
+	{
+		return $this->where('token', $token)->first();
 	}
 
 }

@@ -4,13 +4,14 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 
 class ProjectModel extends Model
 {
     use HasFactory;
 
 	protected $table = 'project';
-	public function insert($token, $email, $logo, $twitter_user_name, $name, $desc, $category_id, $website)
+	public function insert($token, $email, $logo, $twitter_user_name, $name, $desc, $category_id, $website, &$last_insert_id)
 	{
 		try {
 			$this->token = $token;
@@ -21,7 +22,9 @@ class ProjectModel extends Model
 			$this->desc = $desc;
 			$this->category_id = $category_id;
 			$this->website = $website;
-			return $this->save();
+			$ret = $this->save();
+			$last_insert_id = DB::connection()->getPdo()->lastInsertId();
+			return $ret;
 		}
 		catch (Exception $e)
 		{
@@ -33,6 +36,11 @@ class ProjectModel extends Model
 	public function get($project_id)
 	{
 		return $this->where('id', $project_id)->first();
+	}
+
+	public function login($token)
+	{
+		return $this->where('token', $token)->first();
 	}
 
 	public function list($token, $page, $size)

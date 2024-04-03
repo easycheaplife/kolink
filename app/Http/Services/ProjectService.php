@@ -24,12 +24,14 @@ class ProjectService extends Service
 				ErrorDescs::ERROR_CODE_VERIFICATION_CODE_ERROR);		
 		}
 		$project_model = new ProjectModel;
+		$last_insert_id = 0;
 		if (!$project_model->insert($token, $email, $logo, $twitter_user_name, 
-			$name, $desc, $category_id, $website))
+			$name, $desc, $category_id, $website, $last_insert_id))
 		{
 			return $this->error_response($token, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
+		$this->res['id'] = $last_insert_id;
 		return $this->res;
 	}	
 
@@ -37,6 +39,13 @@ class ProjectService extends Service
 	{
 		$project_model = new ProjectModel;
 		$this->res['data'] = $project_model->get($project_id);
+		return $this->res;
+	}
+
+    public function login($token)
+	{
+		$project_model = new ProjectModel;
+		$this->res['data'] = $project_model->login($token);
 		return $this->res;
 	}
 

@@ -14,12 +14,12 @@ use App\Http\Services\ProjectTaskViewService;
 class ProjectTaskService extends Service 
 {
 	public function task_new($project_id, $title, $desc, $social_platform_id, $kol_max, $kol_min_followers, 
-		$kol_like_min, $kol_socre_min, $start_time, $applition_ddl_time, $upload_ddl_time, $blockchain_id,
+		$kol_like_min, $kol_score_min, $start_time, $applition_ddl_time, $upload_ddl_time, $blockchain_id,
 		$token_id, $reward_min)
 	{
 		$project_task_model = new ProjectTaskModel;
 		if (!$project_task_model->insert($project_id, $title, $desc, $social_platform_id, $kol_max, $kol_min_followers, 
-			$kol_like_min, $kol_socre_min, $start_time, $applition_ddl_time, $upload_ddl_time, $blockchain_id,
+			$kol_like_min, $kol_score_min, $start_time, $applition_ddl_time, $upload_ddl_time, $blockchain_id,
 			$token_id, $reward_min))
 		{
 			return $this->error_response($project_id, ErrorCodes::ERROR_CODE_DB_ERROR,
