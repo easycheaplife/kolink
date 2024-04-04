@@ -46,7 +46,7 @@ class MailService extends Service
 			$mail->isSMTP();
 			$mail->Host = 'smtp.protonmail.com';
 			$mail->SMTPAuth = true;
-			$mail->Username = 'kolnksystem@protonmail.comm';
+			$mail->Username = 'kolnksystem@protonmail.com';
 			$mail->Password = 'F0BYKDqw7';
 			$mail->SMTPSecure = 'tls';
 			$mail->Port = 587;
