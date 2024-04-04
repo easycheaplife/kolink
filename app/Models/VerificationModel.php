@@ -45,6 +45,7 @@ class VerificationModel extends Model
 	{
 		return $this->select('id', 'email', 'code', 'try_times')
 			->where('send_flag', 0)
+			->where('try_times', '<=', config('config.mail_try_times'))
 			->orderBy('created_at', 'asc')
 			->first();	
 	}
