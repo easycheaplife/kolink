@@ -52,7 +52,8 @@ class ProjectService extends Service
     public function project_list($token, $page, $size)
 	{
 		$project_model = new ProjectModel;
-		$this->res['data'] = $project_model->list($token, $page, $size);
+		$this->res['data']['list'] = $project_model->list($token, $page, $size);
+		$this->res['data']['total'] = $project_model->count($token);
 		return $this->res;
 	}
 

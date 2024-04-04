@@ -73,6 +73,12 @@ class ProjectTaskApplicationModel extends Model
 			->get();
 	}
 
+	public function kol_task_count($kol_id)
+	{
+		return $this->where('kol_id', $kol_id)
+			->count();
+	}
+
 	public function list($task_id)
 	{
 		return $this->where('task_id', $task_id)

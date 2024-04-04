@@ -60,6 +60,11 @@ class ProjectModel extends Model
 			->get();
 	}
 
+	public function count($token)
+	{
+		return $this->where('token', $token)->count();
+	}
+
 	public function top_project()
 	{
 		return $this->all();

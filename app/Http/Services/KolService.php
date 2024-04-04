@@ -43,8 +43,9 @@ class KolService extends Service
 		$kols = $kol_model->list($region_id, $category_id, $language_id, $channel_id, $page, $size);	
 		foreach ($kols as $kol)
 		{
-			$this->res['data'][] = $kol;	
+			$this->res['data']['list'][] = $kol;	
 		}
+		$this->res['data']['total'] = $kol_model->count($region_id, $category_id, $language_id, $channel_id);	
 		return $this->res;
 	}
 
@@ -72,7 +73,8 @@ class KolService extends Service
 			$task_ids[] = $task['task_id'];	
 		}
 		$task_service = new ProjectTaskService;
-		$this->res['data'] = $task_service->kol_task_list($task_ids);
+		$this->res['data']['list'] = $task_service->kol_task_list($task_ids);
+		$this->res['data']['total'] = $application_service->kol_task_count($kol_id);
 		return $this->res;
 	}
 

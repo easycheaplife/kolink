@@ -34,8 +34,9 @@ class ProjectTaskService extends Service
 		$tasks = $project_task_model->list($project_id, $page, $size);
 		foreach($tasks as $task)
 		{
-			$this->res['data'][] = $task;
+			$this->res['data']['list'][] = $task;
 		}
+		$this->res['data']['total'] = $project_task_model->count($project_id);
 		return $this->res;
 	}
 

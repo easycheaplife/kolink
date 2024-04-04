@@ -54,6 +54,12 @@ class ProjectTaskModel extends Model
 			->get();
 	}
 
+	public function count($project_id)
+	{
+		return $this->where('project_id', $project_id)
+			->count();
+	}
+
 	public function get_tasks($task_ids)
 	{
 		return $this->whereIn('id', $task_ids)

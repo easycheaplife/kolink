@@ -49,12 +49,9 @@ class KolModel extends Model
 	{
 		$query = DB::table($this->table);
 		if ($region_id != 0) {
-			$query->where('region_id', $regionId);
+			$query->where('region_id', $region_id);
 		}
-		if ($category_id != '') {
-			$query->where('category_id', $category_id);
-		}
-		if ($language_id != 0) {
+		if ($language_id != '') {
 			$query->where('language_id', $language_id);
 		}
 		if ($channel_id != 0) {
@@ -64,6 +61,21 @@ class KolModel extends Model
 			->skip($page * $size)
 			->take($size)
 			->get();
+	}
+
+	public function count($region_id, $category_id, $language_id, $channel_id)
+	{
+		$query = DB::table($this->table);
+		if ($region_id != 0) {
+			$query->where('region_id', $region_id);
+		}
+		if ($language_id != '') {
+			$query->where('language_id', $language_id);
+		}
+		if ($channel_id != 0) {
+			$query->where('channel_id', $channel_id);
+		}
+		return $query->count();
 	}
 
 	public function get($kol_id)
