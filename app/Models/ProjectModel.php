@@ -54,6 +54,7 @@ class ProjectModel extends Model
 	public function list($token, $page, $size)
 	{
 		return $this->where('token', $token)
+			->orderByDesc('updated_at')
 			->skip($page * $size)
 			->take($size)
 			->get();

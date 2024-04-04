@@ -67,6 +67,7 @@ class ProjectTaskApplicationModel extends Model
 	public function kol_task_list($kol_id, $page, $size)
 	{
 		return $this->select('task_id')->where('kol_id', $kol_id)
+			->orderByDesc('updated_at')
 			->skip($page * $size)
 			->take($size)
 			->get();
@@ -74,13 +75,16 @@ class ProjectTaskApplicationModel extends Model
 
 	public function list($task_id)
 	{
-		return $this->where('task_id', $task_id)->get();
+		return $this->where('task_id', $task_id)
+			->orderByDesc('updated_at')
+			->get();
 	}
 
 	public function upcoming_task_list($kol_id)
 	{
 		return $this->where('status', '<', config("config.task_status")['finish'])
 			->where('kol_id', $kol_id)
+			->orderByDesc('updated_at')
 			->get();	
 	}
 

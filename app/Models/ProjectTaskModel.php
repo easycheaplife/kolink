@@ -48,6 +48,7 @@ class ProjectTaskModel extends Model
 	public function list($project_id, $page, $size)
 	{
 		return $this->where('project_id', $project_id)
+			->orderByDesc('updated_at')
 			->skip($page * $size)
 			->take($size)
 			->get();
@@ -55,7 +56,9 @@ class ProjectTaskModel extends Model
 
 	public function get_tasks($task_ids)
 	{
-		return $this->whereIn('id', $task_ids)->get();
+		return $this->whereIn('id', $task_ids)
+			->orderByDesc('updated_at')
+			->get();
 	}
 
 	public function detail($task_id)
