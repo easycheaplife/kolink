@@ -13,20 +13,20 @@ return new class extends Migration
     {
         Schema::create('project_task', function (Blueprint $table) {
             $table->id();
-            $table->integer('project_id');
-            $table->string('title', 64);
-            $table->string('desc', 64);
-            $table->integer('social_platform_id');
-            $table->integer('kol_max');
-            $table->integer('kol_min_followers');
-            $table->integer('kol_like_min');
-            $table->integer('kol_score_min');
-            $table->integer('start_time');
-            $table->integer('applition_ddl_time');
-            $table->integer('upload_ddl_time');
-            $table->integer('blockchain_id');
-            $table->integer('token_id');
-            $table->integer('reward_min');
+            $table->integer('project_id')->default(0);
+            $table->string('title', 64)->default('');
+            $table->string('desc', 64)->default('');
+            $table->integer('social_platform_id')->default(0);
+            $table->integer('kol_max')->default(0);
+            $table->integer('kol_min_followers')->default(0);
+            $table->integer('kol_like_min')->default(0);
+            $table->integer('kol_score_min')->default(0);
+            $table->integer('start_time')->default(0);
+            $table->integer('applition_ddl_time')->default(0);
+            $table->integer('upload_ddl_time')->default(0);
+            $table->integer('blockchain_id')->default(0);
+            $table->integer('token_id')->default(0);
+            $table->integer('reward_min')->default(0);
             $table->timestamps();
         });
     }

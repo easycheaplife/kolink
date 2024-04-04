@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('project_task_application', function (Blueprint $table) {
             $table->id();
-            $table->integer('task_id');
-            $table->integer('kol_id');
-            $table->float('quotation');
+            $table->integer('task_id')->default(0);
+            $table->integer('kol_id')->default(0);
+            $table->float('quotation')->default(0.0);
             $table->integer('status')->default(0);
             $table->string('reason')->default('');
             $table->string('comment')->default('');

@@ -13,9 +13,9 @@ return new class extends Migration
     {
         Schema::create('project_task_viewer', function (Blueprint $table) {
             $table->id();
-            $table->integer('kol_id');
-            $table->integer('task_id');
-            $table->string('avatar', 64);
+            $table->integer('kol_id')->default(0);
+            $table->integer('task_id')->default(0);
+            $table->string('avatar', 64)->default('');
             $table->timestamps();
 			$table->unique(['kol_id', 'task_id']);
         });

@@ -5,6 +5,9 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\Log;
+use App\Constants\ErrorCodes;
 
 
 class ProjectTaskViewModel extends Model
@@ -21,9 +24,13 @@ class ProjectTaskViewModel extends Model
 			$this->avatar = $avatar;
 			return $this->save();
 		}
-		catch (Exception $e)
+		catch (QueryException $e)
 		{
-			Log::info($e->getMessage());
+			if ($e->errorInfo[1] == ErrorCodes::ERROR_CODE_DUPLICATE_ENTRY)
+			{
+				return true;	
+			}
+			Log::error($e->getMessage());
 		}
 		return false;
 	}

@@ -13,8 +13,10 @@ return new class extends Migration
     {
         Schema::create('verification_code', function (Blueprint $table) {
             $table->id();
-            $table->string('email', 64);
-            $table->integer('code');
+            $table->string('email', 64)->default('');
+            $table->integer('code')->default(0);
+            $table->integer('send_falg')->default(0);
+            $table->integer('try_times')->default(0);
             $table->timestamps();
         });
     }
