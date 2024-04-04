@@ -44,13 +44,13 @@ class MailService extends Service
 		$mail = new PHPMailer(true);
 		try {
 			$mail->isSMTP();
-			$mail->Host = 'smtp.protonmail.com';
+			$mail->Host = env('MAIL_HOST');
 			$mail->SMTPAuth = true;
-			$mail->Username = 'kolnksystem@protonmail.com';
-			$mail->Password = 'F0BYKDqw7';
-			$mail->SMTPSecure = 'tls';
-			$mail->Port = 587;
-			$mail->setFrom('kolinksystem@protonmail.com', 'kolinksystem');
+			$mail->Username = env('MAIL_USERNAME');
+			$mail->Password = env('MAIL_PASSWORD');
+			$mail->SMTPSecure = env('MAIL_ENCRYPTION');
+			$mail->Port = env('MAIL_PORT');
+			$mail->setFrom(env('MAIL_FROM_ADDRESS'));
 			$mail->addAddress($email, 'Dear');
 			$mail->Subject = 'Verification Code';
 			$mail->Body = "Your verification code is $code.";

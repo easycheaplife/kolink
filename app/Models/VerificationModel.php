@@ -45,7 +45,7 @@ class VerificationModel extends Model
 	{
 		return $this->select('id', 'email', 'code', 'try_times')
 			->where('send_flag', 0)
-			->where('try_times', '<=', config('config.mail_try_times'))
+			->where('try_times', '<', config('config.mail_try_times'))
 			->orderBy('created_at', 'asc')
 			->first();	
 	}
@@ -59,6 +59,10 @@ class VerificationModel extends Model
 	public function inc_try_times($id)
 	{
 		$verification_code = $this->find($id);
+		if (empty($verification_code))
+		{
+			return;
+		}
 		$verification_code->try_times += 1;
 		return $verification_code->save();
 	}
