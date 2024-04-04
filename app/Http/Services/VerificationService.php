@@ -20,8 +20,6 @@ class VerificationService extends Service
 			return $this->error_response($email, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
-		$headers = array('From' => env('MAIL_FROM_ADDRESS'));
-		mail($email, 'Verification Code', "$code", $headers);
 		$this->res['data']['code'] = $code;
 		return $this->res;
 	}	
@@ -35,6 +33,24 @@ class VerificationService extends Service
 			return 0;
 		}
 		return $data['code'];
+	}
+
+	public function unsend_code()
+	{
+		$verification_model = new VerificationModel;
+		return $verification_model->unsend_code();	
+	}
+
+	public function update_send_flag($id)
+	{
+		$verification_model = new VerificationModel;
+		return $verification_model->update_send_flag($id);	
+	}
+
+	public function inc_try_times($id)
+	{
+		$verification_model = new VerificationModel;
+		return $verification_model->inc_try_times($id);	
 	}
 
 }

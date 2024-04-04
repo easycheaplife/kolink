@@ -40,4 +40,25 @@ class VerificationModel extends Model
 			->orderByDesc('created_at')
 			->first();	
 	}
+
+	public function unsend_code()
+	{
+		return $this->select('id', 'email', 'code', 'try_times')
+			->where('send_flag', 0)
+			->orderBy('created_at', 'asc')
+			->first();	
+	}
+
+	public function update_send_flag($id)
+	{
+		return $this->where('id', $id)
+			->update(['send_flag' => 1]);
+	}
+
+	public function inc_try_times($id)
+	{
+		$verification_code = $this->find($id);
+		$verification_code->try_times += 1;
+		return $verification_code->save();
+	}
 }

@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('email', 64)->default('');
             $table->integer('code')->default(0);
-            $table->integer('send_falg')->default(0);
+            $table->integer('send_flag')->default(0);
             $table->integer('try_times')->default(0);
             $table->timestamps();
         });

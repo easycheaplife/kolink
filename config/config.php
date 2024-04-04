@@ -41,4 +41,5 @@ return [
 		'Other' => 3
 	),
 	'default_page_size' => 10,
+	'mail_try_times' => 1,
 ];
