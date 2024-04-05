@@ -63,14 +63,14 @@ class KolService extends Service
 		return $this->res;
 	}
 
-	public function kol_task_list($kol_id, $page, $size)
+	public function kol_task_list($kol_id, $status, $page, $size)
 	{
 		$application_service = new ProjectTaskApplicationService;
-		$task_applications = $application_service->kol_task_list($kol_id, $page, $size);	
+		$task_applications = $application_service->kol_task_list($kol_id, $status, $page, $size);	
 		$task_ids = [];
 		foreach ($task_applications as $application)
 		{
-			$task_ids[] = $application['task_id'];	
+			$task_ids[] = $application->task_id;	
 		}
 		$task_service = new ProjectTaskService;
 		$this->res['data']['list'] = $task_service->kol_task_list($task_ids);
@@ -78,10 +78,9 @@ class KolService extends Service
 		{
 			foreach ($task_applications as $application)
 			{
-				Log::info($task);
-				if ($task['id'] == $application['task_id'])
+				if ($task['id'] == $application->task_id)
 				{
-					$this->res['data']['list'][$key]['status'] = $application['status'];
+					$this->res['data']['list'][$key]['status'] = $application->status;
 					break;
 				}
 			}

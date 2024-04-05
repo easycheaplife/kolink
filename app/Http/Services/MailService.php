@@ -30,7 +30,6 @@ class MailService extends Service
 			Log::info("send mail failed!");	
 		}
 		$verification_service->inc_try_times($data['id']);	
-
 	}	
 
 	public function send_mail($email, $code)

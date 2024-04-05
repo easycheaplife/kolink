@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use App\Constants\ErrorCodes;
 
@@ -64,9 +65,24 @@ class ProjectTaskApplicationModel extends Model
 			'status' => $status]);
 	}
 
-	public function kol_task_list($kol_id, $page, $size)
+	public function kol_task_list($kol_id, $status, $page, $size)
 	{
-		return $this->select('task_id', 'status')->where('kol_id', $kol_id)
+		/*
+		return $this->select('task_id', 'status')
+			->where('kol_id', $kol_id)
+			->orderByDesc('updated_at')
+			->skip($page * $size)
+			->take($size)
+			->get();
+
+		 */
+		$query = DB::table($this->table);
+		if (-1 != $status)
+		{
+			$query->where('status', $status);
+		}
+		return $query->select('task_id', 'status')
+			->where('kol_id', $kol_id)
 			->orderByDesc('updated_at')
 			->skip($page * $size)
 			->take($size)
