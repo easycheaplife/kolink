@@ -81,7 +81,7 @@ class ProjectTaskApplicationModel extends Model
 		{
 			$query->where('status', $status);
 		}
-		return $query->select('task_id', 'status')
+		return $query->select('id', 'task_id', 'status')
 			->where('kol_id', $kol_id)
 			->orderByDesc('updated_at')
 			->skip($page * $size)

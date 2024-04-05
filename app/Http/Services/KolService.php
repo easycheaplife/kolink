@@ -81,6 +81,7 @@ class KolService extends Service
 				if ($task['id'] == $application->task_id)
 				{
 					$this->res['data']['list'][$key]['status'] = $application->status;
+					$this->res['data']['list'][$key]['application_id'] = $application->id;
 					break;
 				}
 			}
