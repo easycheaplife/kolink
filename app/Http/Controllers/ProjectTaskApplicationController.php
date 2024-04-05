@@ -142,11 +142,12 @@ class ProjectTaskApplicationController extends Controller
 
 	public function task_application_finish(Request $request)
 	{
+		$comment = $request->input('comment', '');
 		try {
 			$validated_data = $request->validate([
 				'project_id' => 'required|integer',
 				'application_id' => 'required|integer',
-				'comment' => 'required|string'
+				'status' => 'required|integer'
 			]);
 		}
 		catch (ValidationException $e)
@@ -158,7 +159,8 @@ class ProjectTaskApplicationController extends Controller
 		return $service->task_application_finish(
 			$validated_data['project_id'],
 			$validated_data['application_id'],
-			$validated_data['comment']
+			$validated_data['status'],
+			$comment
 		);
 	}
 

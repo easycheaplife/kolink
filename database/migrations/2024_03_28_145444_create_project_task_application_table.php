@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('reason')->default('');
             $table->string('comment')->default('');
             $table->string('verification')->default('');
+            $table->string('url')->default('');
             $table->timestamps();
 			$table->unique(['kol_id', 'task_id']);
         });
