@@ -45,7 +45,7 @@ class KolModel extends Model
 		return false;
 	}
 
-	public function list($region_id, $category_id, $language_id, $channel_id, $page, $size)
+	public function list($region_id, $category_id, $language_id, $channel_id, $sort_type, $page, $size)
 	{
 		$query = DB::table($this->table);
 		if ($region_id != '0') {
@@ -56,6 +56,14 @@ class KolModel extends Model
 		}
 		if ($channel_id != '0') {
 			$query->whereIn('channel_id', explode(",", $channel_id));
+		}
+		if (1 == $sort_type)
+		{
+			$query->orderByDesc('composite_score');	
+		}
+		else if (2 == $sort_type)
+		{
+			$query->orderByDesc('twitter_followers');	
 		}
 		return $query->orderByDesc('updated_at')
 			->skip($page * $size)
