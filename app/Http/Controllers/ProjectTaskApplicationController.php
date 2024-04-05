@@ -124,7 +124,7 @@ class ProjectTaskApplicationController extends Controller
 			$validated_data = $request->validate([
 				'kol_id' => 'required|integer',
 				'application_id' => 'required|integer',
-				'verification' => 'required|integer'
+				'verification' => 'required|string'
 			]);
 		}
 		catch (ValidationException $e)
