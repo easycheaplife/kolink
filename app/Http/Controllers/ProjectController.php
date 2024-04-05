@@ -100,7 +100,6 @@ class ProjectController extends Controller
 
 	public function project_index(Request $request)
 	{
-		$kol_id = $request->input('kol_id', 0);
 		$days = $request->input('days', 0);
 		try {
 			$validated_data = $request->validate([
@@ -112,7 +111,7 @@ class ProjectController extends Controller
 				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
 		}
 		$service = new projectService();
-		return $service->project_index($kol_id,  $days);
+		return $service->project_index($days);
 	}
 
 	public function project_setting(Request $request)

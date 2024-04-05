@@ -102,12 +102,4 @@ class ProjectTaskApplicationModel extends Model
 			->get();
 	}
 
-	public function upcoming_task_list($kol_id)
-	{
-		return $this->where('status', '<', config("config.task_status")['finish'])
-			->where('kol_id', $kol_id)
-			->orderByDesc('updated_at')
-			->get();	
-	}
-
 }

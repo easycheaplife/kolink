@@ -201,10 +201,4 @@ class ProjectTaskApplicationService extends Service
 		return $application_model->list($task_id);	
 	}
 
-	public function upcoming_task_list($kol_id)
-	{
-		$application_model = new ProjectTaskApplicationModel;
-		return $application_model->upcoming_task_list($kol_id);	
-	}
-
 }

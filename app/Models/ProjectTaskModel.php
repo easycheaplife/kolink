@@ -67,6 +67,20 @@ class ProjectTaskModel extends Model
 			->get();
 	}
 
+	public function upcoming_task()
+	{
+		return $this->where('applition_ddl_time', '>=', time())
+			->orderByDesc('updated_at')
+			->get();
+	}
+
+	public function trending_task()
+	{
+		return $this->where('applition_ddl_time', '<', time())
+			->orderByDesc('updated_at')
+			->get();
+	}
+
 	public function detail($task_id)
 	{
 		return $this->where('id', $task_id)->first();

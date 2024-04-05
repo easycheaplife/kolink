@@ -61,4 +61,19 @@ class ProjectTaskService extends Service
 		$tasks = $project_task_model->get_tasks($task_ids);
 		return $tasks;
 	}
+
+	public function upcoming_task()
+	{
+		$project_task_model = new ProjectTaskModel;
+		$tasks = $project_task_model->upcoming_task();
+		return $tasks;
+	}
+
+	public function trending_task()
+	{
+		$project_task_model = new ProjectTaskModel;
+		$tasks = $project_task_model->trending_task();
+		return $tasks;
+	}
+
 }
