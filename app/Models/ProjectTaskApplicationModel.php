@@ -66,7 +66,7 @@ class ProjectTaskApplicationModel extends Model
 
 	public function kol_task_list($kol_id, $page, $size)
 	{
-		return $this->select('task_id')->where('kol_id', $kol_id)
+		return $this->select('task_id', 'status')->where('kol_id', $kol_id)
 			->orderByDesc('updated_at')
 			->skip($page * $size)
 			->take($size)

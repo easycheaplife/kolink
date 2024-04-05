@@ -66,14 +66,26 @@ class KolService extends Service
 	public function kol_task_list($kol_id, $page, $size)
 	{
 		$application_service = new ProjectTaskApplicationService;
-		$tasks = $application_service->kol_task_list($kol_id, $page, $size);	
+		$task_applications = $application_service->kol_task_list($kol_id, $page, $size);	
 		$task_ids = [];
-		foreach ($tasks as $task)
+		foreach ($task_applications as $application)
 		{
-			$task_ids[] = $task['task_id'];	
+			$task_ids[] = $application['task_id'];	
 		}
 		$task_service = new ProjectTaskService;
 		$this->res['data']['list'] = $task_service->kol_task_list($task_ids);
+		foreach ($this->res['data']['list'] as $key => $task) 
+		{
+			foreach ($task_applications as $application)
+			{
+				Log::info($task);
+				if ($task['id'] == $application['task_id'])
+				{
+					$this->res['data']['list'][$key]['status'] = $application['status'];
+					break;
+				}
+			}
+		}
 		$this->res['data']['total'] = $application_service->kol_task_count($kol_id);
 		return $this->res;
 	}
