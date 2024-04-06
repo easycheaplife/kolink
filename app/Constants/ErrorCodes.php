@@ -18,6 +18,7 @@ class ErrorCodes
 	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_UPLOAD = 9;
 	const ERROR_CODE_PROJECT_IS_NOT_YOURS = 10;
 	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_FINISH = 11;
+	const ERROR_CODE_UPLOAD_FILE_IS_NOT_EXIST = 12;
 	
 	const ERROR_CODE_DUPLICATE_ENTRY = 1062;
 }
@@ -36,5 +37,6 @@ class ErrorDescs
 	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_UPLOAD = 'current task application status can not upload!';
 	const ERROR_CODE_PROJECT_IS_NOT_YOURS = 'project is not yours!';
 	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_FINISH = 'current task application status can not finish!';
+	const ERROR_CODE_UPLOAD_FILE_IS_NOT_EXIST = 'file is not exist!';
 }
 
