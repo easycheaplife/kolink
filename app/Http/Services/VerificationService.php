@@ -14,7 +14,7 @@ class VerificationService extends Service
     public function code($email)
 	{
 		$verification_model = new VerificationModel;
-		$code  = str_pad(mt_rand(0, 999999), 6, '0', STR_PAD_LEFT);
+		$code  = str_pad(mt_rand(111111, 999999), 6, '0', STR_PAD_LEFT);
 		if (!$verification_model->insert($email, $code))
 		{
 			return $this->error_response($email, ErrorCodes::ERROR_CODE_DB_ERROR,

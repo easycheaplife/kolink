@@ -122,7 +122,7 @@ class ProjectTaskApplicationService extends Service
 		return $this->res;
 	}
 
-	public function task_application_upload($kol_id, $application_id, $verification)
+	public function task_application_upload($kol_id, $application_id, $verification, $url)
 	{
 		$application_model = new ProjectTaskApplicationModel;
 		$application_detail = $application_model->get($application_id);	
@@ -141,7 +141,7 @@ class ProjectTaskApplicationService extends Service
 			return $this->error_response($application_id, ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_UPLOAD,
 				ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_UPLOAD);		
 		}
-		if (!$application_model->update_verification_and_status($application_id, $verification, config('config.task_status')['upload']))
+		if (!$application_model->update_verification_and_status($application_id, $verification, $url, config('config.task_status')['upload']))
 		{
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
@@ -149,7 +149,7 @@ class ProjectTaskApplicationService extends Service
 		return $this->res;
 	}
 
-	public function task_application_finish($project_id, $application_id, $status, $comment)
+	public function task_application_finish($project_id, $application_id, $status)
 	{
 		if (!in_array($status, [
 			config('config.task_status')['pass'], 
@@ -183,7 +183,7 @@ class ProjectTaskApplicationService extends Service
 			return $this->error_response($application_id, ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_FINISH,
 				ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_FINISH);		
 		}
-		if (!$application_model->update_comment_and_status($application_id, $comment, $status))
+		if (!$application_model->update_comment_and_status($application_id, $status))
 		{
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		

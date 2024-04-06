@@ -124,7 +124,8 @@ class ProjectTaskApplicationController extends Controller
 			$validated_data = $request->validate([
 				'kol_id' => 'required|integer',
 				'application_id' => 'required|integer',
-				'verification' => 'required|string'
+				'verification' => 'required_without:url',
+				'url' => 'required_without:verification'
 			]);
 		}
 		catch (ValidationException $e)
@@ -132,17 +133,19 @@ class ProjectTaskApplicationController extends Controller
 			return $this->error_response($request->ip(),
 				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
 		}
+		$verification = $request->input('verification', '');
+		$url = $request->input('url', '');
 		$service = new ProjectTaskApplicationService();
 		return $service->task_application_upload(
 			$validated_data['kol_id'],
 			$validated_data['application_id'],
-			$validated_data['verification']
+			$verification,
+			$url
 		);
 	}
 
 	public function task_application_finish(Request $request)
 	{
-		$comment = $request->input('comment', '');
 		try {
 			$validated_data = $request->validate([
 				'project_id' => 'required|integer',
@@ -159,8 +162,7 @@ class ProjectTaskApplicationController extends Controller
 		return $service->task_application_finish(
 			$validated_data['project_id'],
 			$validated_data['application_id'],
-			$validated_data['status'],
-			$comment
+			$validated_data['status']
 		);
 	}
 
