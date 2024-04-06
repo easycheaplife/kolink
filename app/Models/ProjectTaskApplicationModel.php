@@ -59,9 +59,10 @@ class ProjectTaskApplicationModel extends Model
 			'status' => $status]);
 	}
 
-	public function update_comment_and_status($application_id, $status)
+	public function update_comment_and_status($application_id, $comment, $status)
 	{
 		return $this->where('id', $application_id)->update([
+			'comment' => $comment,
 			'status' => $status]);
 	}
 

@@ -146,6 +146,7 @@ class ProjectTaskApplicationController extends Controller
 
 	public function task_application_finish(Request $request)
 	{
+		$comment = $request->input('comment', '');
 		try {
 			$validated_data = $request->validate([
 				'project_id' => 'required|integer',
@@ -162,6 +163,7 @@ class ProjectTaskApplicationController extends Controller
 		return $service->task_application_finish(
 			$validated_data['project_id'],
 			$validated_data['application_id'],
+			$comment,
 			$validated_data['status']
 		);
 	}

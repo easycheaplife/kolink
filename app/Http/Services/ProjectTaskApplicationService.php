@@ -149,7 +149,7 @@ class ProjectTaskApplicationService extends Service
 		return $this->res;
 	}
 
-	public function task_application_finish($project_id, $application_id, $status)
+	public function task_application_finish($project_id, $application_id, $comment, $status)
 	{
 		if (!in_array($status, [
 			config('config.task_status')['pass'], 
@@ -183,7 +183,7 @@ class ProjectTaskApplicationService extends Service
 			return $this->error_response($application_id, ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_FINISH,
 				ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_FINISH);		
 		}
-		if (!$application_model->update_comment_and_status($application_id, $status))
+		if (!$application_model->update_comment_and_status($application_id, $comment, $status))
 		{
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
