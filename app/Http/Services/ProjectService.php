@@ -57,13 +57,14 @@ class ProjectService extends Service
 		return $this->res;
 	}
 
-	public function project_index($days)
+	public function project_index($kol_id, $days)
 	{
 		$task_service = new ProjectTaskService;				
 		$this->res['data']['upcoming_task'] = $task_service->upcoming_task();
 		$project_model = new ProjectModel;
 		$this->res['data']['top_project'] = $project_model->top_project();
 		$view_service = new ProjectTaskViewService;
+		$application_service = new ProjectTaskApplicationService;
 		$trending_task = $view_service->trending_task();
 		$task_ids = [];
 		$trending_task_tmp = [];
@@ -74,7 +75,6 @@ class ProjectService extends Service
 				$task_ids[] = $task->task_id;	
 				$trending_task_tmp[$task->task_id] = $task->view_count;
 			}
-			$task_service = new ProjectTaskService;
 			$tasks = $task_service->kol_task_list($task_ids);
 			foreach ($tasks as $task)
 			{
@@ -85,6 +85,18 @@ class ProjectService extends Service
 		else
 		{
 			$this->res['data']['trending_task'] = $task_service->trending_task();		
+		}
+		foreach ($this->res['data']['trending_task'] as $key => $task)
+		{
+			$application = $application_service->kol_task_status($kol_id, $task->id);
+			if (!empty($application))
+			{
+				$this->res['data']['trending_task'][$key]['status'] = $application['status'];
+			}
+			else
+			{
+				$this->res['data']['trending_task'][$key]['status'] = -1;
+			}
 		}
 		return $this->res;
 	}

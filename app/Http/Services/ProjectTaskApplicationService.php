@@ -212,4 +212,10 @@ class ProjectTaskApplicationService extends Service
 		return $application_model->list($task_id);	
 	}
 
+	public function kol_task_status($kol_id, $task_id)
+	{
+		$application_model = new ProjectTaskApplicationModel;
+		return $application_model->kol_task_status($kol_id, $task_id);	
+	}
+
 }

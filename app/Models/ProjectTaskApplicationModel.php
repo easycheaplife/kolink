@@ -110,4 +110,11 @@ class ProjectTaskApplicationModel extends Model
 			->get();
 	}
 
+	public function kol_task_status($kol_id, $task_id)
+	{
+		return $this->where('kol_id', $kol_id)
+			->where('task_id', $task_id)   
+			->first();
+	}
+
 }

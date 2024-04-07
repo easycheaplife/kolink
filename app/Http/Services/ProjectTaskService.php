@@ -10,6 +10,7 @@ use App\Constants\ErrorDescs;
 use App\Models\ProjectTaskModel;
 use App\Http\Services\ProjectTaskService;
 use App\Http\Services\ProjectTaskViewService;
+use App\Http\Services\ProjectApplicationService;
 use App\Http\Services\ProjectService;
 
 
@@ -102,6 +103,7 @@ class ProjectTaskService extends Service
 		$project_task_model = new ProjectTaskModel;
 		$project_service = new ProjectService;
 		$view_service = new ProjectTaskViewService;
+		$application_service = new ProjectTaskApplicationService;
 		if ($task_type == $task_type_all)
 		{
 			$this->res['data']['list'] = $project_task_model->all_task($page, $size);
@@ -122,6 +124,15 @@ class ProjectTaskService extends Service
 			$project_detail = $project_service->project_detail($task->project_id);	
 			$this->res['data']['list'][$key]['project_detail'] = $project_detail['data']; 
 			$this->res['data']['list'][$key]['view_count'] = $view_service->get_task_viewer_count($task->id);
+			$application = $application_service->kol_task_status($kol_id, $task->id);
+			if (!empty($application))
+			{
+				$this->res['data']['list'][$key]['status'] = $application['status'];
+			}
+			else
+			{
+				$this->res['data']['list'][$key]['status'] = -1;
+			}
 		}
 		return $this->res;
 	}
