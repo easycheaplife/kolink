@@ -110,7 +110,7 @@ class ProjectTaskService extends Service
 		else if ($task_type == $task_type_ongoing)
 		{
 			$this->res['data']['list'] = $project_task_model->ongoing_task($page, $size);
-			$this->res['data']['total'] = $project_task_model->oongoing_task_count();
+			$this->res['data']['total'] = $project_task_model->ongoing_task_count();
 		}	
 		else if ($task_type == $task_type_upcoming)
 		{
