@@ -109,7 +109,10 @@ class ProjectTaskApplicationService extends Service
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_PROJECT_IS_NOT_YOURS,
 				ErrorDescs::ERROR_CODE_PROJECT_IS_NOT_YOURS);		
 		}
-		if ($application_detail['status'] != config('config.task_status')['application'])
+		if (!in_array($application_detail['status'], [
+			config('config.task_status')['pengding'], 
+			config('config.task_status')['application']])
+		)
 		{
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_REVIEW,
 				ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_REVIEW);		
