@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('project_id')->default(0);
             $table->string('title', 64)->default('');
-            $table->string('desc', 64)->default('');
+            $table->string('desc', 2048)->default('');
             $table->integer('social_platform_id')->default(0);
             $table->integer('kol_max')->default(0);
             $table->integer('kol_min_followers')->default(0);
