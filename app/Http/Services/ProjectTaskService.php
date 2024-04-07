@@ -68,6 +68,14 @@ class ProjectTaskService extends Service
 	{
 		$project_task_model = new ProjectTaskModel;
 		$tasks = $project_task_model->upcoming_task();
+		$project_service = new ProjectService;
+		$view_service = new ProjectTaskViewService;
+		foreach ($tasks as $key => $task)
+		{
+			$project_detail = $project_service->project_detail($task->project_id);	
+			$tasks[$key]['project_detail'] = $project_detail['data']; 
+			$tasks[$key]['view_count'] = $view_service->get_task_viewer_count($task->id);
+		}
 		return $tasks;
 	}
 
@@ -75,6 +83,14 @@ class ProjectTaskService extends Service
 	{
 		$project_task_model = new ProjectTaskModel;
 		$tasks = $project_task_model->trending_task();
+		$project_service = new ProjectService;
+		$view_service = new ProjectTaskViewService;
+		foreach ($tasks as $key => $task)
+		{
+			$project_detail = $project_service->project_detail($task->project_id);	
+			$tasks[$key]['project_detail'] = $project_detail['data']; 
+			$tasks[$key]['view_count'] = $view_service->get_task_viewer_count($task->id);
+		}
 		return $tasks;
 	}
 
@@ -85,7 +101,7 @@ class ProjectTaskService extends Service
 		$task_type_upcoming = 2;					
 		$project_task_model = new ProjectTaskModel;
 		$project_service = new ProjectService;
-		$project_taks_view_service = new ProjectTaskViewService;
+		$view_service = new ProjectTaskViewService;
 		if ($task_type == $task_type_all)
 		{
 			$this->res['data']['list'] = $project_task_model->all_task($page, $size);
@@ -105,7 +121,7 @@ class ProjectTaskService extends Service
 		{
 			$project_detail = $project_service->project_detail($task->project_id);	
 			$this->res['data']['list'][$key]['project_detail'] = $project_detail['data']; 
-			$this->res['data']['list'][$key]['viewer_count'] = $project_taks_view_service->get_task_viewer_count($task->id);
+			$this->res['data']['list'][$key]['view_count'] = $view_service->get_task_viewer_count($task->id);
 		}
 		return $this->res;
 	}
