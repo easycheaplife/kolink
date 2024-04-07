@@ -8,7 +8,9 @@ use Illuminate\Support\Facades\Log;
 use App\Constants\ErrorCodes;
 use App\Constants\ErrorDescs;
 use App\Models\ProjectTaskModel;
+use App\Http\Services\ProjectTaskService;
 use App\Http\Services\ProjectTaskViewService;
+use App\Http\Services\ProjectService;
 
 
 class ProjectTaskService extends Service 
@@ -74,6 +76,38 @@ class ProjectTaskService extends Service
 		$project_task_model = new ProjectTaskModel;
 		$tasks = $project_task_model->trending_task();
 		return $tasks;
+	}
+
+	public function all_task($kol_id, $task_type, $page, $size)
+	{
+		$task_type_all = 0;					
+		$task_type_ongoing = 1;					
+		$task_type_upcoming = 2;					
+		$project_task_model = new ProjectTaskModel;
+		$project_service = new ProjectService;
+		$project_taks_view_service = new ProjectTaskViewService;
+		if ($task_type == $task_type_all)
+		{
+			$this->res['data']['list'] = $project_task_model->all_task($page, $size);
+			$this->res['data']['total'] = $project_task_model->all_task_count();
+		}
+		else if ($task_type == $task_type_ongoing)
+		{
+			$this->res['data']['list'] = $project_task_model->ongoing_task($page, $size);
+			$this->res['data']['total'] = $project_task_model->oongoing_task_count();
+		}	
+		else if ($task_type == $task_type_upcoming)
+		{
+			$this->res['data']['list'] = $project_task_model->upcoming_task($page, $size);
+			$this->res['data']['total'] = $project_task_model->upcoming_task_count();
+		}
+		foreach ($this->res['data']['list'] as $key => $task)
+		{
+			$project_detail = $project_service->project_detail($task->project_id);	
+			$this->res['data']['list'][$key]['project_detail'] = $project_detail['data']; 
+			$this->res['data']['list'][$key]['viewer_count'] = $project_taks_view_service->get_task_viewer_count($task->id);
+		}
+		return $this->res;
 	}
 
 }

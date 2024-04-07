@@ -93,4 +93,29 @@ class ProjectTaskController extends Controller
 			$validated_data['task_id']
 		);
 	}
+
+	public function task_all(Request $request)
+	{
+		$page = $request->input('page', 0);
+		$size = $request->input('size', config('config.default_page_size'));
+		$task_type = $request->input('task_type', 0);
+		$kol_id = $request->input('kol_id', 0);
+		try {
+			$validated_data = $request->validate([
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new ProjectTaskService();
+		return $service->all_task(
+			$kol_id,
+			$task_type,
+			$page,
+			$size
+		);
+	}
+
 }

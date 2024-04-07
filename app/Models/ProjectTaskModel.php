@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\Log;
 use App\Constants\ErrorCodes;
@@ -69,14 +70,20 @@ class ProjectTaskModel extends Model
 
 	public function upcoming_task()
 	{
-		return $this->where('applition_ddl_time', '>=', time())
+		return $this->where('start_time', '>=', time())
 			->orderByDesc('updated_at')
 			->get();
 	}
 
+	public function upcoming_task_count()
+	{
+		return $this->where('start_time', '>=', time())
+			->count();
+	}
+
 	public function trending_task()
 	{
-		return $this->where('applition_ddl_time', '<', time())
+		return $this->where('start_time', '<', time())
 			->orderByDesc('updated_at')
 			->get();
 	}
@@ -84,6 +91,37 @@ class ProjectTaskModel extends Model
 	public function detail($task_id)
 	{
 		return $this->where('id', $task_id)->first();
+	}
+
+	public function ongoing_task($page, $size)
+	{
+		return $this->where('start_time', '>=', time())
+			->where('upload_ddl_time', '>', time())
+			->orderByDesc('updated_at')
+			->skip($page * $size)
+			->take($size)
+			->get();
+	}
+
+	public function ongoing_task_count()
+	{
+		return $this->where('start_time', '>=', time())
+			->where('upload_ddl_time', '>', time())
+			->orderByDesc('updated_at')
+			->count();
+	}
+
+	public function all_task($page, $size)
+	{
+		return $this->orderByDesc('updated_at')
+			->skip($page * $size)
+			->take($size)
+			->get();
+	}
+
+	public function all_task_count()
+	{
+		return DB::table($this->table)->count();
 	}
 
 }

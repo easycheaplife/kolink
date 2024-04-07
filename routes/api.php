@@ -62,6 +62,9 @@ Route::post('/project/task/new', [ProjectTaskController::class, 'task_new']);
 Route::get('/project/task/list', [ProjectTaskController::class, 'task_list']);
 Route::post('/project/task/list', [ProjectTaskController::class, 'task_list']);
 
+Route::get('/task/all', [ProjectTaskController::class, 'task_all']);
+Route::post('/task/all', [ProjectTaskController::class, 'task_all']);
+
 Route::get('/project/task/detail', [ProjectTaskController::class, 'task_detail']);
 Route::post('/project/task/detail', [ProjectTaskController::class, 'task_detail']);
 
