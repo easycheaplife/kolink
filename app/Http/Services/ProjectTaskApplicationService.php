@@ -79,7 +79,7 @@ class ProjectTaskApplicationService extends Service
 		return $this->res;
 	}
 
-	public function task_application_review($project_id, $application_id, $status)
+	public function task_application_review($project_id, $application_id, $status, $web3_hash)
 	{
 		if (!in_array($status, [
 			config('config.task_status')['pengding'], 
@@ -114,7 +114,7 @@ class ProjectTaskApplicationService extends Service
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_REVIEW,
 				ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_REVIEW);		
 		}
-		if (!$application_model->update_status($application_id, $status))
+		if (!$application_model->update_web3_hash_and_status($application_id, $web3_hash, $status))
 		{
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		

@@ -17,10 +17,11 @@ return new class extends Migration
             $table->integer('kol_id')->default(0);
             $table->float('quotation')->default(0.0);
             $table->integer('status')->default(0);
-            $table->string('reason')->default('');
-            $table->string('comment')->default('');
-            $table->string('verification')->default('');
-            $table->string('url')->default('');
+            $table->string('reason', 128)->default('');
+            $table->string('comment', 128)->default('');
+            $table->string('verification', 128)->default('');
+            $table->string('url', 128)->default('');
+            $table->string('web3_hash', 128)->default('');
             $table->timestamps();
 			$table->unique(['kol_id', 'task_id']);
         });

@@ -66,6 +66,13 @@ class ProjectTaskApplicationModel extends Model
 			'status' => $status]);
 	}
 
+	public function update_web3_hash_and_status($application_id, $web3_hash, $status)
+	{
+		return $this->where('id', $application_id)->update([
+			'web3_hash' => $web3_hash,
+			'status' => $status]);
+	}
+
 	public function kol_task_list($kol_id, $status, $page, $size)
 	{
 		/*

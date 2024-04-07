@@ -98,6 +98,7 @@ class ProjectTaskApplicationController extends Controller
 
 	public function task_application_review(Request $request)
 	{
+		$web3_hash = $request->input('web3_hash','');
 		try {
 			$validated_data = $request->validate([
 				'project_id' => 'required|integer',
@@ -114,7 +115,8 @@ class ProjectTaskApplicationController extends Controller
 		return $service->task_application_review(
 			$validated_data['project_id'],
 			$validated_data['application_id'],
-			$validated_data['status']
+			$validated_data['status'],
+			$web3_hash
 		);
 	}
 

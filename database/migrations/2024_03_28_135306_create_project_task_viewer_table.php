@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('kol_id')->default(0);
             $table->integer('task_id')->default(0);
-            $table->string('avatar', 64)->default('');
+            $table->string('avatar', 128)->default('');
             $table->timestamps();
 			$table->unique(['kol_id', 'task_id']);
         });

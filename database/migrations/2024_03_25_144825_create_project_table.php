@@ -14,8 +14,8 @@ return new class extends Migration
         Schema::create('project', function (Blueprint $table) {
             $table->id();
             $table->string('token', 64)->default('');
-            $table->string('email', 64)->default('')->unique('unique_email');
-            $table->string('logo', 64)->default('');
+            $table->string('email', 128)->default('')->unique('unique_email');
+            $table->string('logo', 128)->default('');
             $table->string('twitter_user_name', 64)->default('');
             $table->string('name', 64)->default('');
             $table->string('desc', 64)->default('');
