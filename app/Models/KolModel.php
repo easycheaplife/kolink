@@ -16,7 +16,7 @@ class KolModel extends Model
 
 	protected $table = 'kol';
 
-	public function insert($token, $email, $twitter_user_name, $twitter_avatar,  $twitter_followers, 
+	public function insert($token, $email, $twitter_user_name, $twitter_avatar, $twitter_followers, 
 		$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id, &$last_insert_id)
 	{
 		try {
@@ -94,6 +94,20 @@ class KolModel extends Model
 	public function login($token)
 	{
 		return $this->where('token', $token)->first();
+	}
+
+	public function setting($kol_id, $email, $twitter_user_name, $twitter_avatar, $twitter_followers, 
+		$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id)
+	{
+		return $this->where('id', $kol_id)->update([
+			'email' => $email, 
+			'twitter_user_name' => $twitter_user_name, 
+			'twitter_avatar' => $twitter_avatar, 
+			'twitter_subscriptions' => $twitter_subscriptions, 
+			'region_id' => $region_id, 
+			'category_id' => $category_id, 
+			'language_id' => $language_id, 
+			'channel_id' => $channel_id]);
 	}
 
 }

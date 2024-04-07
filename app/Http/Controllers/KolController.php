@@ -130,4 +130,40 @@ class KolController extends Controller
 		);
 	}
 
+	public function kol_setting(Request $request)
+	{
+		$channel_id = $request->input('channel_id', 0);
+		try {
+			$validated_data = $request->validate([
+				'kol_id' => 'required|integer',
+				'email' => 'required|email',
+				'twitter_user_name' => 'required|string',
+				'twitter_avatar' => 'required|string',
+				'twitter_followers' => 'required|integer',
+				'twitter_subscriptions' => 'required|integer',
+				'region_id' => 'required|integer',
+				'category_id' => 'required|string',
+				'language_id' => 'required|integer'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new KolService();
+		return $service->kol_setting(
+			$validated_data['kol_id'],
+			$validated_data['email'],
+			$validated_data['twitter_user_name'],
+			$validated_data['twitter_avatar'],
+			$validated_data['twitter_followers'],
+			$validated_data['twitter_subscriptions'],
+			$validated_data['region_id'],
+			$validated_data['category_id'],
+			$validated_data['language_id'],
+			$channel_id);
+	}
+
+
 }

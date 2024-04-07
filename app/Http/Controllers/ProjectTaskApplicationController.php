@@ -12,12 +12,12 @@ class ProjectTaskApplicationController extends Controller
 {
 	public function task_application_new(Request $request)
 	{
+		$reason = $request->input('reason', '');
 		try {
 			$validated_data = $request->validate([
 				'kol_id' => 'required|integer',
 				'task_id' => 'required|integer',
-				'quotation' => 'required|integer',
-				'reason' => 'required|string'
+				'quotation' => 'required|integer'
 			]);
 		}
 		catch (ValidationException $e)
@@ -30,7 +30,7 @@ class ProjectTaskApplicationController extends Controller
 			$validated_data['kol_id'],
 			$validated_data['task_id'],
 			$validated_data['quotation'],
-			$validated_data['reason']
+			$reason
 		);
 	}
 
@@ -74,12 +74,12 @@ class ProjectTaskApplicationController extends Controller
 
 	public function task_application_edit(Request $request)
 	{
+		$reason = $request->input('reason', '');
 		try {
 			$validated_data = $request->validate([
 				'kol_id' => 'required|integer',
 				'application_id' => 'required|integer',
-				'quotation' => 'required|integer',
-				'reason' => 'required|string'
+				'quotation' => 'required|integer'
 			]);
 		}
 		catch (ValidationException $e)
@@ -92,7 +92,7 @@ class ProjectTaskApplicationController extends Controller
 			$validated_data['kol_id'],
 			$validated_data['application_id'],
 			$validated_data['quotation'],
-			$validated_data['reason']
+			$reason
 		);
 	}
 

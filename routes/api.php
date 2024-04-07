@@ -68,6 +68,10 @@ Route::post('/task/all', [ProjectTaskController::class, 'task_all']);
 Route::get('/project/task/detail', [ProjectTaskController::class, 'task_detail']);
 Route::post('/project/task/detail', [ProjectTaskController::class, 'task_detail']);
 
+Route::get('/project/task/setting', [ProjectTaskController::class, 'task_setting']);
+Route::post('/project/task/setting', [ProjectTaskController::class, 'task_setting']);
+
+
 Route::get('/project/task/view', [ProjectTaskViewController::class, 'task_view']);
 Route::post('/project/task/view', [ProjectTaskViewController::class, 'task_view']);
 
@@ -97,6 +101,9 @@ Route::post('/kol/new', [KolController::class, 'kol_new']);
 
 Route::get('/kol/detail', [KolController::class, 'kol_detail']);
 Route::post('/kol/detail', [KolController::class, 'kol_detail']);
+
+Route::get('/kol/setting', [KolController::class, 'kol_setting']);
+Route::post('/kol/setting', [KolController::class, 'kol_setting']);
 
 Route::get('/kol/login', [KolController::class, 'login']);
 Route::post('/kol/login', [KolController::class, 'login']);

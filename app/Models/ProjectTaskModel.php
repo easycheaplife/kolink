@@ -95,8 +95,8 @@ class ProjectTaskModel extends Model
 
 	public function ongoing_task($page, $size)
 	{
-		return $this->where('start_time', '>=', time())
-			->where('upload_ddl_time', '>', time())
+		return $this->where('start_time', '<=', time())
+			->where('upload_ddl_time', '>=', time())
 			->orderByDesc('updated_at')
 			->skip($page * $size)
 			->take($size)
@@ -123,5 +123,27 @@ class ProjectTaskModel extends Model
 	{
 		return DB::table($this->table)->count();
 	}
+
+	public function setting($task_id, $title, $desc, $social_platform_id, $kol_max, $kol_min_followers,
+		$kol_like_min, $kol_score_min, $start_time, $applition_ddl_time, $upload_ddl_time, $blockchain_id,
+		$token_id, $reward_min)
+	{
+		return $this->where('id', $task_id)->update([
+			'title' => $title, 
+			'desc' => $desc, 
+			'social_platform_id' => $social_platform_id, 
+			'kol_max' => $kol_max, 
+			'kol_min_followers' => $kol_min_followers, 
+			'kol_like_min' => $kol_like_min, 
+			'kol_score_min' => $kol_score_min, 
+			'start_time' => $start_time, 
+			'applition_ddl_time' => $applition_ddl_time, 
+			'upload_ddl_time' => $upload_ddl_time, 
+			'blockchain_id' => $blockchain_id, 
+			'token_id' => $token_id, 
+			'reward_min' => $reward_min]); 
+
+	}
+
 
 }

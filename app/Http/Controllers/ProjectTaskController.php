@@ -118,4 +118,48 @@ class ProjectTaskController extends Controller
 		);
 	}
 
+	public function task_setting(Request $request)
+	{
+		$kol_max = $request->input('kol_max', 0);
+		$kol_min_followers = $request->input('kol_min_followers', 0);
+		$kol_like_min = $request->input('kol_like_min', 0);
+		$kol_score_min = $request->input('kol_score_min', 0);
+		$applition_ddl_time = $request->input('applition_ddl_time', 0);
+		try {
+			$validated_data = $request->validate([
+				'task_id' => 'required|integer',
+				'title' => 'required|string',
+				'desc' => 'required|string',
+				'social_platform_id' => 'required|integer',
+				'start_time' => 'required|integer',
+				'upload_ddl_time' => 'required|integer',
+				'blockchain_id' => 'required|integer',
+				'token_id' => 'required|integer',
+				'reward_min' => 'required|integer'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new ProjectTaskService();
+		return $service->task_setting(
+			$validated_data['task_id'],
+			$validated_data['title'],
+			$validated_data['desc'],
+			$validated_data['social_platform_id'],
+			$kol_max,
+			$kol_min_followers,
+			$kol_like_min,
+			$kol_score_min,
+			$validated_data['start_time'],
+			$applition_ddl_time,
+			$validated_data['upload_ddl_time'],
+			$validated_data['blockchain_id'],
+			$validated_data['token_id'],
+			$validated_data['reward_min']
+		);
+	}
+
 }
