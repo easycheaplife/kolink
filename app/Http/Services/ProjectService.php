@@ -45,7 +45,14 @@ class ProjectService extends Service
     public function login($token)
 	{
 		$project_model = new ProjectModel;
-		$this->res['data'] = $project_model->login($token);
+		$data = $project_model->login($token);
+		if (empty($data))
+		{
+			$this->res['data'] = array();
+		}
+		else{
+			$this->res['data'] = $data;
+		}
 		return $this->res;
 	}
 
