@@ -12,6 +12,7 @@ use App\Http\Services\ProjectTaskService;
 use App\Http\Services\ProjectTaskViewService;
 use App\Http\Services\ProjectApplicationService;
 use App\Http\Services\ProjectService;
+use App\Http\Services\KolService;
 
 
 class ProjectTaskService extends Service 
@@ -53,6 +54,19 @@ class ProjectTaskService extends Service
 
 		$task_application_service = new ProjectTaskApplicationService;
 		$task['application'] = $task_application_service->task_list($task['id']);
+
+		$kol_service = new KolService;
+		foreach($task['application'] as $key => $application)
+		{
+			$kol_detail = $kol_service->kol_detail($application->kol_id);
+			if (!empty($kol_detail))
+			{
+				$task['application'][$key]['kol_detail'] = $kol_detail['data'];
+			}
+			else{
+				$task['application'][$key]['kol_detail'] = array();
+			}
+		}
 
 		$this->res['data'] = $task;
 		return $this->res;
