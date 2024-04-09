@@ -54,6 +54,7 @@ class KolController extends Controller
 		$page = $request->input('page', 0);
 		$size = $request->input('size', config('config.default_page_size'));
 		$sort_type = $request->input('sort_type', 0);
+		$sort_field = $request->input('sort_field', 0);
 		$region_id = $request->input('region_id', '0');
 		$category_id = $request->input('category_id', '0');
 		$language_id = $request->input('language_id', '0');
@@ -65,6 +66,7 @@ class KolController extends Controller
 			$language_id,
 			$channel_id,
 			$sort_type,
+			$sort_field,
 			$page,
 			$size
 		);

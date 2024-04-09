@@ -49,6 +49,7 @@ class ProjectTaskModel extends Model
 	public function list($project_id, $page, $size)
 	{
 		return $this->where('project_id', $project_id)
+			->where('close', '!=', 1)
 			->orderByDesc('updated_at')
 			->skip($page * $size)
 			->take($size)
@@ -58,6 +59,7 @@ class ProjectTaskModel extends Model
 	public function count($project_id)
 	{
 		return $this->where('project_id', $project_id)
+			->where('close', '!=', 1)
 			->count();
 	}
 
@@ -71,6 +73,7 @@ class ProjectTaskModel extends Model
 	public function upcoming_task()
 	{
 		return $this->where('start_time', '>=', time())
+			->where('close', '!=', 1)
 			->orderByDesc('updated_at')
 			->get();
 	}
@@ -78,12 +81,14 @@ class ProjectTaskModel extends Model
 	public function upcoming_task_count()
 	{
 		return $this->where('start_time', '>=', time())
+			->where('close', '!=', 1)
 			->count();
 	}
 
 	public function trending_task()
 	{
 		return $this->where('start_time', '<', time())
+			->where('close', '!=', 1)
 			->orderByDesc('updated_at')
 			->get();
 	}
@@ -97,6 +102,7 @@ class ProjectTaskModel extends Model
 	{
 		return $this->where('start_time', '<=', time())
 			->where('upload_ddl_time', '>=', time())
+			->where('close', '!=', 1)
 			->orderByDesc('updated_at')
 			->skip($page * $size)
 			->take($size)
@@ -107,13 +113,15 @@ class ProjectTaskModel extends Model
 	{
 		return $this->where('start_time', '>=', time())
 			->where('upload_ddl_time', '>', time())
+			->where('close', '!=', 1)
 			->orderByDesc('updated_at')
 			->count();
 	}
 
 	public function all_task($page, $size)
 	{
-		return $this->orderByDesc('updated_at')
+		return $this->where('close', '!=', 1)
+			->orderByDesc('updated_at')
 			->skip($page * $size)
 			->take($size)
 			->get();
@@ -121,7 +129,7 @@ class ProjectTaskModel extends Model
 
 	public function all_task_count()
 	{
-		return DB::table($this->table)->count();
+		return DB::table($this->table)->where('close', '!=', 1) ->count();
 	}
 
 	public function setting($task_id, $title, $desc, $social_platform_id, $kol_max, $kol_min_followers,
