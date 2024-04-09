@@ -27,6 +27,7 @@ return new class extends Migration
             $table->integer('blockchain_id')->default(0);
             $table->integer('token_id')->default(0);
             $table->integer('reward_min')->default(0);
+            $table->integer('close')->default(0);
             $table->timestamps();
         });
     }

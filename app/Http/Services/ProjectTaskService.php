@@ -170,6 +170,22 @@ class ProjectTaskService extends Service
 		return $this->res;
 	}	
 
-
+	public function task_close($project_id, $task_id)
+	{
+		$application_service = new ProjectTaskApplicationService;
+		if ($application_service->task_in_progross($task_id))
+		{
+			return $this->error_response($project_id, ErrorCodes::ERROR_CODE_TASK_IS_IN_PROGRESS,
+				ErrorDescs::ERROR_CODE_TASK_IS_IN_PROGRESS);		
+		}
+		$project_task_model = new ProjectTaskModel;
+		if (!$project_task_model->close($project_id, $task_id))
+		{
+			return $this->error_response($project_id, ErrorCodes::ERROR_CODE_DB_ERROR,
+				ErrorDescs::ERROR_CODE_DB_ERROR);		
+		}
+		$application_service->task_close($task_id);
+		return $this->res;
+	}
 
 }

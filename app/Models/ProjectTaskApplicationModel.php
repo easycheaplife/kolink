@@ -117,4 +117,16 @@ class ProjectTaskApplicationModel extends Model
 			->first();
 	}
 
+	public function task_close($task_id)
+	{
+		return $this->where('task_id', $task_id)->update([
+			'status' => config('config.task_status')['close']]);
+	}
+
+	public function task_in_progross($task_id)
+	{
+		return $this->where('task_id', $task_id)   
+			->count();
+	}
+
 }

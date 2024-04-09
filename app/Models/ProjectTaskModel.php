@@ -145,5 +145,11 @@ class ProjectTaskModel extends Model
 
 	}
 
+	public function close($project_id, $task_id)
+	{
+		return $this->where('id', $task_id)
+			->where('project_id', $project_id)
+			->update(['close' => 1]);
+	}
 
 }

@@ -9,7 +9,8 @@ return [
 		'accept' => 4,
 		'upload' => 5,
 		'fail' => 6,
-		'pass' => 7
+		'finish' => 7,
+		'close' => 8
 	),
 	'category_list' => array(
 		'All' => 0,

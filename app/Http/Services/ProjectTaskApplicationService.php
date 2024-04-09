@@ -155,7 +155,7 @@ class ProjectTaskApplicationService extends Service
 	public function task_application_finish($project_id, $application_id, $comment, $status)
 	{
 		if (!in_array($status, [
-			config('config.task_status')['pass'], 
+			config('config.task_status')['finish'], 
 			config('config.task_status')['fail']])
 		)
 		{
@@ -216,6 +216,18 @@ class ProjectTaskApplicationService extends Service
 	{
 		$application_model = new ProjectTaskApplicationModel;
 		return $application_model->kol_task_status($kol_id, $task_id);	
+	}
+
+	public function task_close($task_id)
+	{
+		$application_model = new ProjectTaskApplicationModel;
+		return $application_model->task_close($task_id);	
+	}
+
+	public function task_in_progross($task_id)
+	{
+		$application_model = new ProjectTaskApplicationModel;
+		return $application_model->task_in_progross($task_id);	
 	}
 
 }

@@ -22,13 +22,13 @@ class ProjectTaskViewService extends Service
 		{
 			if ($project_id != $task_detail['data']['project_id'])
 			{
-				return $this->error_response($kol_id, ErrorCodes::ERROR_CODE_TAKS_NOT_BELONG_TO_PROJECT,
-					ErrorDescs::ERROR_CODE_TAKS_NOT_BELONG_TO_PROJECT);		
+				return $this->error_response($kol_id, ErrorCodes::ERROR_CODE_TASK_NOT_BELONG_TO_PROJECT,
+					ErrorDescs::ERROR_CODE_TASK_NOT_BELONG_TO_PROJECT);		
 			}
 		}
 		else {
-			return $this->error_response($kol_id, ErrorCodes::ERROR_CODE_TAKS_NOT_BELONG_TO_PROJECT,
-				ErrorDescs::ERROR_CODE_TAKS_NOT_BELONG_TO_PROJECT);		
+			return $this->error_response($kol_id, ErrorCodes::ERROR_CODE_TASK_NOT_BELONG_TO_PROJECT,
+				ErrorDescs::ERROR_CODE_TASK_NOT_BELONG_TO_PROJECT);		
 		}
 		$view_model = new ProjectTaskViewModel;
 		if (!$view_model->insert($kol_id, $project_id, $task_id, $avatar))

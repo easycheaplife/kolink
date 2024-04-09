@@ -71,6 +71,8 @@ Route::post('/project/task/detail', [ProjectTaskController::class, 'task_detail'
 Route::get('/project/task/setting', [ProjectTaskController::class, 'task_setting']);
 Route::post('/project/task/setting', [ProjectTaskController::class, 'task_setting']);
 
+Route::get('/project/task/close', [ProjectTaskController::class, 'task_close']);
+Route::post('/project/task/close', [ProjectTaskController::class, 'task_close']);
 
 Route::get('/project/task/view', [ProjectTaskViewController::class, 'task_view']);
 Route::post('/project/task/view', [ProjectTaskViewController::class, 'task_view']);

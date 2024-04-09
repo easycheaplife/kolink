@@ -162,4 +162,24 @@ class ProjectTaskController extends Controller
 		);
 	}
 
+	public function task_close(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'project_id' => 'required|integer',
+				'task_id' => 'required|integer'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new ProjectTaskService();
+		return $service->task_close(
+			$validated_data['project_id'],
+			$validated_data['task_id']
+		);
+	}
+
 }
