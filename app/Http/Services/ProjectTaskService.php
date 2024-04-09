@@ -48,6 +48,10 @@ class ProjectTaskService extends Service
 	{
 		$project_task_model = new ProjectTaskModel;
 		$task = $project_task_model->detail($task_id);
+		if (empty($task))
+		{
+			return $this->res;
+		}
 
 		$task_view_service = new ProjectTaskViewService;
 		$task['viewer'] = $task_view_service->get_task_viewer($task['id']);

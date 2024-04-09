@@ -71,6 +71,10 @@ class ProjectService extends Service
 		$project_model = new ProjectModel;
 		$this->res['data']['top_project'] = $project_model->top_project();
 		$view_service = new ProjectTaskViewService;
+		foreach ($this->res['data']['top_project'] as $key => $project)
+		{
+			$this->res['data']['top_project'][$key]['view_count'] = $view_service->get_project_viewer_count($project['id']);	
+		}
 		$application_service = new ProjectTaskApplicationService;
 		$trending_task = $view_service->trending_task();
 		$task_ids = [];
@@ -99,10 +103,12 @@ class ProjectService extends Service
 			if (!empty($application))
 			{
 				$this->res['data']['trending_task'][$key]['status'] = $application['status'];
+				$this->res['data']['trending_task'][$key]['application'] = $application;
 			}
 			else
 			{
 				$this->res['data']['trending_task'][$key]['status'] = -1;
+				$this->res['data']['trending_task'][$key]['application'] = array();
 			}
 		}
 		return $this->res;

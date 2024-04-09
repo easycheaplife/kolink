@@ -16,10 +16,11 @@ class ProjectTaskViewModel extends Model
 
 	protected $table = 'project_task_viewer';
 
-	public function insert($kol_id, $task_id, $avatar)
+	public function insert($kol_id, $project_id, $task_id, $avatar)
 	{
 		try {
 			$this->kol_id = $kol_id;
+			$this->project_id = $project_id;
 			$this->task_id = $task_id;
 			$this->avatar = $avatar;
 			return $this->save();
@@ -40,9 +41,14 @@ class ProjectTaskViewModel extends Model
 		return $this->where('task_id', $task_id)->get();
 	}
 
-	public function get_count($task_id)
+	public function get_task_count($task_id)
 	{
 		return $this->where('task_id', $task_id)->count();
+	}
+
+	public function get_project_count($project_id)
+	{
+		return $this->where('project_id', $project_id)->count();
 	}
 
 	public function trending_task()

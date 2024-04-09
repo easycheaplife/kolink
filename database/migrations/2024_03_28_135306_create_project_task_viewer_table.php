@@ -14,10 +14,11 @@ return new class extends Migration
         Schema::create('project_task_viewer', function (Blueprint $table) {
             $table->id();
             $table->integer('kol_id')->default(0);
+            $table->integer('project_id')->default(0);
             $table->integer('task_id')->default(0);
             $table->string('avatar', 128)->default('');
             $table->timestamps();
-			$table->unique(['kol_id', 'task_id']);
+			$table->unique(['kol_id', 'project_id', 'task_id']);
         });
     }
 

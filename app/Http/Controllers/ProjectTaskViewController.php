@@ -14,6 +14,7 @@ class ProjectTaskViewController extends Controller
 		try {
 			$validated_data = $request->validate([
 				'kol_id' => 'required|integer',
+				'project_id' => 'required|integer',
 				'task_id' => 'required|integer',
 				'avatar' => 'required|string'
 			]);
@@ -26,6 +27,7 @@ class ProjectTaskViewController extends Controller
 		$service = new ProjectTaskViewService();
 		return $service->task_view(
 			$validated_data['kol_id'],
+			$validated_data['project_id'],
 			$validated_data['task_id'],
 			$validated_data['avatar']
 		);
