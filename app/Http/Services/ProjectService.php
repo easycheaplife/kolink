@@ -119,7 +119,7 @@ class ProjectService extends Service
 		$project_model = new ProjectModel;
 		if (!$project_model->setting($project_id, $name, $desc, $logo, $email))
 		{
-			return $this->error_response($token, ErrorCodes::ERROR_CODE_DB_ERROR,
+			return $this->error_response($project_id, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
 		return $this->res;

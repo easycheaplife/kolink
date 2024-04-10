@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('token', 64)->default('')->unique('unique_token');
             $table->string('email', 128)->default('');
             $table->string('twitter_user_name', 64)->default('');
-            $table->string('twitter_avatar', 128)->default('');
+            $table->string('twitter_avatar', 512)->default('');
             $table->integer('twitter_followers')->default(0);
             $table->integer('twitter_subscriptions')->default(0);
             $table->integer('region_id')->default(0)->default(0);

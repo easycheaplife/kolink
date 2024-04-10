@@ -33,7 +33,7 @@ class ProjectTaskViewService extends Service
 		$view_model = new ProjectTaskViewModel;
 		if (!$view_model->insert($kol_id, $project_id, $task_id, $avatar))
 		{
-			return $this->error_response($token, ErrorCodes::ERROR_CODE_DB_ERROR,
+			return $this->error_response($kol_id, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
 		return $this->res;
