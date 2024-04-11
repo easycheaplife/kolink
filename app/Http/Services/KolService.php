@@ -91,7 +91,7 @@ class KolService extends Service
 				}
 			}
 		}
-		$this->res['data']['total'] = $application_service->kol_task_count($kol_id);
+		$this->res['data']['total'] = $application_service->kol_task_list_count($kol_id, $status);
 		return $this->res;
 	}
 

@@ -200,6 +200,12 @@ class ProjectTaskApplicationService extends Service
 		return $application_model->kol_task_list($kol_id, $status, $page, $size);	
 	}
 
+	public function kol_task_list_count($kol_id, $status)
+	{
+		$application_model = new ProjectTaskApplicationModel;
+		return $application_model->kol_task_list_count($kol_id, $status);	
+	}
+
 	public function kol_task_count($kol_id)
 	{
 		$application_model = new ProjectTaskApplicationModel;

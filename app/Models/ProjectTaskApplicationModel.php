@@ -97,6 +97,18 @@ class ProjectTaskApplicationModel extends Model
 			->get();
 	}
 
+	public function kol_task_list_count($kol_id, $status)
+	{
+		$query = DB::table($this->table);
+		if (-1 != $status)
+		{
+			$query->where('status', $status);
+		}
+		return $query->select('id')
+			->where('kol_id', $kol_id)
+			->count();
+	}
+
 	public function kol_task_count($kol_id)
 	{
 		return $this->where('kol_id', $kol_id)

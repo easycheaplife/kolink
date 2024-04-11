@@ -110,6 +110,7 @@ class ProjectService extends Service
 				$this->res['data']['trending_task'][$key]['status'] = -1;
 				$this->res['data']['trending_task'][$key]['application'] = array();
 			}
+			$this->res['data']['trending_task'][$key]['project_detail'] = $project_model->get($task->project_id);
 		}
 		return $this->res;
 	}

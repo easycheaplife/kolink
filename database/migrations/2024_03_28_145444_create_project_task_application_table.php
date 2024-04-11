@@ -23,7 +23,6 @@ return new class extends Migration
             $table->string('url', 128)->default('');
             $table->string('web3_hash', 128)->default('');
             $table->timestamps();
-			$table->unique(['kol_id', 'task_id']);
         });
     }
 
