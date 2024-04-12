@@ -3,10 +3,12 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
 	"log"
 	"math/big"
 	"strings"
-
+	_ "github.com/go-sql-driver/mysql"
+	"database/sql"
 	"github.com/ethereum/go-ethereum"
 	"github.com/ethereum/go-ethereum/accounts/abi"
 	"github.com/ethereum/go-ethereum/common"
@@ -22,6 +24,21 @@ func GetLatestBlock(client *ethclient.Client) (*big.Int, error) {
 
 	latestBlockNumber := header.Number
 	return latestBlockNumber, nil
+}
+
+func InsertEvent(db* sql.DB, index_code string, event_type int, block_number uint64, 
+	from_address string, to_address string, token string, amt int64, created_time uint64) (error) {
+	stmt, err := db.Prepare("INSERT INTO event (index_code, event_type, block_number, from_address, to_address, amt, created_time) VALUES (?, ?, ?, ?, ?, ?, ?)")		
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	_, err = stmt.Exec(index_code, event_type, block_number, from_address, to_address, amt, created_time)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("insert success! block_number：", block_number)
+	return nil
 }
 
 func main() {
@@ -586,8 +603,43 @@ func main() {
 			  "type": "receive"
 		  }]`
 
+/*
+	cfg := mysql.Config{
+		User:   "root",
+		Passwd: "F0BYKDqw7",
+		Net:    "tcp",
+		Addr:   "192.168.0.194:3306",
+		DBName: "kolink",
+	}
+	var db *sql.DB
+	db, err := sql.Open("mysql", cfg.FormatDSN())
+*/
+	db, err := sql.Open("mysql", "root:F0BYKDqw7@tcp(192.168.0.194:3306)/kolink?parseTime=true&loc=Local")
+	if err != nil {
+		log.Fatal(err)
+	}
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+	fmt.Println("mysql connected!")
+	rows, _ := db.Query("SELECT last_block_number FROM event_base")
+	defer rows.Close()
+	var last_block_number int
+	for rows.Next() {
+		if err := rows.Scan(&last_block_number); err != nil {
+			fmt.Errorf("query last_block_number error: %v", err)
+			return;
+		}
+	}
+	fmt.Println("last_block_number:", last_block_number)
+
 	const start_block = 19622170
 	const end_block = 19622200
+	const event_type_lock_assert = 0;
+	const event_type_settle = 1;
+	const event_type_delegate_settle = 2;
+	const event_type_cancel_lock = 3;
 
 	client, err := ethclient.Dial(rpc_url)
 	if err != nil {
@@ -607,7 +659,7 @@ func main() {
 	}
 
 	query := ethereum.FilterQuery{
-		FromBlock: big.NewInt(start_block),
+		FromBlock: big.NewInt(int64(last_block_number)),
 		ToBlock:   big.NewInt(latestBlockNumber.Int64()),
 		Addresses: []common.Address{
 			contractAddress,
@@ -657,7 +709,12 @@ func main() {
 	}
 
 	for _, vLog := range logs {
-		fmt.Println(vLog.BlockNumber)
+		fmt.Println("BlockNumber:",vLog.BlockNumber)
+		block, err := client.BlockByNumber(context.Background(), new(big.Int).SetUint64(vLog.BlockNumber))
+		if err != nil {
+			log.Fatal(err)
+		}
+		fmt.Println("Timestamp:", time.Unix(int64(block.Time()), 0).Format("2006-01-02 15:04:05 MST"))
 		switch vLog.Topics[0].Hex() {
 		case lockAssetEventSigHash.Hex():
 			fmt.Printf("Event Name: LockAsset()\n")
@@ -670,6 +727,10 @@ func main() {
 			fmt.Println("lockAssetEvent.User : ", lockAssetEvent.User)
 			fmt.Println("lockAssetEvent.Token : ", lockAssetEvent.Token)
 			fmt.Println("lockAssetEvent.LockAmt : ", lockAssetEvent.LockAmt)
+			err = InsertEvent(db, "", event_type_lock_assert, vLog.BlockNumber, lockAssetEvent.User.String(), "", lockAssetEvent.Token.String(), lockAssetEvent.LockAmt.Int64(), block.Time());
+			if err != nil {
+				log.Fatal(err)
+			}
 
 		case settleEventSigHash.Hex():
 			fmt.Printf("Event Name: Settle()\n")
@@ -683,6 +744,10 @@ func main() {
 			fmt.Println("settleEvent.To : ", settleEvent.To)
 			fmt.Println("settleEvent.Token : ", settleEvent.Token)
 			fmt.Println("settleEvent.Amt : ", settleEvent.Amt)
+			err = InsertEvent(db, settleEvent.IndexCode, event_type_settle, vLog.BlockNumber, "", settleEvent.To.String(), settleEvent.Token.String(), settleEvent.Amt.Int64(), block.Time());
+			if err != nil {
+				log.Fatal(err)
+			}
 
 		case delegateSettleEventSigHash.Hex():
 			fmt.Printf("Event Name: DelegateSettle()\n")
@@ -697,6 +762,11 @@ func main() {
 			fmt.Println("delegateSettleEvent.To : ", delegateSettleEvent.To)
 			fmt.Println("delegateSettleEvent.Token : ", delegateSettleEvent.Token)
 			fmt.Println("delegateSettleEvent.Amt : ", delegateSettleEvent.Amt)
+			err = InsertEvent(db, delegateSettleEvent.IndexCode, event_type_delegate_settle, vLog.BlockNumber, 
+				delegateSettleEvent.Locker.String(), delegateSettleEvent.To.String(), delegateSettleEvent.Token.String(), delegateSettleEvent.Amt.Int64(), block.Time());
+			if err != nil {
+				log.Fatal(err)
+			}
 
 		case cancelLockEventSigHash.Hex():
 			fmt.Printf("Event Name: CancelLock()\n")
@@ -711,8 +781,18 @@ func main() {
 			fmt.Println("cancelLockEvent.To : ", cancelLockEvent.To)
 			fmt.Println("cancelLockEvent.Token : ", cancelLockEvent.Token)
 			fmt.Println("cancelLockEvent.Amt : ", cancelLockEvent.Amt)
+			err = InsertEvent(db, cancelLockEvent.IndexCode, event_type_cancel_lock, vLog.BlockNumber, 
+				cancelLockEvent.Locker.String(), cancelLockEvent.To.String(), cancelLockEvent.Token.String(), cancelLockEvent.Amt.Int64(), block.Time());
+			if err != nil {
+				log.Fatal(err)
+			}
 		}
-
 		fmt.Printf("\n\n")
 	}
+	sql := "UPDATE event_base SET last_block_number = ?"
+	_, err = db.Exec(sql, latestBlockNumber.String())
+	if err != nil {
+		log.Fatal(err)
+	}
+
 }
