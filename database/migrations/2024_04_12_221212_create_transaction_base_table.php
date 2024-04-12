@@ -14,7 +14,6 @@ return new class extends Migration
         Schema::create('transaction_base', function (Blueprint $table) {
             $table->id();
 			$table->integer('last_block_number')->default(0);
-			$table->integer('order')->default(0);
             $table->timestamps();
         });
     }

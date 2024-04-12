@@ -38,7 +38,8 @@ class ProjectTaskApplicationModel extends Model
 
 	public function get($application_id)
 	{
-		return $this->where('id', $application_id)->first();
+		return $this->select('id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url')
+			->where('id', $application_id)->first();
 	}
 
 	public function update_status($application_id, $status)
@@ -89,7 +90,7 @@ class ProjectTaskApplicationModel extends Model
 		{
 			$query->where('status', $status);
 		}
-		return $query->select('id', 'task_id', 'status', 'quotation', 'reason', 'verification', 'url')
+		return $query->select('id', 'task_id', 'status', 'quotation', 'reason', 'comment', 'verification', 'url')
 			->where('kol_id', $kol_id)
 			->orderByDesc('updated_at')
 			->skip($page * $size)
@@ -117,21 +118,24 @@ class ProjectTaskApplicationModel extends Model
 
 	public function list($task_id)
 	{
-		return $this->where('task_id', $task_id)
+		return $this->select('id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url')
+			->where('task_id', $task_id)
 			->orderByDesc('updated_at')
 			->get();
 	}
 
 	public function kol_task_status($kol_id, $task_id)
 	{
-		return $this->where('kol_id', $kol_id)
+		return $this->select('id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url')
+			->where('kol_id', $kol_id)
 			->where('task_id', $task_id)   
 			->first();
 	}
 
 	public function task_close($task_id)
 	{
-		return $this->where('task_id', $task_id)->update([
+		return $this->select('id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url')
+			->where('task_id', $task_id)->update([
 			'status' => config('config.task_status')['close']]);
 	}
 

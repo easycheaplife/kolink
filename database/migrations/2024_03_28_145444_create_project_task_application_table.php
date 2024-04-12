@@ -22,6 +22,9 @@ return new class extends Migration
             $table->string('verification', 128)->default('');
             $table->string('url', 128)->default('');
             $table->string('web3_hash', 128)->default('');
+            $table->integer('transaction_type')->default(0);
+            $table->integer('transaction_flag')->default(0);
+            $table->integer('transaction_try_times')->default(0);
             $table->timestamps();
         });
     }

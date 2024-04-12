@@ -77,7 +77,8 @@ class KolModel extends Model
 				$query->orderByDesc('twitter_followers');	
 			}
 		}
-		return $query->orderByDesc('updated_at')
+		return $query->select('id', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score')
+			->orderByDesc('updated_at')
 			->skip($page * $size)
 			->take($size)
 			->get();
@@ -100,12 +101,14 @@ class KolModel extends Model
 
 	public function get($kol_id)
 	{
-		return $this->where('id', $kol_id)->first();
+		return $this->select('id', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score')
+			->where('id', $kol_id)->first();
 	}
 
 	public function login($token)
 	{
-		return $this->where('token', $token)->first();
+		return $this->select('id', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score')
+			->where('token', $token)->first();
 	}
 
 	public function setting($kol_id, $email, $twitter_user_name, $twitter_avatar, $twitter_followers, 
