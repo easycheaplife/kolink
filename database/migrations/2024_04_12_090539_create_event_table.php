@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('to_address')->default('');
             $table->string('token')->default('');
             $table->bigInteger('amt')->default(0);
+            $table->bigInteger('fee')->default(0);
+            $table->integer('transfer_time')->default(0);
             $table->integer('created_time')->default(0);
         });
     }

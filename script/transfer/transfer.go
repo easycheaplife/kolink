@@ -27,13 +27,14 @@ func GetLatestBlock(client *ethclient.Client) (*big.Int, error) {
 }
 
 func InsertEvent(db* sql.DB, index_code string, event_type int, block_number uint64, 
-	from_address string, to_address string, token string, amt int64, created_time uint64) (error) {
-	stmt, err := db.Prepare("INSERT INTO event (index_code, event_type, block_number, from_address, to_address, amt, created_time) VALUES (?, ?, ?, ?, ?, ?, ?)")		
+	from_address string, to_address string, token string, amt int64, fee int64, transfer_time uint64) (error) {
+	created_time := time.Now().Unix()
+	stmt, err := db.Prepare("INSERT INTO event (index_code, event_type, block_number, from_address, to_address, token, amt, fee, transfer_time, created_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)")		
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(index_code, event_type, block_number, from_address, to_address, amt, created_time)
+	_, err = stmt.Exec(index_code, event_type, block_number, from_address, to_address, token, amt, fee, transfer_time, created_time)
 	if err != nil {
 		return err
 	}
@@ -149,6 +150,12 @@ func main() {
 				  "indexed": false,
 				  "internalType": "uint256",
 				  "name": "_amt",
+				  "type": "uint256"
+			  },
+			  {
+				  "indexed": false,
+				  "internalType": "uint256",
+				  "name": "_fee",
 				  "type": "uint256"
 			  }
 			  ],
@@ -269,6 +276,12 @@ func main() {
 				  "indexed": false,
 				  "internalType": "uint256",
 				  "name": "_amt",
+				  "type": "uint256"
+			  },
+			  {
+				  "indexed": false,
+				  "internalType": "uint256",
+				  "name": "_fee",
 				  "type": "uint256"
 			  }
 			  ],
@@ -603,17 +616,6 @@ func main() {
 			  "type": "receive"
 		  }]`
 
-/*
-	cfg := mysql.Config{
-		User:   "root",
-		Passwd: "F0BYKDqw7",
-		Net:    "tcp",
-		Addr:   "192.168.0.194:3306",
-		DBName: "kolink",
-	}
-	var db *sql.DB
-	db, err := sql.Open("mysql", cfg.FormatDSN())
-*/
 	db, err := sql.Open("mysql", "root:F0BYKDqw7@tcp(192.168.0.194:3306)/kolink?parseTime=true&loc=Local")
 	if err != nil {
 		log.Fatal(err)
@@ -679,16 +681,17 @@ func main() {
 		LockAmt *big.Int
 	}
 
-	settleSig := []byte("Settle(string,address,address,uint256)")
+	settleSig := []byte("Settle(string,address,address,uint256,uint256)")
 	settleEventSigHash := crypto.Keccak256Hash(settleSig)
 	type ContractsSettle struct {
 		IndexCode string
 		To        common.Address
 		Token     common.Address
 		Amt       *big.Int
+		Fee       *big.Int
 	}
 
-	delegateSettleSig := []byte("DelegateSettle(string,address,address,address,uint256)")
+	delegateSettleSig := []byte("DelegateSettle(string,address,address,address,uint256,uint256)")
 	delegateSettleEventSigHash := crypto.Keccak256Hash(delegateSettleSig)
 	type ContractsDelegateSettle struct {
 		IndexCode string
@@ -696,6 +699,7 @@ func main() {
 		To        common.Address
 		Token     common.Address
 		Amt       *big.Int
+		Fee       *big.Int
 	}
 
 	cancelLockSig := []byte("CancelLock(string,address,address,address,uint256)")
@@ -727,7 +731,7 @@ func main() {
 			fmt.Println("lockAssetEvent.User : ", lockAssetEvent.User)
 			fmt.Println("lockAssetEvent.Token : ", lockAssetEvent.Token)
 			fmt.Println("lockAssetEvent.LockAmt : ", lockAssetEvent.LockAmt)
-			err = InsertEvent(db, "", event_type_lock_assert, vLog.BlockNumber, lockAssetEvent.User.String(), "", lockAssetEvent.Token.String(), lockAssetEvent.LockAmt.Int64(), block.Time());
+			err = InsertEvent(db, "", event_type_lock_assert, vLog.BlockNumber, lockAssetEvent.User.String(), "", lockAssetEvent.Token.String(), lockAssetEvent.LockAmt.Int64(), 0, block.Time());
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -744,7 +748,8 @@ func main() {
 			fmt.Println("settleEvent.To : ", settleEvent.To)
 			fmt.Println("settleEvent.Token : ", settleEvent.Token)
 			fmt.Println("settleEvent.Amt : ", settleEvent.Amt)
-			err = InsertEvent(db, settleEvent.IndexCode, event_type_settle, vLog.BlockNumber, "", settleEvent.To.String(), settleEvent.Token.String(), settleEvent.Amt.Int64(), block.Time());
+			fmt.Println("settleEvent.Fee : ", settleEvent.Fee)
+			err = InsertEvent(db, settleEvent.IndexCode, event_type_settle, vLog.BlockNumber, "", settleEvent.To.String(), settleEvent.Token.String(), settleEvent.Amt.Int64(), settleEvent.Fee.Int64(), block.Time());
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -762,8 +767,9 @@ func main() {
 			fmt.Println("delegateSettleEvent.To : ", delegateSettleEvent.To)
 			fmt.Println("delegateSettleEvent.Token : ", delegateSettleEvent.Token)
 			fmt.Println("delegateSettleEvent.Amt : ", delegateSettleEvent.Amt)
+			fmt.Println("delegateSettleEvent.Fee : ", delegateSettleEvent.Fee)
 			err = InsertEvent(db, delegateSettleEvent.IndexCode, event_type_delegate_settle, vLog.BlockNumber, 
-				delegateSettleEvent.Locker.String(), delegateSettleEvent.To.String(), delegateSettleEvent.Token.String(), delegateSettleEvent.Amt.Int64(), block.Time());
+				delegateSettleEvent.Locker.String(), delegateSettleEvent.To.String(), delegateSettleEvent.Token.String(), delegateSettleEvent.Amt.Int64(), delegateSettleEvent.Fee.Int64(), block.Time());
 			if err != nil {
 				log.Fatal(err)
 			}
@@ -782,7 +788,7 @@ func main() {
 			fmt.Println("cancelLockEvent.Token : ", cancelLockEvent.Token)
 			fmt.Println("cancelLockEvent.Amt : ", cancelLockEvent.Amt)
 			err = InsertEvent(db, cancelLockEvent.IndexCode, event_type_cancel_lock, vLog.BlockNumber, 
-				cancelLockEvent.Locker.String(), cancelLockEvent.To.String(), cancelLockEvent.Token.String(), cancelLockEvent.Amt.Int64(), block.Time());
+				cancelLockEvent.Locker.String(), cancelLockEvent.To.String(), cancelLockEvent.Token.String(), cancelLockEvent.Amt.Int64(), 0, block.Time());
 			if err != nil {
 				log.Fatal(err)
 			}
