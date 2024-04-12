@@ -28,14 +28,14 @@ func GetLatestBlock(client *ethclient.Client) (*big.Int, error) {
 }
 
 func InsertEvent(db* sql.DB, index_code string, event_type int, block_number uint64, 
-	from_address string, to_address string, token string, amt int64, fee int64, transfer_time uint64) (error) {
+	from_address string, to_address string, token string, amt int64, fee int64, transaction_time uint64) (error) {
 	created_time := time.Now().Unix()
-	stmt, err := db.Prepare("INSERT INTO event (index_code, event_type, block_number, from_address, to_address, token, amt, fee, transfer_time, created_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)")		
+	stmt, err := db.Prepare("INSERT INTO event (index_code, event_type, block_number, from_address, to_address, token, amt, fee, transaction_time, created_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)")		
 	if err != nil {
 		return err
 	}
 	defer stmt.Close()
-	_, err = stmt.Exec(index_code, event_type, block_number, from_address, to_address, token, amt, fee, transfer_time, created_time)
+	_, err = stmt.Exec(index_code, event_type, block_number, from_address, to_address, token, amt, fee, transaction_time, created_time)
 	if err != nil {
 		return err
 	}
