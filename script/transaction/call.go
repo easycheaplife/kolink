@@ -114,7 +114,7 @@ func main() {
 		case transaction_type_cancel_lock:
 			status = CancelLockCall(client, instance, auth, indexCode)
 		}
-		if (0 == status) {
+		if (0 != status) {
 			UpdateTransactionFlag(db, id, 1, transaction_try_times + 1)
 		}
 	}
