@@ -17,7 +17,6 @@ class ProjectTaskViewService extends Service
 	{
 		$task_service = new ProjectTaskService;
 		$task_detail = $task_service->task_detail($task_id);
-		Log::info($task_detail);
 		if (!empty($task_detail['data']))
 		{
 			if ($project_id != $task_detail['data']['project_id'])

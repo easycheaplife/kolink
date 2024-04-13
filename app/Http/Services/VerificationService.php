@@ -20,7 +20,6 @@ class VerificationService extends Service
 			return $this->error_response($email, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
-		$this->res['data']['code'] = $code;
 		return $this->res;
 	}	
 

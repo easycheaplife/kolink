@@ -11,6 +11,7 @@ use App\Http\Controllers\ProjectTaskViewController;
 use App\Http\Controllers\ProjectTaskApplicationController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\FileController;
+use App\Http\Controllers\TransactionController;
 
 
 /*
@@ -122,5 +123,11 @@ Route::post('/config/list', [ConfigController::class, 'list']);
 Route::post('/file/upload', [FileController::class, 'upload']);
 
 Route::get('/file/download/{file_name}', [FileController::class, 'download']);
+
+Route::get('/taansaction/hash', [TransactionController::class, 'transation_hash']);
+Route::post('/taansaction/hash', [TransactionController::class, 'transation_hash']);
+
+Route::get('/transation/list', [TransactionController::class, 'transation_list']);
+Route::post('/transation/list', [TransactionController::class, 'transation_list']);
 
 
