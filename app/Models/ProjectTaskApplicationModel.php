@@ -38,7 +38,7 @@ class ProjectTaskApplicationModel extends Model
 
 	public function get($application_id)
 	{
-		return $this->select('id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url')
+		return $this->select('id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash')
 			->where('id', $application_id)->first();
 	}
 

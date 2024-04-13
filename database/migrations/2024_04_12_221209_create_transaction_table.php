@@ -13,12 +13,12 @@ return new class extends Migration
     {
         Schema::create('transaction', function (Blueprint $table) {
             $table->id();
-            $table->string('index_code')->default('');
+            $table->string('index_code', 32)->default('');
             $table->integer('transaction_type')->default(0);
             $table->integer('block_number')->default(0);
-            $table->string('from_address')->default('');
-            $table->string('to_address')->default('');
-            $table->string('token')->default('');
+            $table->string('from_address', 64)->default('');
+            $table->string('to_address', 64)->default('');
+            $table->string('token', 64)->default('');
             $table->bigInteger('amt')->default(0);
             $table->bigInteger('fee')->default(0);
             $table->integer('transaction_time')->default(0);

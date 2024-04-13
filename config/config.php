@@ -42,6 +42,12 @@ return [
 		'French' => 2,
 		'Other' => 3
 	),
+	'transaction_type' => array(
+		'lock_assert' => 0,
+		'settle' => 1,
+		'delegate_settle' => 2,
+		'cancel_lock' => 3
+	),
 	'default_page_size' => 10,
 	'mail_try_times' => 3,
 ];

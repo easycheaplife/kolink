@@ -9,6 +9,7 @@ use App\Constants\ErrorCodes;
 use App\Constants\ErrorDescs;
 use App\Models\ProjectTaskApplicationModel;
 use App\Http\Services\ProjectTaskService;
+use App\Http\Services\TransactionQueueService;
 
 
 class ProjectTaskApplicationService extends Service 
@@ -49,6 +50,10 @@ class ProjectTaskApplicationService extends Service
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
+
+		$transaction_queue_service = new TransactionQueueService;
+		$transaction_queue_service->push($application_detail['web3_hash'], config('config.transaction_type')['cancel_lock']);
+
 		return $this->res;
 	}
 
