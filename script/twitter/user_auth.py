@@ -3,6 +3,7 @@ import tweepy
 import mysql.connector
 import json
 import time
+import logging
 from datetime import datetime
 
 app = Flask(__name__)
@@ -19,14 +20,9 @@ cnx = mysql.connector.connect(
     password="F0BYKDqw7",
     database="kolink"
 )
+log_file = "user_auth.log"
 
 cursor = cnx.cursor()
-
-def str_to_unixtime(date_string):
-    date_format = "%a %b %d %H:%M:%S %z %Y"
-    dt = datetime.strptime(date_string, date_format)
-    return int(dt.timestamp())
-    
 
 @app.route('/')
 def index():
@@ -56,11 +52,18 @@ def auth_twitter_callback():
     user_json = json.dumps(user._json)
     inser_user_json(user.id, user_json)
     insert_user(user)
-    return user_json
+    response = {
+        "code": 0,
+        "message": "",
+        "data": user._json
+    }
+
+    return response
 
 def inser_user_json(user_id, data):
     try:
         insert_query = "INSERT INTO twitter_user_data (user_id, data) VALUES (%s, %s)"
+        logging.info(insert_query)
         values = (str(user_id),  data)
         cursor.execute(insert_query, values)
         cnx.commit()
@@ -68,7 +71,7 @@ def inser_user_json(user_id, data):
         if e.errno == 1062:
             pass
         else:
-            print('inser_user_json failed:', e)
+            logging.error('inser_user_json failed:', e)
 
 def insert_user(user):
     try:
@@ -83,6 +86,7 @@ def insert_user(user):
             %s, %s, %s, %s, %s, 
             %s, %s, %s, %s, %s, 
             %s, %s)"""
+        logging.info(insert_query)
         if user.url is None:
             user.url = ''
         if user.utc_offset is None:
@@ -105,18 +109,17 @@ def insert_user(user):
         cursor.execute(insert_query, values)
 
         insert_data_query = "UPDATE twitter_user_data SET insert_flag = 1 where user_id = " + str(user.id) 
+        logging.info(insert_data_query)
         cursor.execute(insert_data_query)
         cnx.commit()
     except mysql.connector.IntegrityError as e:
         if e.errno == 1062: 
             pass
         else:
-            print('inser_user_json failed:', e)
+            logging.error('inser_user_json failed:', e)
 
 
 if __name__ == '__main__':
-    date_string = "Tue Apr 10 14:08:55 +0000 2018"
-    print(str_to_unixtime(date_string))
     app.run(debug=True, host=host, port=port)
     cursor.close()
     cnx.close()
