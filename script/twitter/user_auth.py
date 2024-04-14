@@ -20,9 +20,10 @@ cnx = mysql.connector.connect(
     password="F0BYKDqw7",
     database="kolink"
 )
-log_file = "user_auth.log"
-
 cursor = cnx.cursor()
+
+logging.basicConfig(filename=log_file, level=logging.DEBUG)
+log_file = "user_auth.log"
 
 @app.route('/')
 def index():
@@ -89,8 +90,6 @@ def insert_user(user):
         logging.info(insert_query)
         if user.url is None:
             user.url = ''
-        if user.utc_offset is None:
-            user.utc_offset = 0
         if user.lang is None:
             user.lang = ''
         if user.utc_offset is None:
