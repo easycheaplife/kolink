@@ -5,7 +5,13 @@ import mysql.connector
 import json
 import time
 import logging
+import sys
 from datetime import datetime
+
+args = sys.argv
+if len(sys.argv) < 2:
+    print('param error! please input python3 search_user.py gamefi')
+    sys.exit()
 
 client = Client('en-US')
 
@@ -31,6 +37,7 @@ cursor = cnx.cursor()
 log_file = "search_user.log"
 logging.basicConfig(filename=log_file, level=logging.DEBUG)
 
+
 def str_to_unixtime(date_string):
     date_format = "%a %b %d %H:%M:%S %z %Y"
     dt = datetime.strptime(date_string, date_format)
@@ -43,12 +50,12 @@ def insert_user(user):
             url, followers_count, friends_count, listed_count, favourites_count, 
             utc_offset, time_zone, geo_enabled, verified, statuses_count, 
             lang, profile_background_image_url, profile_background_image_url_https, profile_image_url, profile_image_url_https, 
-            created_at, updated_at) 
+            following_count, media_count, description_urls, created_at, updated_at) 
             VALUES (%s, %s, %s, %s, %s,
             %s, %s, %s, %s, %s, 
             %s, %s, %s, %s, %s, 
             %s, %s, %s, %s, %s, 
-            %s, %s)"""
+            %s, %s, %s, %s, %s)"""
         logging.info(insert_query)
         if user.url is None:
             user.url = ''
@@ -56,7 +63,7 @@ def insert_user(user):
             user.url, str(user.followers_count), '0', str(user.listed_count), str(user.favourites_count),
             '0', '', '0', str(int(user.verified)), str(user.statuses_count),
             '', '', '', user.profile_image_url, '', 
-            str(str_to_unixtime(user.created_at)), str(int(time.time())))
+            str(user.following_count), str(user.media_count), str(json.dumps(user.description_urls)), str(str_to_unixtime(user.created_at)), str(int(time.time())))
         cursor.execute(insert_query, values)
 
         insert_data_query = "UPDATE twitter_user_data SET insert_flag = 1 where user_id = " + str(user.id) 
@@ -70,7 +77,9 @@ def insert_user(user):
             logging.error('inser_user_json failed:', e)
 
 tweets_to_store = [];
-result = client.search_user('gamefi')
+logging.info("search keyward:" + str(args[1])) 
+search_count = 100
+result = client.search_user(args[1], search_count)
 for user in result:
     logging.info(user.__dict__)
     insert_user(user)

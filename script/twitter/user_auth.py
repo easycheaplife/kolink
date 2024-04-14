@@ -22,8 +22,8 @@ cnx = mysql.connector.connect(
 )
 cursor = cnx.cursor()
 
-logging.basicConfig(filename=log_file, level=logging.DEBUG)
 log_file = "user_auth.log"
+logging.basicConfig(filename=log_file, level=logging.DEBUG)
 
 @app.route('/')
 def index():
@@ -93,7 +93,7 @@ def insert_user(user):
         if user.lang is None:
             user.lang = ''
         if user.utc_offset is None:
-            user.utc_offset = ''
+            user.utc_offset = 0
         if user.profile_background_image_url is None:
             user.profile_background_image_url = ''
         if user.profile_background_image_url_https is None:

@@ -23,6 +23,9 @@ return new class extends Migration
             $table->integer('friends_count')->default(0);
             $table->integer('listed_count')->default(0);
             $table->integer('favourites_count')->default(0);
+            $table->integer('following_count')->default(0);
+            $table->string('description_urls', 512)->default('');
+            $table->integer('media_count')->default(0);
             $table->integer('utc_offset')->default(0);
             $table->string('time_zone', 128)->default('');
             $table->integer('geo_enabled')->default(0);
