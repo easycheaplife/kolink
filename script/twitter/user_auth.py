@@ -50,6 +50,7 @@ def auth_twitter_callback():
 
     api = tweepy.API(auth)
     user = api.verify_credentials()
+    logging.info(user)
     user_json = json.dumps(user._json)
     inser_user_json(user.id, user_json)
     insert_user(user)
@@ -102,7 +103,7 @@ def insert_user(user):
             user.time_zone = ''
         values = (str(user.id), user.name, user.screen_name, user.location, user.description,
             user.url, str(user.followers_count), str(user.friends_count), str(user.listed_count), str(user.favourites_count),
-            str(user.utc_offset), user.time_zone, str(int(user.geo_enabled)), str(int(user.verified)), str(user.statuses_count),
+            '0', user.time_zone, str(int(user.geo_enabled)), str(int(user.verified)), str(user.statuses_count),
             user.lang, user.profile_background_image_url, user.profile_background_image_url_https, user.profile_image_url, user.profile_image_url_https, 
             str(user.created_at.timestamp()), str(int(time.time())))
         cursor.execute(insert_query, values)
