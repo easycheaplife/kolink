@@ -12,6 +12,7 @@ use App\Http\Controllers\ProjectTaskApplicationController;
 use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\TransactionController;
+use App\Http\Controllers\TwitterController;
 
 
 /*
@@ -129,5 +130,9 @@ Route::post('/taansaction/hash', [TransactionController::class, 'transation_hash
 
 Route::get('/transation/list', [TransactionController::class, 'transation_list']);
 Route::post('/transation/list', [TransactionController::class, 'transation_list']);
+
+Route::get('/twitter/auth', [TwitterController::class, 'auth']);
+Route::post('/twitter/auth', [TwitterController::class, 'auth']);
+
 
 
