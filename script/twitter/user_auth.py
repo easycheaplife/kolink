@@ -93,7 +93,7 @@ def auth_twitter():
     response['data']['session_id'] = session_id
     if session_id not in session:
         session[session_id] = {}
-    return auth_res
+    #return auth_res
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret, callback_url)
     auth_url = auth.get_authorization_url()
     session[session_id]['request_token'] = auth.request_token
@@ -109,7 +109,7 @@ def auth_twitter_callback():
     }
     session_id = request.args.get('session_id')
     verifier = request.args.get('oauth_verifier')
-    return user_res
+    #return user_res
     auth = tweepy.OAuthHandler(consumer_key, consumer_secret, callback_url)
     auth.request_token = session[session_id]['request_token']
     auth.get_access_token(verifier)

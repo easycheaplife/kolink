@@ -55,9 +55,13 @@ class TwitterService extends Service
 				Log::info($data);
 				$this->res['data'] = $data['data'];
 				$twitter_user_model = new TwitterUserModel;
-				$twitter_user_model->insert($data['data']);
+				$insert_flag = 0;
+				if ($twitter_user_model->insert($data['data']))
+				{
+					$insert_flag = 1;	
+				}
 				$twitter_user_data_model = new TwitterUserDataModel;
-				$twitter_user_data_model->insert($data['data']);
+				$twitter_user_data_model->insert($data['data'], $insert_flag);
 			}
 			else {
 				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
