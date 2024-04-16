@@ -24,4 +24,23 @@ class TwitterController extends Controller
 		$service = new TwitterService();
 		return $service->auth();
 	}
+
+	public function user(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'session_id' => 'required|string',
+				'oauth_verifier' => 'required|string'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new TwitterService();
+		return $service->user($validated_data['session_id'],
+			$validated_data['oauth_verifier']);
+	}
+
 }

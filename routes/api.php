@@ -134,5 +134,7 @@ Route::post('/transation/list', [TransactionController::class, 'transation_list'
 Route::get('/twitter/auth', [TwitterController::class, 'auth']);
 Route::post('/twitter/auth', [TwitterController::class, 'auth']);
 
+Route::get('/twitter/user', [TwitterController::class, 'user']);
+Route::post('/twitter/user', [TwitterController::class, 'user']);
 
 
