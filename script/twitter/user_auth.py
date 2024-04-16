@@ -18,7 +18,7 @@ port = 8000
 log_file = "user_auth.log"
 logging.basicConfig(filename=log_file, level=logging.DEBUG)
 
-@app.route('/twitter/auth')
+@app.route('/twitter/auth', methods=['GET', 'POST'])
 def auth_twitter():
     session_id = request.args.get('session_id')
     if session_id not in session:
@@ -33,7 +33,7 @@ def auth_twitter():
     }
     return response
 
-@app.route('/twitter/user')
+@app.route('/twitter/user', methods=['GET', 'POST'])
 def auth_twitter_callback():
     session_id = request.args.get('session_id')
     verifier = request.args.get('oauth_verifier')
