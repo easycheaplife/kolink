@@ -104,7 +104,7 @@ class ProjectTaskApplicationService extends Service
 		}
 		$task_service = new ProjectTaskService;
 		$task_detail = $task_service->task_detail($application_detail['task_id']);
-		if (empty($task_detail))
+		if (empty($task_detail['data']))
 		{
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_IS_MISSING,
 				ErrorDescs::ERROR_CODE_TASK_APPLICATION_IS_MISSING);		
