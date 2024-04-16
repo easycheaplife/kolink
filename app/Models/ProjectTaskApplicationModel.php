@@ -38,7 +38,7 @@ class ProjectTaskApplicationModel extends Model
 
 	public function get($application_id)
 	{
-		return $this->select('id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash')
+		return $this->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash')
 			->where('id', $application_id)->first();
 	}
 
@@ -90,7 +90,7 @@ class ProjectTaskApplicationModel extends Model
 		{
 			$query->where('status', $status);
 		}
-		return $query->select('id', 'task_id', 'status', 'quotation', 'reason', 'comment', 'verification', 'url')
+		return $query->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash')
 			->where('kol_id', $kol_id)
 			->orderByDesc('updated_at')
 			->skip($page * $size)
@@ -118,7 +118,7 @@ class ProjectTaskApplicationModel extends Model
 
 	public function list($task_id)
 	{
-		return $this->select('id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url')
+		return $this->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash')
 			->where('task_id', $task_id)
 			->orderByDesc('updated_at')
 			->get();
@@ -126,7 +126,7 @@ class ProjectTaskApplicationModel extends Model
 
 	public function kol_task_status($kol_id, $task_id)
 	{
-		return $this->select('id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url')
+		return $this->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash')
 			->where('kol_id', $kol_id)
 			->where('task_id', $task_id)   
 			->first();
@@ -134,7 +134,7 @@ class ProjectTaskApplicationModel extends Model
 
 	public function task_close($task_id)
 	{
-		return $this->select('id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url')
+		return $this->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash')
 			->where('task_id', $task_id)->update([
 			'status' => config('config.task_status')['close']]);
 	}

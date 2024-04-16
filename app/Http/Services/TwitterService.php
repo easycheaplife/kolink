@@ -27,7 +27,7 @@ class TwitterService extends Service
 			if ($response->successful()) {
 				$data = $response->json();
 				Log::info($data);
-				$this->res['data']['session_id'] = $data['data']['session_id'];
+				$this->res['data'] = $data['data'];
 			}
 			else {
 				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
