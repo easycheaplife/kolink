@@ -50,4 +50,6 @@ return [
 	),
 	'default_page_size' => 10,
 	'mail_try_times' => 3,
+	'twitter_url_base' => 'http://localhost:8010',
+	'http_timeout' => 3,
 ];

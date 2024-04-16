@@ -243,7 +243,6 @@ class ProjectTaskApplicationService extends Service
 
 	public function tansaction_timeout_check()
 	{
-		Log::info("===========+++");
 	}
 
 }

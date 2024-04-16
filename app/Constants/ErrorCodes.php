@@ -21,6 +21,8 @@ class ErrorCodes
 	const ERROR_CODE_UPLOAD_FILE_IS_NOT_EXIST = 12;
 	const ERROR_CODE_TASK_NOT_BELONG_TO_PROJECT = 13;
 	const ERROR_CODE_TASK_IS_IN_PROGRESS = 14;
+	const ERROR_CODE_TWITTER_AUTH_URL_FAULED = 15;
+	const ERROR_CODE_TWITTER_USER_FAULED = 15;
 	
 	const ERROR_CODE_DUPLICATE_ENTRY = 1062;
 }
@@ -42,5 +44,7 @@ class ErrorDescs
 	const ERROR_CODE_UPLOAD_FILE_IS_NOT_EXIST = 'file is not exist!';
 	const ERROR_CODE_TASK_NOT_BELONG_TO_PROJECT = 'the task does not belong to the project.';
 	const ERROR_CODE_TASK_IS_IN_PROGRESS = 'task is in progress, can not close the task!';
+	const ERROR_CODE_TWITTER_AUTH_URL_FAULED = 'get twitter auth url failed';
+	const ERROR_CODE_TWITTER_USER_FAULED = 'get twitter use data failed';
 }
 

@@ -17,21 +17,26 @@ class TwitterService extends Service
 	public function auth()
 	{
 		$session_id = Str::uuid();
-		$url = "http://localhost:8000/twitter/auth";
+		$url = config('config.twitter_url_base') . "/twitter/auth?session_id=$session_id";
 		try {
-			$response = Http::withHeaders([
-				'Accept' => 'application/json',
-			])->get($url, [
-				'session_id' => $session_id
-			]);
+			$headers = [];
+			$response = Http::withHeaders($headers)
+				->timeout(config('config.http_timeout'))
+				->get($url);
 			if ($response->successful()) {
 				$data = $response->json();
-				$this->res['data'] = $data;
 				Log::info($data);
+				$this->res['data']['session_id'] = $data['data']['session_id'];
+			}
+			else {
+				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
+				Log::error($error_message);
+				return $this->error_response($session_id, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $error_message);
 			}
 		} catch (\Exception $e) 
 		{   
 			Log::error($e->getMessage());
+			return $this->error_response($session_id, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $e->getMessage());
 		}  
 		return $this->res;
 	}	
