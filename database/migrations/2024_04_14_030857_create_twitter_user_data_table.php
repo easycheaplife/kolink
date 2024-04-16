@@ -16,9 +16,8 @@ return new class extends Migration
             $table->bigInteger('user_id')->default(0);
             $table->string('data', 7168)->default('');
             $table->integer('insert_flag')->default(0);
+            $table->timestamps();
 			$table->unique(['user_id']);
-            $table->integer('created_at')->default(0);
-            $table->integer('updated_at')->default(0);
         });
     }
 

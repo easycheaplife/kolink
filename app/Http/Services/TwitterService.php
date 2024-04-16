@@ -9,7 +9,8 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Constants\ErrorCodes;
 use App\Constants\ErrorDescs;
-use App\Models\TwitterModel;
+use App\Models\TwitterUserModel;
+use App\Models\TwitterUserDataModel;
 
 
 class TwitterService extends Service 
@@ -53,6 +54,10 @@ class TwitterService extends Service
 				$data = $response->json();
 				Log::info($data);
 				$this->res['data'] = $data['data'];
+				$twitter_user_model = new TwitterUserModel;
+				$twitter_user_model->insert($data['data']);
+				$twitter_user_data_model = new TwitterUserDataModel;
+				$twitter_user_data_model->insert($data['data']);
 			}
 			else {
 				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();

@@ -36,8 +36,7 @@ return new class extends Migration
             $table->string('profile_background_image_url_https', 256)->default('');
             $table->string('profile_image_url', 256)->default('');
             $table->string('profile_image_url_https', 256)->default('');
-            $table->integer('created_at')->default(0);
-            $table->integer('updated_at')->default(0);
+            $table->timestamps();
 			$table->unique(['user_id']);
         });
     }
