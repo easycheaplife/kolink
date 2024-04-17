@@ -13,6 +13,7 @@ class KolController extends Controller
 {
 	public function kol_new(Request $request)
 	{
+		$twitter_user_id = $request->input('twitter_user_id', 0);
 		$channel_id = $request->input('channel_id', 0);
 		try {
 			$validated_data = $request->validate([
@@ -37,6 +38,7 @@ class KolController extends Controller
 		return $service->kol_new(
 			$validated_data['token'],
 			$validated_data['email'],
+			$twitter_user_id,
 			$validated_data['twitter_user_name'],
 			$validated_data['twitter_avatar'],
 			$validated_data['twitter_followers'],

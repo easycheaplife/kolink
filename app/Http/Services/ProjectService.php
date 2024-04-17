@@ -14,7 +14,7 @@ use App\Http\Services\ProjectTaskViewService;
 
 class ProjectService extends Service 
 {
-    public function project_new($token, $email, $logo, $twitter_user_name, $name, $desc, $category_id, $website, $code)
+    public function project_new($token, $email, $logo, $twitter_user_id, $twitter_user_name, $name, $desc, $category_id, $website, $code)
 	{
 		$verification_service = new VerificationService;
 		$verification_code = $verification_service->get_code($email);
@@ -25,7 +25,7 @@ class ProjectService extends Service
 		}
 		$project_model = new ProjectModel;
 		$last_insert_id = 0;
-		if (!$project_model->insert($token, $email, $logo, $twitter_user_name, 
+		if (!$project_model->insert($token, $email, $logo, $twitter_user_id, $twitter_user_name, 
 			$name, $desc, $category_id, $website, $last_insert_id))
 		{
 			return $this->error_response($token, ErrorCodes::ERROR_CODE_DB_ERROR,

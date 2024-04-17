@@ -12,6 +12,7 @@ class ProjectController extends Controller
 {
 	public function project_new(Request $request)
 	{
+		$twitter_user_id = $request->input('twitter_user_id', 0);
 		try {
 			$validated_data = $request->validate([
 				'token' => 'required|string',
@@ -35,6 +36,7 @@ class ProjectController extends Controller
 			$validated_data['token'],
 			$validated_data['email'],
 			$validated_data['logo'],
+			$twitter_user_id,
 			$validated_data['twitter_user_name'],
 			$validated_data['name'],
 			$validated_data['desc'],

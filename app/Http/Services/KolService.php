@@ -15,7 +15,7 @@ use App\Http\Services\ProjectTaskService;
 
 class KolService extends Service 
 {
-	public function kol_new($token, $email, $twitter_user_name, $twitter_avatar, $twitter_followers, 
+	public function kol_new($token, $email, $twitter_user_id, $twitter_user_name, $twitter_avatar, $twitter_followers, 
 		$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id, $code)
 	{
 		$verification_service = new VerificationService;
@@ -27,7 +27,7 @@ class KolService extends Service
 		}
 		$last_insert_id = 0;
 		$kol_model = new KolModel;
-		if (!$kol_model->insert($token, $email, $twitter_user_name, $twitter_avatar, $twitter_followers, 
+		if (!$kol_model->insert($token, $email, $twitter_user_id, $twitter_user_name, $twitter_avatar, $twitter_followers, 
 			$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id, $last_insert_id))
 		{
 			return $this->error_response($token, ErrorCodes::ERROR_CODE_DB_ERROR,

@@ -52,4 +52,5 @@ return [
 	'mail_try_times' => 3,
 	'twitter_url_base' => 'http://localhost:8010',
 	'http_timeout' => 3,
+	'verification_code_valid_time' => 30,
 ];

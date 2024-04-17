@@ -16,12 +16,13 @@ class KolModel extends Model
 
 	protected $table = 'kol';
 
-	public function insert($token, $email, $twitter_user_name, $twitter_avatar, $twitter_followers, 
+	public function insert($token, $email, $twitter_user_id, $twitter_user_name, $twitter_avatar, $twitter_followers, 
 		$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id, &$last_insert_id)
 	{
 		try {
 			$this->token = $token;
 			$this->email = $email;
+			$this->twitter_user_id = $twitter_user_id;
 			$this->twitter_user_name = $twitter_user_name;
 			$this->twitter_avatar = $twitter_avatar;
 			$this->twitter_followers = $twitter_followers;

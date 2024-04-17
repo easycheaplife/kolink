@@ -15,12 +15,13 @@ class ProjectModel extends Model
     use HasFactory;
 
 	protected $table = 'project';
-	public function insert($token, $email, $logo, $twitter_user_name, $name, $desc, $category_id, $website, &$last_insert_id)
+	public function insert($token, $email, $logo, $twitter_user_id, $twitter_user_name, $name, $desc, $category_id, $website, &$last_insert_id)
 	{
 		try {
 			$this->token = $token;
 			$this->email = $email;
 			$this->logo = $logo;
+			$this->twitter_user_id = $twitter_user_id;
 			$this->twitter_user_name = $twitter_user_name;
 			$this->name = $name;
 			$this->desc = $desc;
