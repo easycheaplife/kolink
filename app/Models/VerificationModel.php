@@ -35,7 +35,7 @@ class VerificationModel extends Model
 
 	public function get($email)
 	{
-		return $this->select('code')
+		return $this->select('code', 'updated_at')
 			->where('email', $email)
 			->orderByDesc('created_at')
 			->first();	

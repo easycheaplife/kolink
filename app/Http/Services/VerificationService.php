@@ -31,6 +31,11 @@ class VerificationService extends Service
 		{
 			return 0;
 		}
+		$updated_at_time = strtotime($data['updated_at']); 
+		if (($updated_at_time + config('config.verification_code_valid_time')) < time())
+		{
+			return 0;	
+		}
 		return $data['code'];
 	}
 
