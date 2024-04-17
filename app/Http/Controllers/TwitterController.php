@@ -12,6 +12,7 @@ class TwitterController extends Controller
 {
 	public function auth(Request $request)
 	{
+		$redirect_uri = $request->input('redirect_uri','');
 		try {
 			$validated_data = $request->validate([
 			]);
@@ -22,11 +23,12 @@ class TwitterController extends Controller
 				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
 		}
 		$service = new TwitterService();
-		return $service->auth();
+		return $service->auth($redirect_uri);
 	}
 
 	public function user(Request $request)
 	{
+		$redirect_uri = $request->input('redirect_uri','');
 		try {
 			$validated_data = $request->validate([
 				'session_id' => 'required|string',
@@ -40,7 +42,8 @@ class TwitterController extends Controller
 		}
 		$service = new TwitterService();
 		return $service->user($validated_data['session_id'],
-			$validated_data['oauth_verifier']);
+			$validated_data['oauth_verifier'],
+			$redirect_uri);
 	}
 
 }

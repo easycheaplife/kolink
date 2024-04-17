@@ -15,10 +15,10 @@ use App\Models\TwitterUserDataModel;
 
 class TwitterService extends Service 
 {
-	public function auth()
+	public function auth($redirect_uri)
 	{
 		$session_id = Str::uuid();
-		$url = config('config.twitter_url_base') . "/twitter/auth?session_id=$session_id";
+		$url = config('config.twitter_url_base') . "/twitter/auth?session_id=$session_id&redirect_uri=$redirect_uri";
 		try {
 			$headers = [];
 			$response = Http::withHeaders($headers)
@@ -42,9 +42,9 @@ class TwitterService extends Service
 		return $this->res;
 	}	
 
-	public function user($session_id, $oauth_verifier)
+	public function user($session_id, $oauth_verifier, $redirect_uri)
 	{
-		$url = config('config.twitter_url_base') . "/twitter/user?session_id=$session_id&oauth_verifier=$oauth_verifier";
+		$url = config('config.twitter_url_base') . "/twitter/user?session_id=$session_id&oauth_verifier=$oauth_verifier&redirect_uri=$redirect_uri";
 		try {
 			$headers = [];
 			$response = Http::withHeaders($headers)
