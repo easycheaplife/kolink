@@ -36,6 +36,9 @@ class TwitterService extends Service
 			}
 		} catch (\Exception $e) 
 		{   
+			if (strpos($e->getMessage(), "" . ErrorCodes::ERROR_CODE_DUPLICATE_ENTRY) !== false) {
+				return $this->res;	
+			}
 			Log::error($e->getMessage());
 			return $this->error_response($session_id, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $e->getMessage());
 		}  
@@ -52,7 +55,6 @@ class TwitterService extends Service
 				->get($url);
 			if ($response->successful()) {
 				$data = $response->json();
-				Log::info($data);
 				$this->res['data'] = $data['data'];
 				$twitter_user_model = new TwitterUserModel;
 				$insert_flag = 0;
@@ -70,7 +72,10 @@ class TwitterService extends Service
 			}
 		} catch (\Exception $e) 
 		{   
-			Log::error($e->getMessage());
+			if (strpos($e->getMessage(), "" . ErrorCodes::ERROR_CODE_DUPLICATE_ENTRY) !== false) {
+				return $this->res;	
+			}
+			Log::error($e);
 			return $this->error_response($session_id, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $e->getMessage());
 		}  
 		return $this->res;

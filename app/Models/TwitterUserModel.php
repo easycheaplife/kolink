@@ -45,6 +45,7 @@ class TwitterUserModel extends Model
 		{
 			if ($e->errorInfo[1] == ErrorCodes::ERROR_CODE_DUPLICATE_ENTRY)
 			{
+				Log::error($e->getMessage());
 				return true;	
 			}
 			Log::error($e->getMessage());
