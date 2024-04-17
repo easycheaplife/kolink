@@ -7,8 +7,8 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-consumer_key = 'OUdXhQ3o52StkWakpcOCLew8s'
-consumer_secret = 'jqdlE388wxf8YutH5O06Fjsa157sJTy0R9h8SNVepf65tYrxWl'
+consumer_key = 'gfJSbufYP2dDLGx9A4nYrUBQf'
+consumer_secret = 'W7qE8naK1D3v6zXn6njkkL30M7EQAk39klGkZmFbY4Wl8yRNTh'
 callback_url = 'http://localhost:8888/oauth'
 session = {}
 
