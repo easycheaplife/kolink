@@ -116,6 +116,8 @@ func main() {
 		}
 		if (0 != status) {
 			UpdateTransactionFlag(db, id, 1, transaction_try_times + 1)
+		} else {
+			UpdateTransactionFlag(db, id, 0, transaction_try_times + 1)
 		}
 	}
 

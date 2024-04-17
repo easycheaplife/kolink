@@ -243,6 +243,11 @@ class ProjectTaskApplicationService extends Service
 
 	public function tansaction_timeout_check()
 	{
+		$application_model = new ProjectTaskApplicationModel;
+		$application_detail = $application_model->task_review_timeout();	
+		$transaction_queue_service = new TransactionQueueService;
+		$transaction_queue_service->push($application_detail['web3_hash'], config('config.transaction_type')['delegate_settle']);
+		Log::info($application_detail);
 	}
 
 }

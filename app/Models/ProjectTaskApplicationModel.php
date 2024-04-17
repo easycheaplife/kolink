@@ -145,4 +145,15 @@ class ProjectTaskApplicationModel extends Model
 			->count();
 	}
 
+	public function task_review_timeout()
+	{
+		$timeout_days = config('config.task_review_timeout');
+		return $this->select('id', 'web3_hash')
+			->where('status', config('config.task_status')['upload'])
+			->where('web3_hash', '!=', '')
+			->whereRaw("updated_at + INTERVAL $timeout_days DAY <= NOW()")
+			->orderBy('updated_at', 'asc')
+			->first();
+	}
+
 }

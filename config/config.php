@@ -53,4 +53,5 @@ return [
 	'twitter_url_base' => 'http://localhost:8010',
 	'http_timeout' => 3,
 	'verification_code_valid_time' => 300,
+	'task_review_timeout' => 7,
 ];
