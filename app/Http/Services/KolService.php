@@ -11,6 +11,7 @@ use App\Models\KolModel;
 use App\Http\Services\VerificationService;
 use App\Http\Services\ProjectTaskApplicationService;
 use App\Http\Services\ProjectTaskService;
+use App\Http\Services\TwitterService;
 
 
 class KolService extends Service 
@@ -107,5 +108,21 @@ class KolService extends Service
 		}
 		return $this->res;
 	}
+
+	public function get_by_twitter_user_id($twitter_user_id)
+	{
+		$kol_model = new KolModel;
+		return $kol_model->get_by_twitter_user_id($twitter_user_id);
+	}
 	
+	public function insert_twitter_user($twitter_user) 
+	{
+		$kol_model = new KolModel;
+		if (!$kol_model->insert_twitter_user($twitter_user)) 
+		{
+			return $this->error_response($twitter_user['user_id'], ErrorCodes::ERROR_CODE_DB_ERROR,
+				ErrorDescs::ERROR_CODE_DB_ERROR);		
+		}
+	}	
+
 }

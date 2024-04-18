@@ -126,4 +126,33 @@ class KolModel extends Model
 			'channel_id' => $channel_id]);
 	}
 
+	public function get_by_twitter_user_id($twitter_user_id)
+	{
+		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score')
+			->where('twitter_user_id', $twitter_user_id)->first();
+	}
+
+	public function insert_twitter_user($twitter_user)
+	{
+		try {
+			$this->token = base64_encode(openssl_random_pseudo_bytes(32));;
+			$this->twitter_user_id = $twitter_user['user_id'];
+			$this->twitter_user_name = $twitter_user['screen_name'];
+			$this->twitter_avatar = $twitter_user['profile_image_url'];
+			$this->twitter_followers = $twitter_user['followers_count'];
+			$this->twitter_subscriptions = $twitter_user['description'];
+			$ret = $this->save();
+			return $ret;
+		}
+		catch (QueryException $e)
+		{
+			if ($e->errorInfo[1] == ErrorCodes::ERROR_CODE_DUPLICATE_ENTRY)
+			{
+				return true;	
+			}
+			Log::error($e->getMessage());
+		}
+		return false;
+	}
+
 }

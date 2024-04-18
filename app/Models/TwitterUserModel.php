@@ -52,4 +52,28 @@ class TwitterUserModel extends Model
 		}
 		return false;
 	}
-}
+
+	public function get($user_id)
+	{
+		return $this->select('user_id', 'name', 'screen_name', 'location', 'description', 'url', 'followers_count', 
+			'friends_count', 'listed_count', 'favourites_count', 'following_count', 'media_count', 
+			'statuses_count', 'lang', 'profile_image_url')
+			->where('user_id', $user_id)
+			->first();
+	}
+
+	public function count()
+	{
+		return $this->select('id')->count();
+	}
+
+	public function get_users($page, $size)
+	{
+		return $this->select('user_id', 'name', 'screen_name', 'location', 'description', 'url', 'followers_count', 
+			'friends_count', 'listed_count', 'favourites_count', 'following_count', 'media_count', 
+			'statuses_count', 'lang', 'profile_image_url')
+			->skip($page * $size)
+			->take($size)
+			->get();
+	}
+}	
