@@ -25,6 +25,7 @@ return new class extends Migration
             $table->integer('twitter_listed_count')->default(0);
             $table->integer('twitter_statuses_count')->default(0);
             $table->integer('twitter_media_count')->default(0);
+            $table->integer('twitter_created_at')->default(0);
             $table->integer('region_id')->default(0)->default(0);
             $table->integer('language_id')->default(0);
             $table->string('category_id', 64)->default('');

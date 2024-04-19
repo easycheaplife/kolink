@@ -146,6 +146,7 @@ class KolModel extends Model
 			$this->twitter_statuses_count = $twitter_user['statuses_count'];
 			$this->twitter_favourites_count = $twitter_user['favourites_count'];
 			$this->twitter_media_count = $twitter_user['media_count'];
+			$this->twitter_created_at = $twitter_user['created_at'];
 			$ret = $this->save();
 			return $ret;
 		}
