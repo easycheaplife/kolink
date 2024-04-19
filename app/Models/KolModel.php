@@ -140,7 +140,12 @@ class KolModel extends Model
 			$this->twitter_user_name = $twitter_user['screen_name'];
 			$this->twitter_avatar = $twitter_user['profile_image_url'];
 			$this->twitter_followers = $twitter_user['followers_count'];
-			$this->twitter_subscriptions = $twitter_user['description'];
+			$this->twitter_subscriptions = $twitter_user['following_count'];
+			$this->twitter_friends_count = $twitter_user['friends_count'];
+			$this->twitter_listed_count = $twitter_user['listed_count'];
+			$this->twitter_statuses_count = $twitter_user['statuses_count'];
+			$this->twitter_favourites_count = $twitter_user['favourites_count'];
+			$this->twitter_media_count = $twitter_user['media_count'];
 			$ret = $this->save();
 			return $ret;
 		}
@@ -153,6 +158,20 @@ class KolModel extends Model
 			Log::error($e->getMessage());
 		}
 		return false;
+	}
+
+	public function update_twitter_user($twitter_user)
+	{
+		return $this->where('twitter_user_id', $twitter_user['user_id'])->update([
+			'twitter_user_name' => $twitter_user['screen_name'], 
+			'twitter_avatar' => $twitter_user['profile_image_url'], 
+			'twitter_followers' => $twitter_user['followers_count'], 
+			'twitter_subscriptions' => $twitter_user['following_count'], 
+			'twitter_friends_count' => $twitter_user['friends_count'], 
+			'twitter_listed_count' => $twitter_user['listed_count'], 
+			'twitter_statuses_count' => $twitter_user['statuses_count'], 
+			'twitter_favourites_count' => $twitter_user['favourites_count'], 
+			'twitter_media_count' => $twitter_user['media_count']]);
 	}
 
 }

@@ -125,4 +125,14 @@ class KolService extends Service
 		}
 	}	
 
+	public function update_twitter_user($twitter_user) 
+	{
+		$kol_model = new KolModel;
+		if (!$kol_model->update_twitter_user($twitter_user)) 
+		{
+			return $this->error_response($twitter_user['user_id'], ErrorCodes::ERROR_CODE_DB_ERROR,
+				ErrorDescs::ERROR_CODE_DB_ERROR);		
+		}
+	}	
+
 }

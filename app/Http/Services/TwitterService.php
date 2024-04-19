@@ -94,7 +94,7 @@ class TwitterService extends Service
 		$twitter_user_model = new TwitterUserModel;
 		$total = $twitter_user_model->count();
 		Log::info($total);
-		$size = 10;
+		$size = config('config.default_page_size');
 		$page = $total / $size;
 		for ($i = 0; $i <= $page; ++$i)
 		{
@@ -111,6 +111,7 @@ class TwitterService extends Service
 					// update
 					$this->update_kol($user, $kol);
 				}
+				sleep(1);
 			}
 		}
 	}
@@ -120,12 +121,12 @@ class TwitterService extends Service
 		$kol_service = new KolService;
 		$kol_service->insert_twitter_user($twitter_user);
 		Log::info('insert:' . $twitter_user['user_id']);
-			
 	}
 
 	public function update_kol($twitter_user, $kol_user)
 	{
 		$kol_service = new KolService;
+		$kol_service->update_twitter_user($twitter_user);
 		Log::info('update:' . $twitter_user['user_id']);
 	}
 

@@ -19,7 +19,12 @@ return new class extends Migration
             $table->string('twitter_user_name', 64)->default('');
             $table->string('twitter_avatar', 512)->default('');
             $table->integer('twitter_followers')->default(0);
-            $table->string('twitter_subscriptions', 1024)->default(0);
+            $table->integer('twitter_subscriptions')->default(0);
+            $table->integer('twitter_friends_count')->default(0);
+            $table->integer('twitter_favourites_count')->default(0);
+            $table->integer('twitter_listed_count')->default(0);
+            $table->integer('twitter_statuses_count')->default(0);
+            $table->integer('twitter_media_count')->default(0);
             $table->integer('region_id')->default(0)->default(0);
             $table->integer('language_id')->default(0);
             $table->string('category_id', 64)->default('');
