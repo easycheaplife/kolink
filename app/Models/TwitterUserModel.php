@@ -71,7 +71,7 @@ class TwitterUserModel extends Model
 	{
 		return $this->select('user_id', 'name', 'screen_name', 'location', 'description', 'url', 'followers_count', 
 			'friends_count', 'listed_count', 'favourites_count', 'following_count', 'media_count', 
-			'statuses_count', 'lang', 'profile_image_url')
+			'statuses_count', 'lang', 'profile_image_url', 'created_at')
 			->skip($page * $size)
 			->take($size)
 			->get();

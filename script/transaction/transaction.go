@@ -46,7 +46,7 @@ func InsertEvent(db* sql.DB, index_code string, transaction_type int, block_numb
 func main() {
 	const rpc_url = "http://120.55.165.46:8545"
 	const contract_addr = "0xD7aAdD7BD1d12ee13E1f4Db8BB56458882796bE4"
-	db, err := sql.Open("mysql", "root:F0BYKDqw7@tcp(192.168.0.194:3306)/kolink?parseTime=true&loc=Local")
+	db, err := sql.Open("mysql", "root:F0BYKDqw7@tcp(127.0.0.1:3306)/kolink?parseTime=true&loc=Local")
 	if err != nil {
 		log.Fatal(err)
 	}
