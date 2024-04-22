@@ -136,10 +136,12 @@ func main() {
 		log.Fatal(err)
 	}
 
-	lockAssetEventSig := []byte("LockAsset(address,address,uint256)")
+	lockAssetEventSig := []byte("LockAsset(string,address,address,address,uint256)")
 	lockAssetEventSigHash := crypto.Keccak256Hash(lockAssetEventSig)
 	type ContractsLockAsset struct {
+		IndexCode string
 		User    common.Address
+		To      common.Address
 		Token   common.Address
 		LockAmt *big.Int
 	}
@@ -191,10 +193,12 @@ func main() {
 			if err != nil {
 				log.Fatal(err)
 			}
+			fmt.Println("lockAssetEvent.IndexCode : ", lockAssetEvent.IndexCode)
 			fmt.Println("lockAssetEvent.User : ", lockAssetEvent.User)
+			fmt.Println("lockAssetEvent.To : ", lockAssetEvent.To)
 			fmt.Println("lockAssetEvent.Token : ", lockAssetEvent.Token)
 			fmt.Println("lockAssetEvent.LockAmt : ", lockAssetEvent.LockAmt)
-			err = InsertEvent(db, "", transaction_type_lock_assert, vLog.BlockNumber, lockAssetEvent.User.String(), "", lockAssetEvent.Token.String(), lockAssetEvent.LockAmt.Int64(), 0, block.Time());
+			err = InsertEvent(db, lockAssetEvent.IndexCode, transaction_type_lock_assert, vLog.BlockNumber, lockAssetEvent.User.String(), lockAssetEvent.To.String(), lockAssetEvent.Token.String(), lockAssetEvent.LockAmt.Int64(), 0, block.Time());
 			if err != nil {
 				log.Fatal(err)
 			}

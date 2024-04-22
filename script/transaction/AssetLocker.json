@@ -134,8 +134,20 @@
         "inputs": [
             {
                 "indexed": false,
+                "internalType": "string",
+                "name": "_indexCode",
+                "type": "string"
+            },
+            {
+                "indexed": false,
                 "internalType": "address",
                 "name": "_user",
+                "type": "address"
+            },
+            {
+                "indexed": false,
+                "internalType": "address",
+                "name": "_to",
                 "type": "address"
             },
             {
