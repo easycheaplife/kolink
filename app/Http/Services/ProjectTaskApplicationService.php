@@ -254,6 +254,10 @@ class ProjectTaskApplicationService extends Service
 	{
 		$application_model = new ProjectTaskApplicationModel;
 		$application_detail = $application_model->task_review_timeout();	
+		if (empty($application_detail))
+		{
+			return;
+		}
 		$transaction_queue_service = new TransactionQueueService;
 		$transaction_queue_service->push($application_detail['web3_hash'], config('config.transaction_type')['delegate_settle']);
 		Log::info($application_detail);

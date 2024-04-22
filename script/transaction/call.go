@@ -60,7 +60,7 @@ func main() {
 	const transaction_type_delegate_settle = 2;
 	const transaction_type_cancel_lock = 3;
 
-	db, err := sql.Open("mysql", "root:F0BYKDqw7@tcp(192.168.0.194:3306)/kolink?parseTime=true&loc=Local")
+	db, err := sql.Open("mysql", "root:F0BYKDqw7@tcp(127.0.0.1:3306)/kolink?parseTime=true&loc=Local")
 	client, err := ethclient.Dial("http://120.55.165.46:8545")
 	if err != nil {
 		log.Fatal(err)
