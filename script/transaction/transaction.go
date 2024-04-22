@@ -15,7 +15,16 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
-)
+	)
+
+const status_cancel = 1
+const status_accept = 4
+const status_finish = 7
+
+const transaction_type_lock_assert = 0;
+const transaction_type_settle = 1;
+const transaction_type_delegate_settle = 2;
+const transaction_type_cancel_lock = 3;
 
 func GetLatestBlock(client *ethclient.Client) (*big.Int, error) {
 	header, err := client.HeaderByNumber(context.Background(), nil)
@@ -25,6 +34,30 @@ func GetLatestBlock(client *ethclient.Client) (*big.Int, error) {
 
 	latestBlockNumber := header.Number
 	return latestBlockNumber, nil
+}
+
+func UpdateProjectTaskApplicationStatus(db* sql.DB, transaction_type int, index_code string) (error) {
+	stmt, err := db.Prepare("UPDATE project_task_application SET status = ? where web3_hash = ?;")	
+	if err != nil {
+		return err
+	}
+	defer stmt.Close()
+	var status int
+	switch transaction_type {
+		case transaction_type_lock_assert: 
+			status = status_accept 
+		case transaction_type_settle: 
+		case transaction_type_delegate_settle: 
+			status = status_finish 
+		case transaction_type_cancel_lock: 
+			status = status_cancel 
+	}
+	_, err = stmt.Exec(status, index_code)
+	if err != nil {
+		return err
+	}
+	fmt.Printf("update success! index_code：%s", index_code)
+	return nil
 }
 
 func InsertEvent(db* sql.DB, index_code string, transaction_type int, block_number uint64, 
@@ -40,7 +73,8 @@ func InsertEvent(db* sql.DB, index_code string, transaction_type int, block_numb
 		return err
 	}
 	fmt.Printf("insert success! block_number：%d", block_number)
-	return nil
+	err = UpdateProjectTaskApplicationStatus(db, transaction_type, index_code)
+	return err
 }
 
 func main() {
@@ -54,7 +88,6 @@ func main() {
 	if pingErr != nil {
 		log.Fatal(pingErr)
 	}
-	fmt.Println("mysql connected!")
 	rows, _ := db.Query("SELECT last_block_number FROM transaction_base")
 	defer rows.Close()
 	var last_block_number int
@@ -68,10 +101,6 @@ func main() {
 
 	const start_block = 19622170
 	const end_block = 19622200
-	const transaction_type_lock_assert = 0;
-	const transaction_type_settle = 1;
-	const transaction_type_delegate_settle = 2;
-	const transaction_type_cancel_lock = 3;
 
 	client, err := ethclient.Dial(rpc_url)
 	if err != nil {
@@ -234,5 +263,14 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+
+/*
+	// test
+	index_code_update := "qwert"	
+	err = UpdateProjectTaskApplicationStatus(db, transaction_type_lock_assert, index_code_update)
+	if err != nil {
+		log.Fatal(err)
+	}
+*/
 
 }

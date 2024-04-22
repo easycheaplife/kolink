@@ -50,9 +50,10 @@ class ProjectTaskApplicationService extends Service
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
-
+/*
 		$transaction_queue_service = new TransactionQueueService;
 		$transaction_queue_service->push($application_detail['web3_hash'], config('config.transaction_type')['cancel_lock']);
+*/
 
 		return $this->res;
 	}
@@ -87,7 +88,7 @@ class ProjectTaskApplicationService extends Service
 	public function task_application_review($project_id, $application_id, $status, $web3_hash)
 	{
 		if (!in_array($status, [
-			config('config.task_status')['pengding'], 
+			config('config.task_status')['pending'], 
 			config('config.task_status')['declined'], 
 			config('config.task_status')['accept']])
 		)
@@ -115,12 +116,16 @@ class ProjectTaskApplicationService extends Service
 				ErrorDescs::ERROR_CODE_PROJECT_IS_NOT_YOURS);		
 		}
 		if (!in_array($application_detail['status'], [
-			config('config.task_status')['pengding'], 
+			config('config.task_status')['pending'], 
 			config('config.task_status')['application']])
 		)
 		{
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_REVIEW,
 				ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_REVIEW);		
+		}
+		if ($status == config('config.task_status')['accept'])
+		{
+			$status = config('config.task_status')['lock_pending'];
 		}
 		if (!$application_model->update_web3_hash_and_status($application_id, $web3_hash, $status))
 		{
@@ -190,6 +195,10 @@ class ProjectTaskApplicationService extends Service
 		{
 			return $this->error_response($application_id, ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_FINISH,
 				ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_FINISH);		
+		}
+		if ($status == config('config.task_status')['finish'])
+		{
+			$status = config('config.task_status')['settle_pending'];
 		}
 		if (!$application_model->update_comment_and_status($application_id, $comment, $status))
 		{

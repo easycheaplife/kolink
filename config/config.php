@@ -4,13 +4,17 @@ return [
 	'task_status' => array(
 		'application' => 0,
 		'cancel' => 1,
-		'pengding' => 2,
+		'pending' => 2,
 		'declined' => 3,
 		'accept' => 4,
 		'upload' => 5,
 		'fail' => 6,
 		'finish' => 7,
-		'close' => 8
+		'close' => 8,
+		'lock_pending' => 9,
+		'cancel_pending' => 10,
+		'settle_pending' => 11,
+		'delegate_settle_pending' => 12
 	),
 	'category_list' => array(
 		'All' => 0,

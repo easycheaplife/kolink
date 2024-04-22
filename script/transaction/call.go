@@ -93,7 +93,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	sql := "SELECT id, index_node, transaction_type,transaction_try_times FROM transaction_queue where transaction_flag = 0 and transaction_try_times < ? order by updated_at"
+	sql := "SELECT id, index_node, transaction_type,transaction_try_times FROM transaction_queue where transaction_type in (2,3) and transaction_flag = 0 and transaction_try_times < ? order by updated_at"
 	rows, _ := db.Query(sql, max_transaction_try_times)
 	defer rows.Close()
 	indexCode := "0x009"
