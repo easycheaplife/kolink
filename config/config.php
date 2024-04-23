@@ -27,7 +27,10 @@ return [
 		'Safety' => 7,
 		'DAO' => 8,
 		'Tool' => 9,
-		'Others' => 10,
+		'AI' => 10,
+		'RWA' => 11,
+		'MEME' => 12,
+		'Other' => 99,
 	),
 	'region_list' => array(
 		'All' => 0,
@@ -38,7 +41,7 @@ return [
 		'South Asia' => 5,
 		'Africa' => 6,
 		'CIS' => 7,
-		'Other' => 8
+		'Other' => 99
 	),
 	'language_list' => array(
 		'All' => 0,
@@ -61,7 +64,7 @@ return [
 		'Italian' => 17,
 		'Ukrainian' => 18,
 		'Urdu' => 19,
-		'Other' => 20
+		'Other' => 99
 	),
 	'transaction_type' => array(
 		'lock_assert' => 0,
