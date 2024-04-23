@@ -44,19 +44,19 @@ class ProjectModel extends Model
 
 	public function get($project_id)
 	{
-		return $this->select('id', 'token', 'email', 'logo', 'twitter_user_name', 'desc', 'website', 'category_id')
+		return $this->select('id', 'token', 'email', 'logo', 'twitter_user_name', 'twitter_user_id', 'name', 'desc', 'website', 'category_id')
 			->where('id', $project_id)->first();
 	}
 
 	public function login($token)
 	{
-		return $this->select('id', 'token', 'email', 'logo', 'twitter_user_name', 'desc', 'website', 'category_id')
+		return $this->select('id', 'token', 'email', 'logo', 'twitter_user_name', 'twitter_user_id', 'name', 'desc', 'website', 'category_id')
 			->where('token', $token)->first();
 	}
 
 	public function list($token, $page, $size)
 	{
-		return $this->select('id', 'token', 'email', 'logo', 'twitter_user_name', 'desc', 'website', 'category_id')
+		return $this->select('id', 'token', 'email', 'logo', 'twitter_user_name', 'twitter_user_id', 'name', 'desc', 'website', 'category_id')
 			->where('token', $token)
 			->orderByDesc('updated_at')
 			->skip($page * $size)
