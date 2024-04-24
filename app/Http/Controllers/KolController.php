@@ -58,7 +58,7 @@ class KolController extends Controller
 		$sort_type = $request->input('sort_type', 0);
 		$sort_field = $request->input('sort_field', 0);
 		$region_id = $request->input('region_id', '0');
-		$category_id = $request->input('category_id', '0');
+		$category_id = $request->input('category_id', '');
 		$language_id = $request->input('language_id', '0');
 		$channel_id = $request->input('channel_id', '0');
 		$service = new KolService();
