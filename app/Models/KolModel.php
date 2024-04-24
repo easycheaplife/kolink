@@ -151,6 +151,7 @@ class KolModel extends Model
 			$this->twitter_user_id = $twitter_user['user_id'];
 			$this->twitter_user_name = $twitter_user['screen_name'];
 			$this->twitter_avatar = $twitter_user['profile_image_url'];
+			$this->engagement_score = $twitter_user['engagement_score'];
 			$this->twitter_followers = $twitter_user['followers_count'];
 			$this->twitter_subscriptions = $twitter_user['favourites_count'];
 			$this->twitter_friends_count = $twitter_user['friends_count'];
@@ -178,6 +179,7 @@ class KolModel extends Model
 		return $this->where('twitter_user_id', $twitter_user['user_id'])->update([
 			'twitter_user_name' => $twitter_user['screen_name'], 
 			'twitter_avatar' => $twitter_user['profile_image_url'], 
+			'engagement_score' => $twitter_user['engagement_score'], 
 			'twitter_followers' => $twitter_user['followers_count'], 
 			'twitter_subscriptions' => $twitter_user['favourites_count'], 
 			'twitter_friends_count' => $twitter_user['friends_count'], 

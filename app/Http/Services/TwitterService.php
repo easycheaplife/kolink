@@ -93,7 +93,17 @@ class TwitterService extends Service
 		$kol_service = new KolService;
 		$twitter_user_model = new TwitterUserModel;
 		$total = $twitter_user_model->count();
-		Log::info($total);
+		$followers_count_max = $twitter_user_model->get_column_count_max('followers_count');
+		$friends_count_max = $twitter_user_model->get_column_count_max('friends_count');
+		$listed_count_max = $twitter_user_model->get_column_count_max('listed_count');
+		$favourites_count_max = $twitter_user_model->get_column_count_max('favourites_count');
+		$media_count_max = $twitter_user_model->get_column_count_max('media_count');
+		Log::info("total:$total");
+		Log::info("followers_count_max:$followers_count_max");
+		Log::info("friends_count_max:$friends_count_max");
+		Log::info("listed_count_max:$listed_count_max");
+		Log::info("favourites_count_max:$favourites_count_max");
+		Log::info("media_count_max:$media_count_max");
 		$size = config('config.default_page_size');
 		$page = $total / $size;
 		for ($i = 0; $i <= $page; ++$i)
@@ -101,6 +111,9 @@ class TwitterService extends Service
 			$users = $twitter_user_model->get_users($i, $size);
 			foreach ($users as $user)
 			{
+				$user['engagement_score'] = $this->calc_engagement_score($user, 
+					$followers_count_max, $listed_count_max, $friends_count_max,
+					$favourites_count_max, $media_count_max);
 				$kol = $kol_service->get_by_twitter_user_id($user['user_id']);
 				if (empty($kol))
 				{
@@ -120,14 +133,31 @@ class TwitterService extends Service
 	{
 		$kol_service = new KolService;
 		$kol_service->insert_twitter_user($twitter_user);
-		Log::info('insert:' . $twitter_user['user_id']);
+		Log::info('insert twitter_user_id:' . $twitter_user['user_id']);
 	}
 
 	public function update_kol($twitter_user, $kol_user)
 	{
 		$kol_service = new KolService;
 		$kol_service->update_twitter_user($twitter_user);
-		Log::info('update:' . $twitter_user['user_id']);
+		Log::info('update twitter_user_id:' . $twitter_user['user_id']);
+	}
+
+	public function calc_engagement_score($user, $followers_count_max, 
+		$listed_count_max, $friends_count_max, $favourites_count_max, $media_count_max)
+	{
+		$followers_count_max = $followers_count_max > 0 ? $followers_count_max : 1; 
+		$listed_count_max = $listed_count_max > 0 ? $listed_count_max : 1; 
+		$friends_count_max = $friends_count_max > 0 ? $friends_count_max : 1; 
+		$favourites_count_max = $favourites_count_max > 0 ? $favourites_count_max : 1; 
+		$media_count_max = $media_count_max > 0 ? $media_count_max : 1; 
+		$engagement_score = number_format($user['following_count'] / $followers_count_max * 20, 2)
+			+ number_format($user['listed_count'] / $listed_count_max * 20, 2)	
+			+ number_format($user['friends_count'] / $friends_count_max * 10, 2)	
+			+ number_format($user['favourites_count'] / $favourites_count_max * 10, 2)
+			+ number_format($user['media_count'] / $media_count_max * 10, 2);	
+		Log::info("engagement_score:$engagement_score");
+		return $engagement_score * 100;
 	}
 
 }
