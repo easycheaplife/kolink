@@ -58,6 +58,12 @@ class KolModel extends Model
 		if ($channel_id != '0') {
 			$query->whereIn('channel_id', explode(",", $channel_id));
 		}
+		if ($category_id != '') {
+			$items = explode(",", $category_id);
+			foreach ($items as $item) {
+				$query->orWhereRaw("FIND_IN_SET($item, category_id) > 0");
+			}
+		}
 		if (1 == $sort_field)
 		{
 			if (0 == $sort_type)
@@ -96,6 +102,12 @@ class KolModel extends Model
 		}
 		if ($channel_id != '0') {
 			$query->whereIn('channel_id', explode(",", $channel_id));
+		}
+		if ($category_id != '') {
+			$items = explode(",", $category_id);
+			foreach ($items as $item) {
+				$query->orWhereRaw("FIND_IN_SET($item, category_id) > 0");
+			}
 		}
 		return $query->count();
 	}
