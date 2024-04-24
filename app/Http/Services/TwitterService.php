@@ -151,13 +151,13 @@ class TwitterService extends Service
 		$friends_count_max = $friends_count_max > 0 ? $friends_count_max : 1; 
 		$favourites_count_max = $favourites_count_max > 0 ? $favourites_count_max : 1; 
 		$media_count_max = $media_count_max > 0 ? $media_count_max : 1; 
-		$engagement_score = number_format($user['following_count'] / $followers_count_max * 20, 2)
+		$engagement_score = number_format($user['followers_count'] / $followers_count_max * 20, 2)
 			+ number_format($user['listed_count'] / $listed_count_max * 20, 2)	
 			+ number_format($user['friends_count'] / $friends_count_max * 10, 2)	
 			+ number_format($user['favourites_count'] / $favourites_count_max * 10, 2)
 			+ number_format($user['media_count'] / $media_count_max * 10, 2);	
 		Log::info("engagement_score:$engagement_score");
-		return $engagement_score * 100;
+		return $engagement_score;
 	}
 
 }
