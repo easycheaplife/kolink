@@ -152,7 +152,7 @@ class KolModel extends Model
 			$this->twitter_user_name = $twitter_user['screen_name'];
 			$this->twitter_avatar = $twitter_user['profile_image_url'];
 			$this->twitter_followers = $twitter_user['followers_count'];
-			$this->twitter_subscriptions = $twitter_user['following_count'];
+			$this->twitter_subscriptions = $twitter_user['favourites_count'];
 			$this->twitter_friends_count = $twitter_user['friends_count'];
 			$this->twitter_listed_count = $twitter_user['listed_count'];
 			$this->twitter_statuses_count = $twitter_user['statuses_count'];
@@ -179,7 +179,7 @@ class KolModel extends Model
 			'twitter_user_name' => $twitter_user['screen_name'], 
 			'twitter_avatar' => $twitter_user['profile_image_url'], 
 			'twitter_followers' => $twitter_user['followers_count'], 
-			'twitter_subscriptions' => $twitter_user['following_count'], 
+			'twitter_subscriptions' => $twitter_user['favourites_count'], 
 			'twitter_friends_count' => $twitter_user['friends_count'], 
 			'twitter_listed_count' => $twitter_user['listed_count'], 
 			'twitter_statuses_count' => $twitter_user['statuses_count'], 

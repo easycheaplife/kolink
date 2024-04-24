@@ -50,12 +50,12 @@ def insert_user(user):
             url, followers_count, friends_count, listed_count, favourites_count, 
             utc_offset, time_zone, geo_enabled, verified, statuses_count, 
             lang, profile_background_image_url, profile_background_image_url_https, profile_image_url, profile_image_url_https, 
-            following_count, media_count, description_urls, created_at, updated_at) 
+            friends_count, following_count, media_count, description_urls, created_at, updated_at) 
             VALUES (%s, %s, %s, %s, %s,
             %s, %s, %s, %s, %s, 
             %s, %s, %s, %s, %s, 
             %s, %s, %s, %s, %s, 
-            %s, %s, %s, %s, %s)"""
+            %s, %s, %s, %s, %s, %s)"""
         logging.info(insert_query)
         if user.url is None:
             user.url = ''
@@ -63,7 +63,7 @@ def insert_user(user):
             user.url, str(user.followers_count), '0', str(user.listed_count), str(user.favourites_count),
             '0', '', '0', str(int(user.verified)), str(user.statuses_count),
             '', '', '', user.profile_image_url, '', 
-            str(user.following_count), str(user.media_count), str(json.dumps(user.description_urls)), str(str_to_unixtime(user.created_at)), str(int(time.time())))
+            str(user.following_count), str(user.following_count), str(user.media_count), str(json.dumps(user.description_urls)), str(str_to_unixtime(user.created_at)), str(int(time.time())))
         cursor.execute(insert_query, values)
 
         insert_data_query = "UPDATE twitter_user_data SET insert_flag = 1 where user_id = " + str(user.id) 
