@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('task_id')->default(0);
             $table->integer('kol_id')->default(0);
-            $table->float('quotation', 12, 2)->default(0.0);
+            $table->string('quotation', 24)->default('');
             $table->integer('status')->default(0);
             $table->string('reason', 128)->default('');
             $table->string('comment', 128)->default('');

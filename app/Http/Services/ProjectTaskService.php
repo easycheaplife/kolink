@@ -146,10 +146,12 @@ class ProjectTaskService extends Service
 			if (!empty($application))
 			{
 				$this->res['data']['list'][$key]['status'] = $application['status'];
+				$this->res['data']['list'][$key]['application'] = $application;
 			}
 			else
 			{
 				$this->res['data']['list'][$key]['status'] = -1;
+				$this->res['data']['list'][$key]['application'] = array();
 			}
 		}
 		return $this->res;
