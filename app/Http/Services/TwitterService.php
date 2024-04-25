@@ -98,12 +98,14 @@ class TwitterService extends Service
 		$listed_count_max = $twitter_user_model->get_column_count_max('listed_count');
 		$favourites_count_max = $twitter_user_model->get_column_count_max('favourites_count');
 		$media_count_max = $twitter_user_model->get_column_count_max('media_count');
+		$created_at_min = $twitter_user_model->get_column_count_min('created_at');
 		Log::info("total:$total");
 		Log::info("followers_count_max:$followers_count_max");
 		Log::info("friends_count_max:$friends_count_max");
 		Log::info("listed_count_max:$listed_count_max");
 		Log::info("favourites_count_max:$favourites_count_max");
 		Log::info("media_count_max:$media_count_max");
+		Log::info("created_at_min:$created_at_min");
 		$size = config('config.default_page_size');
 		$page = $total / $size;
 		for ($i = 0; $i <= $page; ++$i)
@@ -114,6 +116,8 @@ class TwitterService extends Service
 				$user['engagement_score'] = $this->calc_engagement_score($user, 
 					$followers_count_max, $listed_count_max, $friends_count_max,
 					$favourites_count_max, $media_count_max);
+				$user['age_score'] = $this->calc_age_score($user, $created_at_min);
+				$user['composite_score'] = $user['engagement_score'] + $user['age_score'];
 				$kol = $kol_service->get_by_twitter_user_id($user['user_id']);
 				if (empty($kol))
 				{
@@ -158,6 +162,16 @@ class TwitterService extends Service
 			+ number_format($user['media_count'] / $media_count_max * 10, 2);	
 		Log::info("engagement_score:$engagement_score");
 		return $engagement_score;
+	}
+
+	public function calc_age_score($user, $twitter_created_at_min)
+	{
+		$now_time = time();
+		$twitter_total = $now_time - $twitter_created_at_min;	
+		$twitter_diff = $now_time - strtotime($user['created_at']);
+		$twitter_time_score = number_format($twitter_diff / $twitter_total * 10, 2);
+		Log::info("twitter_time_score:$twitter_time_score");
+		return $twitter_time_score;
 	}
 
 }

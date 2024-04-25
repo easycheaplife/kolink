@@ -82,4 +82,9 @@ class TwitterUserModel extends Model
 		return $this->select($column_name)->max($column_name);
 	}
 
+	public function get_column_count_min($column_name)
+	{
+		return $this->select($column_name)->min($column_name);
+	}
+
 }	
