@@ -8,13 +8,36 @@ use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Str;
 use App\Constants\ErrorCodes;
 use App\Constants\ErrorDescs;
+use App\Http\Services\KolService;
+use App\Models\EtherscanModel;
 
 
 class EtherscanService extends Service 
 {
+	public function load_all_tokens()
+	{
+		$kol_service = new KolService;
+		$total = $kol_service->token_count();
+		Log::info("total:$total");
+		$size = config('config.default_page_size');
+		$page = $total / $size;
+		for ($i = 0; $i <= $page; ++$i)
+		{
+			$tokens = $kol_service->get_tokens($i, $size);
+			foreach ($tokens as $token)
+			{
+				$this->address_info($token);
+				Log::info("token:$token");
+			}
+		}
+	}
+
 	public function address_info($address)
+
 	{
 		$created_at = time();
+		$token_count = 0;
+		$nft_count = 0;
 		$etherscan_api_key = config('config.etherscan_api_key');
 		$etherscan_url_base = config('config.etherscan_url_base');
 		$headers = [];
@@ -32,10 +55,60 @@ class EtherscanService extends Service
 			if ($response->successful()) {
 				$data = $response->json();
 				Log::info($data);
-				if (!empty($data))
+				if (is_array($data['result']) && !empty($data['result']))
 				{
-					$created_at = $data['result']['timeStamp'];
+					$created_at = $data['result'][0]['timeStamp'];
 				}
+			}
+			else {
+				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
+				Log::error($error_message);
+				return $this->error_response($address, ErrorCodes::ERROR_CODE_ETHERSCAN_API_FAULED, $error_message);
+			}
+			sleep(1);
+			$contractaddress = config('config.contractaddress');
+			$offset = 9999;
+			$url = "$etherscan_url_base?module=account&action=tokentx" .
+				"&contractaddress=$contractaddress&address=$address" . 
+				"&page=$page&offset=$offset&startblock=$start_block" . 
+				"&endblock=$end_block&sort=asc&apikey=$etherscan_api_key";
+			$response = Http::withHeaders($headers)
+				->timeout(config('config.http_timeout'))
+				->get($url);
+			if ($response->successful()) {
+				$data = $response->json();
+				Log::info($data);
+				if (is_array($data['result']) && !empty($data['result']))
+				{
+					$token_count = count($data['result']);
+				}
+			}
+			else {
+				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
+				Log::error($error_message);
+				return $this->error_response($address, ErrorCodes::ERROR_CODE_ETHERSCAN_API_FAULED, $error_message);
+			}
+
+			sleep(1);
+			$url = "$etherscan_url_base?module=account&action=tokennfttx" . 
+				"&contractaddress=$contractaddress&address=$address" .
+				"&page=$page&offset=$offset&startblock=$start_block&endblock=$end_block" . 
+				"&sort=asc&apikey=$etherscan_api_key";
+			$response = Http::withHeaders($headers)
+				->timeout(config('config.http_timeout'))
+				->get($url);
+			if ($response->successful()) {
+				$data = $response->json();
+				Log::info($data);
+				if (is_array($data['result']) && !empty($data['result']))
+				{
+					$nft_count = count($data['result']);
+				}
+				$etherscan_service = new EtherscanModel;
+				$etherscan_service->insert($address, $created_at, $token_count, $nft_count);
+				Log::info("created_at:$created_at");
+				Log::info("token_count:$token_count");
+				Log::info("nft_count:$nft_count");
 			}
 			else {
 				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
@@ -47,6 +120,25 @@ class EtherscanService extends Service
 			Log::error($e->getMessage());
 			return $this->error_response($address, ErrorCodes::ERROR_CODE_ETHERSCAN_API_FAULED, $e->getMessage());
 		}  
-
 	}
+
+	public function get_token($address)
+	{
+		$etherscan_service = new EtherscanModel;
+		$etherscan_service->get($address);
+	
+	}
+
+	public function get_column_count_max($column_name)
+	{
+		$etherscan_model = new EtherscanModel;
+		return $etherscan_model->get_column_count_max($column_name);
+	}
+
+	public function get_column_count_min($column_name)
+	{
+		$etherscan_model = new EtherscanModel;
+		return $etherscan_model->get_column_count_min($column_name);
+	}
+
 }

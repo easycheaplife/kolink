@@ -193,4 +193,21 @@ class KolModel extends Model
 			'twitter_media_count' => $twitter_user['media_count']]);
 	}
 
+	public function token_count()
+	{
+		return $this->select('id') 
+			->where('token', 'like', '0x%')
+			->count();
+	}
+
+	public function get_tokens($page, $size)
+	{
+		return $this->select('token') 
+			->where('token', 'like', '0x%')
+			->skip($page * $size)
+			->take($size)
+			->get();
+	
+	}
+
 }

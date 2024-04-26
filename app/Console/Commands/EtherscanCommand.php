@@ -30,6 +30,7 @@ class EtherscanCommand extends Command
     {
 		$etherscan_service = new EtherscanService;
 		$etherscan_service->address_info('0xBf1A207adc5776d284A3059F71F1702f0465B0f7');
+		//$etherscan_service->load_all_tokens();
 		Log::info("app:etherscan-command");
     }
 }

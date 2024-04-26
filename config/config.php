@@ -80,4 +80,5 @@ return [
 	'task_review_timeout' => 7,
 	'etherscan_api_key' => '3IEU6UYCNQN43DFVF5BJM9SP32HH5PZHH8',
 	'etherscan_url_base' => 'https://api.etherscan.io/api',
+	'contractaddress' => '0xD7aAdD7BD1d12ee13E1f4Db8BB56458882796bE4',
 ];

@@ -12,6 +12,7 @@ use App\Constants\ErrorDescs;
 use App\Models\TwitterUserModel;
 use App\Models\TwitterUserDataModel;
 use App\Http\Services\KolService;
+use App\Http\Services\EtherscanService;
 
 
 class TwitterService extends Service 
@@ -89,20 +90,27 @@ class TwitterService extends Service
 	{
 		$kol_service = new KolService;
 		$twitter_user_model = new TwitterUserModel;
+		$etherscan_service = new EtherscanService;
 		$total = $twitter_user_model->count();
 		$followers_count_max = $twitter_user_model->get_column_count_max('followers_count');
 		$friends_count_max = $twitter_user_model->get_column_count_max('friends_count');
 		$listed_count_max = $twitter_user_model->get_column_count_max('listed_count');
 		$favourites_count_max = $twitter_user_model->get_column_count_max('favourites_count');
 		$media_count_max = $twitter_user_model->get_column_count_max('media_count');
-		$created_at_min = $twitter_user_model->get_column_count_min('created_at');
+		$twitter_created_at_min = $twitter_user_model->get_column_count_min('created_at');
+		$tokon_created_at_min = $etherscan_service->get_column_count_min('created_at');
+		$token_count_max = $etherscan_service->get_column_count_min('token_count');
+		$nft_count_max = $etherscan_service->get_column_count_min('nft_count');
 		Log::info("total:$total");
 		Log::info("followers_count_max:$followers_count_max");
 		Log::info("friends_count_max:$friends_count_max");
 		Log::info("listed_count_max:$listed_count_max");
 		Log::info("favourites_count_max:$favourites_count_max");
 		Log::info("media_count_max:$media_count_max");
-		Log::info("created_at_min:$created_at_min");
+		Log::info("twitter_created_at_min:$twitter_created_at_min");
+		Log::info("token_created_at_min:$twitter_created_at_min");
+		Log::info("token_count_max:$token_count_max");
+		Log::info("nft_count_max:$nft_count_max");
 		$size = config('config.default_page_size');
 		$page = $total / $size;
 		for ($i = 0; $i <= $page; ++$i)
@@ -110,12 +118,15 @@ class TwitterService extends Service
 			$users = $twitter_user_model->get_users($i, $size);
 			foreach ($users as $user)
 			{
+				$kol = $kol_service->get_by_twitter_user_id($user['user_id']);
+				$token = empty($kol) ? '' : $kol['token'];
+				$token_user = $this->get_token_user($token);
 				$user['engagement_score'] = $this->calc_engagement_score($user, 
 					$followers_count_max, $listed_count_max, $friends_count_max,
 					$favourites_count_max, $media_count_max);
-				$user['age_score'] = $this->calc_age_score($user, $created_at_min);
-				$user['composite_score'] = $user['engagement_score'] + $user['age_score'];
-				$kol = $kol_service->get_by_twitter_user_id($user['user_id']);
+				$user['age_score'] = $this->calc_age_score($user, $token_user, $twitter_created_at_min, $twitter_created_at_min);
+				$user['monetary_score'] = $this->calc_monetary_score($token_user, $token_count_max, $nft_count_max);
+				$user['composite_score'] = $user['engagement_score'] + $user['age_score'] + $user['monetary_score'];
 				if (empty($kol))
 				{
 					// insert 	
@@ -161,14 +172,51 @@ class TwitterService extends Service
 		return $engagement_score;
 	}
 
-	public function calc_age_score($user, $twitter_created_at_min)
+	public function calc_age_score($user, $token_user, $twitter_created_at_min, $token_created_at_min)
 	{
 		$now_time = time();
+		$twitter_time_score = 0;
 		$twitter_total = $now_time - $twitter_created_at_min;	
-		$twitter_diff = $now_time - strtotime($user['created_at']);
-		$twitter_time_score = number_format($twitter_diff / $twitter_total * 10, 2);
-		Log::info("twitter_time_score:$twitter_time_score");
-		return $twitter_time_score;
+		if (!empty($twitter_total))
+		{
+			$twitter_diff = $now_time - $user['created_at'];
+			$twitter_time_score = number_format($twitter_diff / $twitter_total * 5, 2);
+			Log::info("twitter_time_score:$twitter_time_score,twitter_diff:$twitter_diff,twitter_total:$twitter_total");
+		}
+
+		$token_time_score = 0;
+		$token_total = $now_time - $token_created_at_min;	
+		if (!empty($token_user) && !empty($token_total))
+		{
+			$token_diff = $now_time - $token_user['created_at'];
+			$token_time_score = number_format($token_diff / $token_total * 5, 2);
+			Log::info("token_time_score:$token_time_score,token_diff:$token_diff,token_total:$token_total");
+		}
+		return floatval($twitter_time_score) + floatval($token_time_score);
+	}
+
+	public function get_token_user($token)
+	{
+		if ('' == $token)
+		{
+			return array();
+		}
+		$etherscan_service = new EtherscanService; 
+		return $etherscan_service->get_token($token);
+	}
+
+	public function calc_monetary_score($token_user, $token_count_max, $nft_count_max)
+	{
+		if (empty($token_user))
+		{
+			return 0;
+		}
+		$token_count_max = $token_count_max > 0 ? $token_count_max : 1; 
+		$nft_count_max = $nft_count_max > 0 ? $nft_count_max : 1; 
+		$monetary_score = number_format($token_user['token_count'] / $token_count_max * 20, 2) 
+			+ number_format($token_user['nft_count'] / $nft_count_max * 20, 2);
+		Log::info("monetary_score:$monetary_score");
+		return $monetary_score;
 	}
 
 }

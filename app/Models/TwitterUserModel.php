@@ -15,6 +15,8 @@ class TwitterUserModel extends Model
 
 	protected $table = 'twitter_user';
 
+	public $timestamps = false;
+
 	public function insert($user)
 	{
 		try {

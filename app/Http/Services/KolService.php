@@ -135,4 +135,16 @@ class KolService extends Service
 		}
 	}	
 
+	public function get_tokens($page, $size)
+	{
+		$kol_model = new KolModel;
+		return $kol_model->get_tokens($page, $size);
+	}
+
+	public function token_count()
+	{
+		$kol_model = new KolModel;
+		return $kol_model->token_count();
+	}
+
 }
