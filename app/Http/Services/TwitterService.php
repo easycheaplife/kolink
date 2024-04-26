@@ -37,9 +37,6 @@ class TwitterService extends Service
 			}
 		} catch (\Exception $e) 
 		{   
-			if (strpos($e->getMessage(), "" . ErrorCodes::ERROR_CODE_DUPLICATE_ENTRY) !== false) {
-				return $this->res;	
-			}
 			Log::error($e->getMessage());
 			return $this->error_response($session_id, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $e->getMessage());
 		}  

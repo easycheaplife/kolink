@@ -23,6 +23,7 @@ class ErrorCodes
 	const ERROR_CODE_TASK_IS_IN_PROGRESS = 14;
 	const ERROR_CODE_TWITTER_AUTH_URL_FAULED = 15;
 	const ERROR_CODE_TWITTER_USER_FAULED = 16;
+	const ERROR_CODE_ETHERSCAN_API_FAULED = 16;
 	
 	const ERROR_CODE_DUPLICATE_ENTRY = 1062;
 }
@@ -46,5 +47,6 @@ class ErrorDescs
 	const ERROR_CODE_TASK_IS_IN_PROGRESS = 'Task is in progress, can not close the task!';
 	const ERROR_CODE_TWITTER_AUTH_URL_FAULED = 'Get twitter auth url failed';
 	const ERROR_CODE_TWITTER_USER_FAULED = 'Get twitter use data failed';
+	const ERROR_CODE_ETHERSCAN_API_FAULED = 'Get etherscan api failed';
 }
 

@@ -78,4 +78,6 @@ return [
 	'http_timeout' => 3,
 	'verification_code_valid_time' => 300,
 	'task_review_timeout' => 7,
+	'etherscan_api_key' => '3IEU6UYCNQN43DFVF5BJM9SP32HH5PZHH8',
+	'etherscan_url_base' => 'https://api.etherscan.io/api',
 ];
