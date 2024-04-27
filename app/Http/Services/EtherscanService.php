@@ -65,7 +65,6 @@ class EtherscanService extends Service
 				Log::error($error_message);
 				return $this->error_response($address, ErrorCodes::ERROR_CODE_ETHERSCAN_API_FAULED, $error_message);
 			}
-			sleep(1);
 			$contractaddress = config('config.contractaddress');
 			$offset = 9999;
 			$url = "$etherscan_url_base?module=account&action=tokentx" .
@@ -89,7 +88,6 @@ class EtherscanService extends Service
 				return $this->error_response($address, ErrorCodes::ERROR_CODE_ETHERSCAN_API_FAULED, $error_message);
 			}
 
-			sleep(1);
 			$url = "$etherscan_url_base?module=account&action=tokennfttx" . 
 				"&contractaddress=$contractaddress&address=$address" .
 				"&page=$page&offset=$offset&startblock=$start_block&endblock=$end_block" . 

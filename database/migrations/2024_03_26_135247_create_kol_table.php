@@ -30,10 +30,10 @@ return new class extends Migration
             $table->integer('language_id')->default(0);
             $table->string('category_id', 64)->default('');
             $table->integer('channel_id')->default(0);
-            $table->float('monetary_score')->default(0.0);
-            $table->float('engagement_score')->default(0.0);
-            $table->float('age_score')->default(0.0);
-            $table->float('composite_score')->default(0.0);
+            $table->string('monetary_score', 24)->default('');
+            $table->string('engagement_score', 24)->default('');
+            $table->string('age_score', 24)->default('');
+            $table->string('composite_score', 24)->default('');
             $table->timestamps();
         });
     }

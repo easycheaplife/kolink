@@ -136,7 +136,6 @@ class TwitterService extends Service
 					// update
 					$this->update_kol($user, $kol);
 				}
-				sleep(1);
 			}
 		}
 	}
