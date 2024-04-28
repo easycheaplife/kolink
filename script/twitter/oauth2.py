@@ -7,6 +7,9 @@ import requests
 from requests.auth import AuthBase, HTTPBasicAuth
 from requests_oauthlib import OAuth2Session
 
+
+#export CLIENT_ID='emNmLUt4WEt4SlFWekpCMjNxSWw6MTpjaQ'
+#export CLIENT_SECRET='pgCKjsZqpB_c92sUro6pzsJC6UA5pCYHgSrOWxQPlgP8EUTj-a'
 # First, you will need to enable OAuth 2.0 in your App’s auth settings in the Developer Portal to get your client ID.
 # Inside your terminal you will need to set an enviornment variable
 # export CLIENT_ID='your-client-id'
