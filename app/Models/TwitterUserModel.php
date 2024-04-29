@@ -55,6 +55,35 @@ class TwitterUserModel extends Model
 		return false;
 	}
 
+	public function insert2($user)
+	{
+		try {
+			$this->user_id = $user['id'];
+			$this->name = $user['name'];
+			$this->screen_name = $user['username'];
+			$this->description = $user['description'];
+			$this->followers_count = $user['public_metrics']['followers_count'];
+			$this->friends_count = $user['public_metrics']['following_count'];
+			$this->listed_count = $user['public_metrics']['listed_count'];
+			$this->favourites_count = $user['public_metrics']['like_count'];
+			$this->statuses_count = $user['public_metrics']['tweet_count'];
+			$this->profile_image_url = $user['profile_image_url'];
+			$this->created_at = strtotime($user['created_at']);
+			return $this->save();
+		}
+		catch (QueryException $e)
+		{
+			if ($e->errorInfo[1] == ErrorCodes::ERROR_CODE_DUPLICATE_ENTRY)
+			{
+				Log::error($e->getMessage());
+				return true;	
+			}
+			Log::error($e->getMessage());
+		}
+		return false;
+	}
+
+
 	public function get($user_id)
 	{
 		return $this->select('user_id', 'name', 'screen_name', 'location', 'description', 'url', 'followers_count', 
