@@ -26,6 +26,23 @@ class TwitterController extends Controller
 		return $service->auth($redirect_uri);
 	}
 
+	public function auth2(Request $request)
+	{
+		$redirect_uri = $request->input('redirect_uri', config('config.twitter_redirect_uri'));
+		try {
+			$validated_data = $request->validate([
+				'code' => 'required|string',
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new TwitterService();
+		return $service->auth2($redirect_uri, $validated_data['code']);
+	}
+
 	public function user(Request $request)
 	{
 		$redirect_uri = $request->input('redirect_uri','');
@@ -44,6 +61,22 @@ class TwitterController extends Controller
 		return $service->user($validated_data['session_id'],
 			$validated_data['oauth_verifier'],
 			$redirect_uri);
+	}
+
+	public function user2(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'access_token' => 'required|string'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new TwitterService();
+		return $service->user2($validated_data['access_token']);
 	}
 
 }

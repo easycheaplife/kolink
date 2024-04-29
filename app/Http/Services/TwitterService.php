@@ -44,6 +44,36 @@ class TwitterService extends Service
 		return $this->res;
 	}	
 
+	public function auth2($redirect_uri, $code)
+	{
+		try {
+			$url = 'https://api.twitter.com/2/oauth2/token';
+			$response = Http::asForm()->post($url, [
+				'code' => $code,
+				'grant_type' => 'authorization_code',
+				'client_id' => config('config.twitter_client_id'),
+				'redirect_uri' => $redirect_uri,
+				'code_verifier' => 'challenge',
+			]);
+
+			if ($response->successful()) {
+				$data = $response->json();
+				Log::info($data);
+				$this->res['data'] = $data;
+			}
+			else {
+				$error_message = "http post $url failed, status:" . $response->status() . ' ' . $response->body();
+				Log::error($error_message);
+				return $this->error_response($code, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $error_message);
+			}
+		} catch (\Exception $e) 
+		{   
+			Log::error($e->getMessage());
+			return $this->error_response($code, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $e->getMessage());
+		}  
+		return $this->res;
+	}	
+
 	public function user($session_id, $oauth_verifier, $redirect_uri)
 	{
 		$url = config('config.twitter_url_base') . "/twitter/user?session_id=$session_id&oauth_verifier=$oauth_verifier&redirect_uri=$redirect_uri";
@@ -79,6 +109,45 @@ class TwitterService extends Service
 		}  
 		return $this->res;
 	}	
+
+	public function user2($access_token)
+	{
+		$url = "https://api.twitter.com/2/users/me?" . 
+			"user.fields=created_at,description,entities,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified,withheld";
+		try {
+			$headers = ['Authorization' => "Bearer $access_token"];
+			$response = Http::withHeaders($headers)
+				->get($url);
+			if ($response->successful()) {
+				$data = $response->json();
+				$this->res['data'] = $data;
+				/*
+				$twitter_user_model = new TwitterUserModel;
+				$insert_flag = 0;
+				if ($twitter_user_model->insert($data['data']))
+				{
+					$insert_flag = 1;	
+				}
+				$twitter_user_data_model = new TwitterUserDataModel;
+				$twitter_user_data_model->insert($data['data'], $insert_flag);
+				 */
+			}
+			else {
+				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
+				Log::error($error_message);
+				return $this->error_response($access_token, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $error_message);
+			}
+		} catch (\Exception $e) 
+		{   
+			if (strpos($e->getMessage(), "" . ErrorCodes::ERROR_CODE_DUPLICATE_ENTRY) !== false) {
+				return $this->res;	
+			}
+			Log::error($e);
+			return $this->error_response($access_token, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $e->getMessage());
+		}  
+		return $this->res;
+	}	
+
 
 	public function get_user($user_id)
 	{

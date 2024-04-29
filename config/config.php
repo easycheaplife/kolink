@@ -81,4 +81,6 @@ return [
 	'etherscan_api_key' => '3IEU6UYCNQN43DFVF5BJM9SP32HH5PZHH8',
 	'etherscan_url_base' => 'https://api.etherscan.io/api',
 	'contractaddress' => '0xD7aAdD7BD1d12ee13E1f4Db8BB56458882796bE4',
+	'twitter_client_id' => 'emNmLUt4WEt4SlFWekpCMjNxSWw6MTpjaQ',
+	'twitter_redirect_uri' => 'http://localhost:8888/oauth',
 ];
