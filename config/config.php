@@ -77,6 +77,24 @@ return [
 	'twitter_url_base' => 'http://localhost:8010',
 	'http_timeout' => 3,
 	'verification_code_valid_time' => 300,
+	'verification_type' => array('kol' => 0, 'project' => 1), 
+	'verification_subject' => array(0 => 'KOLink - Confirm Your Email Address', 1 => 'KOLink - Confirm Your Email Address'), 
+	'verification_body' => array(
+		0 => 
+	"Thank you for joining KOLink! We're excited to have you on board as we work together to redefine content creation and influencer marketing.\n\n" .
+	"Your verification code is: %s \n\n" .
+	"If you did not initiate this request, please ignore this message.\n\n" .
+	"We look forward to seeing the amazing content you'll create and the connections you'll build.\n\n" .
+	"Warm regards,\n" .
+	"The KOLink Team", 
+		1 => 
+	"Welcome to KOLink, the hub where projects meet top-tier influencers! Please confirm your email to begin your journey: \n\n" .
+	"Verification Code: %s \n\n" .
+	"If you did not initiate this request, please ignore this message. \n\n" .
+	"Thank you for choosing KOLink. \n\n" .
+	"Warm regards,\n" .
+	"The KOLink Team"
+	), 
 	'task_review_timeout' => 7,
 	'etherscan_api_key' => '3IEU6UYCNQN43DFVF5BJM9SP32HH5PZHH8',
 	'etherscan_url_base' => 'https://api.etherscan.io/api',

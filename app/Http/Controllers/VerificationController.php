@@ -11,6 +11,7 @@ class VerificationController extends Controller
 {
 	public function code(Request $request)
 	{
+		$type = $request->input('type', 0);
 		try {
 			$validated_data = $request->validate([
 				'email' => 'required|email',
@@ -22,6 +23,6 @@ class VerificationController extends Controller
 				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
 		}
 		$service = new VerificationService();
-		return $service->code($validated_data['email']);
+		return $service->code($validated_data['email'], $type);
 	}
 }

@@ -20,7 +20,7 @@ class MailService extends Service
 			return;
 		}
 		Log::info('email:' . $data['email'] . ',code:' . $data['code']);	
-		if ($this->send_mail_new($data['email'], $data['code']))
+		if ($this->send_mail_new($data['email'], $data['code'], $data['type']))
 		{
 			$verification_service->update_send_flag($data['id']);	
 			Log::info("send mail success!");	
@@ -38,7 +38,7 @@ class MailService extends Service
 		return mail($email, 'Verification Code', "$code", $headers);
 	}
 
-	public function send_mail_new($email, $code)
+	public function send_mail_new($email, $code, $type)
 	{
 		$mail = new PHPMailer(true);
 		try {
@@ -51,8 +51,8 @@ class MailService extends Service
 			$mail->Port = env('MAIL_PORT');
 			$mail->setFrom(env('MAIL_FROM_ADDRESS'));
 			$mail->addAddress($email, 'Dear');
-			$mail->Subject = 'Verification Code';
-			$mail->Body = "Your verification code is $code.";
+			$mail->Subject = config('config.verification_subject')[$type];
+			$mail->Body = sprintf(config('config.verification_body')[$type], strval($code));
 			return $mail->send();
 		} catch (Exception $e) {
 			Log::error("Email could not be sent. Error: " . $mail->ErrorInfo);

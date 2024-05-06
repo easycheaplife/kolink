@@ -15,11 +15,12 @@ class VerificationModel extends Model
 
 	protected $table = 'verification_code';
 
-	public function insert($email, $code)
+	public function insert($email, $code, $type)
 	{
 		try {
 			$this->email = $email;
 			$this->code = $code;
+			$this->type = $type;
 			return $this->save();
 		}
 		catch (QueryException $e)
@@ -33,17 +34,18 @@ class VerificationModel extends Model
 		return false;
 	}
 
-	public function get($email)
+	public function get($email, $type)
 	{
 		return $this->select('code', 'updated_at')
 			->where('email', $email)
+			->where('type', $type)
 			->orderByDesc('created_at')
 			->first();	
 	}
 
 	public function unsend_code()
 	{
-		return $this->select('id', 'email', 'code', 'try_times')
+		return $this->select('id', 'email', 'code', 'try_times', 'type')
 			->where('send_flag', 0)
 			->where('try_times', '<', config('config.mail_try_times'))
 			->orderBy('created_at', 'asc')

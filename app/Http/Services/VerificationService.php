@@ -11,11 +11,11 @@ use App\Models\VerificationModel;
 
 class VerificationService extends Service 
 {
-    public function code($email)
+    public function code($email, $type)
 	{
 		$verification_model = new VerificationModel;
 		$code  = str_pad(mt_rand(111111, 999999), 6, '0', STR_PAD_LEFT);
-		if (!$verification_model->insert($email, $code))
+		if (!$verification_model->insert($email, $code, $type))
 		{
 			return $this->error_response($email, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
@@ -23,10 +23,10 @@ class VerificationService extends Service
 		return $this->res;
 	}	
 
-	public function get_code($email)
+	public function get_code($email, $type)
 	{
 		$verification_model = new VerificationModel;
-		$data = $verification_model->get($email);	
+		$data = $verification_model->get($email, $type);	
 		if (empty($data))
 		{
 			return 0;

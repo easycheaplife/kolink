@@ -20,7 +20,7 @@ class KolService extends Service
 		$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id, $code)
 	{
 		$verification_service = new VerificationService;
-		$verification_code = $verification_service->get_code($email);
+		$verification_code = $verification_service->get_code($email, config('config.verification_type')['kol']);
 		if ($code != $verification_code)
 		{
 			return $this->error_response($token, ErrorCodes::ERROR_CODE_VERIFICATION_CODE_ERROR,
@@ -34,7 +34,7 @@ class KolService extends Service
 			return $this->error_response($token, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
-		$this->res['id'] = $last_insert_id;
+		$this->res['data']['id'] = $last_insert_id;
 		return $this->res;
 	}	
 
