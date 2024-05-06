@@ -156,4 +156,19 @@ class ProjectTaskApplicationModel extends Model
 			->first();
 	}
 
+	public function application_kol_num($task_id)
+	{
+		$task_status = array(
+			config('config.task_status')['accept'],
+			config('config.task_status')['upload'],
+			config('config.task_status')['finish'],
+			config('config.task_status')['lock_pending'],
+			config('config.task_status')['settle_pending'],
+			config('config.task_status')['delegate_settle_pending'],
+		);
+		return $this->where('task_id', $task_id)   
+			->whereIn('status', $task_status)
+			->count();
+	}
+
 }
