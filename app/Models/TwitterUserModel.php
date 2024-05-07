@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use DateTime;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\QueryException;
@@ -55,8 +56,20 @@ class TwitterUserModel extends Model
 		return false;
 	}
 
+	public function convert_to_unixtime($datetimeStr) {
+		$datetime = DateTime::createFromFormat('Y-m-d\TH:i:s.u\Z', $datetimeStr);
+		if ($datetime === false) {
+			$datetime = DateTime::createFromFormat('D M d H:i:s O Y', $datetimeStr);
+		}
+		if ($datetime !== false) {
+			return $datetime->getTimestamp();
+		}
+		return time();
+	}
+
 	public function insert2($user)
 	{
+		Log::info($user);
 		try {
 			$this->user_id = $user['id'];
 			$this->name = $user['name'];
@@ -68,7 +81,7 @@ class TwitterUserModel extends Model
 			$this->favourites_count = $user['public_metrics']['like_count'];
 			$this->statuses_count = $user['public_metrics']['tweet_count'];
 			$this->profile_image_url = $user['profile_image_url'];
-			$this->created_at = strtotime($user['created_at']);
+			$this->created_at = $this->convert_to_unixtime($user['created_at']);
 			return $this->save();
 		}
 		catch (QueryException $e)
