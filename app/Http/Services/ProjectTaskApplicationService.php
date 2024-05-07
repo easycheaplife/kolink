@@ -17,42 +17,11 @@ class ProjectTaskApplicationService extends Service
 {
     public function task_application_new($kol_id, $task_id, $quotation, $reason)
 	{
-		$task_service = new ProjectTaskService;
-		$task_detail = $task_service->task_detail($task_id);
-		if (empty($task_detail['data']))
+		$application_result = $this->application_eligibility($kol_id, $task_id);
+		if ($application_result['code'] != ErrorCodes::ERROR_CODE_SUCCESS)
 		{
-			return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_IS_NOT_EXIST,
-				ErrorDescs::ERROR_CODE_TASK_IS_NOT_EXIST);		
+			return $application_result;	
 		}
-		$max_kol_num = $task_detail['data']['kol_max'];
-		if ($max_kol_num > 0)
-		{
-			$application_kol_num = $this->application_kol_num($task_id);	
-			if ($application_kol_num >= $max_kol_num)
-			{
-				return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_REACH_MAX_KOL_UPLIMIT,
-					ErrorDescs::ERROR_CODE_TASK_APPLICATION_REACH_MAX_KOL_UPLIMIT);		
-			}
-		}
-
-		$kol_service = new KolService;
-		$kol_detail = $kol_service->kol_detail($kol_id);
-		if (empty($kol_detail['data']))
-		{
-			return $this->error_response($task_id, ErrorCodes::ERROR_CODE_KOL_IS_NOT_EXIST,
-				ErrorDescs::ERROR_CODE_KOL_IS_NOT_EXIST);		
-		}
-		$kol_min_followers = $task_detail['data']['kol_min_followers'];
-		if ($kol_min_followers > 0)
-		{
-			$followers = $kol_detail['data']['twitter_followers'];	
-			if ($followers < $kol_min_followers)
-			{
-				return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_KOL_FOLLOWERS_IS_NOT_ENOUGH,
-					ErrorDescs::ERROR_CODE_TASK_APPLICATION_KOL_FOLLOWERS_IS_NOT_ENOUGH);		
-			}
-		}
-
 		$application_model = new ProjectTaskApplicationModel;
 		if (!$application_model->insert($kol_id, $task_id, $quotation, $reason))
 		{
@@ -304,6 +273,46 @@ class ProjectTaskApplicationService extends Service
 	{
 		$application_model = new ProjectTaskApplicationModel;
 		return $application_model->application_kol_num($task_id);
+	}
+
+	public function application_eligibility($kol_id, $task_id)
+	{
+		$task_service = new ProjectTaskService;
+		$task_detail = $task_service->task_detail($task_id);
+		if (empty($task_detail['data']))
+		{
+			return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_IS_NOT_EXIST,
+				ErrorDescs::ERROR_CODE_TASK_IS_NOT_EXIST);		
+		}
+		$max_kol_num = $task_detail['data']['kol_max'];
+		if ($max_kol_num > 0)
+		{
+			$application_kol_num = $this->application_kol_num($task_id);	
+			if ($application_kol_num >= $max_kol_num)
+			{
+				return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_REACH_MAX_KOL_UPLIMIT,
+					ErrorDescs::ERROR_CODE_TASK_APPLICATION_REACH_MAX_KOL_UPLIMIT);		
+			}
+		}
+
+		$kol_service = new KolService;
+		$kol_detail = $kol_service->kol_detail($kol_id);
+		if (empty($kol_detail['data']))
+		{
+			return $this->error_response($task_id, ErrorCodes::ERROR_CODE_KOL_IS_NOT_EXIST,
+				ErrorDescs::ERROR_CODE_KOL_IS_NOT_EXIST);		
+		}
+		$kol_min_followers = $task_detail['data']['kol_min_followers'];
+		if ($kol_min_followers > 0)
+		{
+			$followers = $kol_detail['data']['twitter_followers'];	
+			if ($followers < $kol_min_followers)
+			{
+				return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_KOL_FOLLOWERS_IS_NOT_ENOUGH,
+					ErrorDescs::ERROR_CODE_TASK_APPLICATION_KOL_FOLLOWERS_IS_NOT_ENOUGH);		
+			}
+		}
+		return $this->res;
 	}
 
 }

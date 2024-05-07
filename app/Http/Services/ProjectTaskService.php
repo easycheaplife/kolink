@@ -63,7 +63,7 @@ class ProjectTaskService extends Service
 		foreach($task['application'] as $key => $application)
 		{
 			$kol_detail = $kol_service->kol_detail($application->kol_id);
-			if (!empty($kol_detail))
+			if (!empty($kol_detail['data']))
 			{
 				$task['application'][$key]['kol_detail'] = $kol_detail['data'];
 			}
@@ -153,6 +153,8 @@ class ProjectTaskService extends Service
 				$this->res['data']['list'][$key]['status'] = -1;
 				$this->res['data']['list'][$key]['application'] = array();
 			}
+			$application_result = $application_service->application_eligibility($kol_id, $task->id);
+			$this->res['data']['list'][$key]['application_eligibility'] = $application_result['code'] == ErrorCodes::ERROR_CODE_SUCCESS ? 1 : 0;
 		}
 		return $this->res;
 	}
