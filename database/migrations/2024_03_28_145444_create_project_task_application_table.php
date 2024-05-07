@@ -18,6 +18,7 @@ return new class extends Migration
             $table->string('quotation', 24)->default('');
             $table->integer('status')->default(0);
             $table->string('reason', 128)->default('');
+            $table->string('declined_desc', 128)->default('');
             $table->string('comment', 128)->default('');
             $table->string('verification', 128)->default('');
             $table->string('url', 128)->default('');

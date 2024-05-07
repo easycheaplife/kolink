@@ -91,7 +91,7 @@ class ProjectTaskApplicationService extends Service
 		return $this->res;
 	}
 
-	public function task_application_review($project_id, $application_id, $status, $web3_hash)
+	public function task_application_review($project_id, $application_id, $status, $web3_hash, $declined_desc)
 	{
 		if (!in_array($status, [
 			config('config.task_status')['pending'], 
@@ -133,7 +133,7 @@ class ProjectTaskApplicationService extends Service
 		{
 			$status = config('config.task_status')['lock_pending'];
 		}
-		if (!$application_model->update_web3_hash_and_status($application_id, $web3_hash, $status))
+		if (!$application_model->update_web3_hash_and_status($application_id, $web3_hash, $status, $declined_desc))
 		{
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		

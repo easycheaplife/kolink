@@ -58,6 +58,7 @@ class ProjectTaskService extends Service
 
 		$task_application_service = new ProjectTaskApplicationService;
 		$task['application'] = $task_application_service->task_list($task['id']);
+		$task['application_num'] = $task_application_service->application_kol_num($task['id']);
 
 		$kol_service = new KolService;
 		foreach($task['application'] as $key => $application)
