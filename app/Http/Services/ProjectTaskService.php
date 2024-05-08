@@ -36,8 +36,10 @@ class ProjectTaskService extends Service
 	{
 		$project_task_model = new ProjectTaskModel;
 		$tasks = $project_task_model->list($project_id, $page, $size);
+		$application_service = new ProjectTaskApplicationService;
 		foreach($tasks as $task)
 		{
+			$task['application_num'] = $application_service->application_kol_num($task->id);
 			$this->res['data']['list'][] = $task;
 		}
 		$this->res['data']['total'] = $project_task_model->count($project_id);
