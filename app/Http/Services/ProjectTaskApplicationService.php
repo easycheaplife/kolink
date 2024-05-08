@@ -312,6 +312,34 @@ class ProjectTaskApplicationService extends Service
 					ErrorDescs::ERROR_CODE_TASK_APPLICATION_KOL_FOLLOWERS_IS_NOT_ENOUGH);		
 			}
 		}
+
+		$kol_score_min = $task_detail['data']['kol_score_min'];
+		if ($kol_min_followers > 0)
+		{
+			$score = $kol_detail['data']['composite_score'];	
+			if ($score < $kol_score_min)
+			{
+				return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_KOL_SCORE_IS_NOT_ENOUGH,
+					ErrorDescs::ERROR_CODE_TASK_APPLICATION_KOL_SCORE_IS_NOT_ENOUGH);		
+			}
+		}
+
+		$kol_engagement_min = $task_detail['data']['kol_like_min'];
+		if ($kol_engagement_min > 0)
+		{
+			$engagement = 1;
+			$followers = $kol_detail['data']['twitter_followers'];
+			$likes = $kol_detail['data']['twitter_subscriptions'];
+			if ($followers > 0 && $likes > 0)
+			{
+				$engagement = number_format($likes / $followers * 100, 2);	
+			}
+			if ($engagement < $kol_engagement_min)
+			{
+				return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_KOL_ENGAGEMENT_IS_NOT_ENOUGH,
+					ErrorDescs::ERROR_CODE_TASK_APPLICATION_KOL_ENGAGEMENT_IS_NOT_ENOUGH);		
+			}
+		}
 		return $this->res;
 	}
 
