@@ -30,6 +30,8 @@ class ErrorCodes
 	const ERROR_CODE_TASK_APPLICATION_KOL_FOLLOWERS_IS_NOT_ENOUGH = 21;
 	const ERROR_CODE_TASK_APPLICATION_KOL_ENGAGEMENT_IS_NOT_ENOUGH = 22;
 	const ERROR_CODE_TASK_APPLICATION_KOL_SCORE_IS_NOT_ENOUGH = 23;
+	const ERROR_CODE_TASK_APPLICATION_DDL_TIMEOUT = 24;
+	const ERROR_CODE_TASK_UPLOAD_DDL_TIMEOUT = 24;
 	
 	const ERROR_CODE_DUPLICATE_ENTRY = 1062;
 }
@@ -41,7 +43,7 @@ class ErrorDescs
 	const ERROR_CODE_DB_ERROR = 'db error!';
 	const ERROR_CODE_VERIFICATION_CODE_ERROR = 'The captcha is invalid or has expired!';
 	const ERROR_CODE_TASK_APPLICATION_IS_MISSING = 'The task application does not match!';
-	const ERROR_CODE_TASK_APPLICATION_IS_NOT_YOURS = 'Task application is not yours, you cann not cancel!';
+	const ERROR_CODE_TASK_APPLICATION_IS_NOT_YOURS = 'Task application is not yours!';
 	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_EDIT = 'Current task application status can not edit!';
 	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_REVIEW = 'Current task application status can not review!';
 	const ERROR_CODE_TASK_APPLICATION_STATUS_CODE_ERROR = 'Input param status error, only panding,accept,declined are allowed.';
@@ -60,5 +62,7 @@ class ErrorDescs
 	const ERROR_CODE_TASK_APPLICATION_KOL_FOLLOWERS_IS_NOT_ENOUGH = "Kol's followers is not enouth!";
 	const ERROR_CODE_TASK_APPLICATION_KOL_ENGAGEMENT_IS_NOT_ENOUGH = "Kol's engagement is not enouth!";
 	const ERROR_CODE_TASK_APPLICATION_KOL_SCORE_IS_NOT_ENOUGH = "Kol's engagement is not enouth!";
+	const ERROR_CODE_TASK_APPLICATION_DDL_TIMEOUT = 'The current time has exceeded the application deadline.';
+	const ERROR_CODE_TASK_UPLOAD_DDL_TIMEOUT= 'The current time has exceeded the upload deadline.';
 }
 

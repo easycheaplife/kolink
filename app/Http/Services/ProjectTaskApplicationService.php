@@ -150,16 +150,36 @@ class ProjectTaskApplicationService extends Service
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_IS_MISSING,
 				ErrorDescs::ERROR_CODE_TASK_APPLICATION_IS_MISSING);		
 		}
+
+		$task_service = new ProjectTaskService;
+		$task_detail = $task_service->task_detail($application_detail['task_id']);
+		if (empty($task_detail['data']))
+		{
+			return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_IS_NOT_EXIST,
+				ErrorDescs::ERROR_CODE_TASK_IS_NOT_EXIST);		
+		}
+		$upload_ddl_time = $task_detail['data']['upload_ddl_time'];
+		if ($upload_ddl_time > 0)
+		{
+			if (time() > $upload_ddl_time)
+			{
+				return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_UPLOAD_DDL_TIMEOUT,
+					ErrorDescs::ERROR_CODE_TASK_UPLOAD_DDL_TIMEOUT);		
+			}
+		}
+
 		if ($kol_id != $application_detail['kol_id'])
 		{
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_IS_NOT_YOURS,
 				ErrorDescs::ERROR_CODE_TASK_APPLICATION_IS_NOT_YOURS);		
 		}
+
 		if ($application_detail['status'] != config('config.task_status')['accept'])
 		{
 			return $this->error_response($application_id, ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_UPLOAD,
 				ErrorDescs::ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_UPLOAD);		
 		}
+
 		if (!$application_model->update_verification_and_status($application_id, $verification, $url, config('config.task_status')['upload']))
 		{
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_DB_ERROR,
@@ -321,6 +341,16 @@ class ProjectTaskApplicationService extends Service
 			{
 				return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_KOL_SCORE_IS_NOT_ENOUGH,
 					ErrorDescs::ERROR_CODE_TASK_APPLICATION_KOL_SCORE_IS_NOT_ENOUGH);		
+			}
+		}
+
+		$applition_ddl_time = $task_detail['data']['applition_ddl_time'];
+		if ($applition_ddl_time > 0)
+		{
+			if (time() > $applition_ddl_time)
+			{
+				return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_DDL_TIMEOUT,
+					ErrorDescs::ERROR_CODE_TASK_APPLICATION_DDL_TIMEOUT);		
 			}
 		}
 
