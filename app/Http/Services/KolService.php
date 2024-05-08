@@ -88,9 +88,12 @@ class KolService extends Service
 					$this->res['data']['list'][$key]['reason'] = $application->reason;
 					$this->res['data']['list'][$key]['verification'] = $application->verification;
 					$this->res['data']['list'][$key]['url'] = $application->url;
+					$this->res['data']['list'][$key]['declined_desc'] = $application->declined_desc;
 					break;
 				}
 			}
+			$application_result = $application_service->application_eligibility($kol_id, $task['id']);
+			$this->res['data']['list'][$key]['application_eligibility'] = $application_result['code'] == ErrorCodes::ERROR_CODE_SUCCESS ? 1 : 0;
 			$this->res['data']['list'][$key]['application_num'] = $application_service->application_kol_num($task['id']);
 		}
 		$this->res['data']['total'] = $application_service->kol_task_list_count($kol_id, $status);
