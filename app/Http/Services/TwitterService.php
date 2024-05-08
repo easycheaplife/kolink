@@ -84,6 +84,8 @@ class TwitterService extends Service
 				->get($url);
 			if ($response->successful()) {
 				$data = $response->json();
+				$data['data']['profile_image_url'] = str_replace('_normal', '', $data['data']['profile_image_url']);
+				$data['data']['profile_image_url_https'] = str_replace('_normal', '', $data['data']['profile_image_url_https']);
 				$this->res['data'] = $data['data'];
 				$twitter_user_model = new TwitterUserModel;
 				$insert_flag = 0;
@@ -120,6 +122,7 @@ class TwitterService extends Service
 				->get($url);
 			if ($response->successful()) {
 				$data = $response->json();
+				$data['data']['profile_image_url'] = str_replace('_normal', '', $data['data']['profile_image_url']);
 				$this->res['data'] = $data['data'];
 				$twitter_user_model = new TwitterUserModel;
 				$insert_flag = 0;
@@ -197,7 +200,7 @@ class TwitterService extends Service
 				if (empty($kol))
 				{
 					// insert 	
-					$this->insert_kol($user);
+					// $this->insert_kol($user);
 				}
 				else {
 					// update
