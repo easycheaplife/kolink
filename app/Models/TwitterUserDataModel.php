@@ -29,4 +29,26 @@ class TwitterUserDataModel extends Model
 		}
 		return false;
 	}
+
+	public function count()
+	{
+		return $this->select('id')
+			  ->where('insert_flag', 0)
+			  ->count();
+	}
+
+	public function get_users($page, $size)
+	{
+		return $this->select('id', 'data')
+			->skip($page * $size)
+			->take($size)
+			->get();
+	}
+
+	public function update_insert_flag($id)
+	{
+		return $this->where('id', $id)
+			->update(['insert_flag' => 1]);
+	}
+
 }

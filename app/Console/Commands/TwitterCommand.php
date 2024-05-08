@@ -29,6 +29,7 @@ class TwitterCommand extends Command
     public function handle()
     {
 		$twitter_service = new TwitterService;
+		$twitter_service->sync_all_users();
 		$twitter_service->load_all_users();
 		Log::info("app:twitter-command");
     }

@@ -170,7 +170,7 @@ class TwitterService extends Service
 		$nft_count_max = $etherscan_service->get_column_count_min('nft_count');
 		Log::debug("total:$total");
 		Log::debug("followers_count_max:$followers_count_max");
-		Log::debug"friends_count_max:$friends_count_max");
+		Log::debug("friends_count_max:$friends_count_max");
 		Log::debug("listed_count_max:$listed_count_max");
 		Log::debug("favourites_count_max:$favourites_count_max");
 		Log::debug("media_count_max:$media_count_max");
@@ -234,7 +234,7 @@ class TwitterService extends Service
 			+ number_format($user['friends_count'] / $friends_count_max * 10, 2)	
 			+ number_format($user['favourites_count'] / $favourites_count_max * 10, 2)
 			+ number_format($user['media_count'] / $media_count_max * 10, 2);	
-		Log::info("engagement_score:$engagement_score");
+		Log::debug("engagement_score:$engagement_score");
 		return $engagement_score;
 	}
 
@@ -247,7 +247,7 @@ class TwitterService extends Service
 		{
 			$twitter_diff = $now_time - $user['created_at'];
 			$twitter_time_score = number_format($twitter_diff / $twitter_total * 5, 2);
-			Log::info("twitter_time_score:$twitter_time_score,twitter_diff:$twitter_diff,twitter_total:$twitter_total");
+			Log::debug("twitter_time_score:$twitter_time_score,twitter_diff:$twitter_diff,twitter_total:$twitter_total");
 		}
 
 		$token_time_score = 0;
@@ -256,7 +256,7 @@ class TwitterService extends Service
 		{
 			$token_diff = $now_time - $token_user['created_at'];
 			$token_time_score = number_format($token_diff / $token_total * 5, 2);
-			Log::info("token_time_score:$token_time_score,token_diff:$token_diff,token_total:$token_total");
+			Log::debug("token_time_score:$token_time_score,token_diff:$token_diff,token_total:$token_total");
 		}
 		return floatval($twitter_time_score) + floatval($token_time_score);
 	}
@@ -281,8 +281,43 @@ class TwitterService extends Service
 		$nft_count_max = $nft_count_max > 0 ? $nft_count_max : 1; 
 		$monetary_score = number_format($token_user['token_count'] / $token_count_max * 20, 2) 
 			+ number_format($token_user['nft_count'] / $nft_count_max * 20, 2);
-		Log::info("monetary_score:$monetary_score");
+		Log::debug("monetary_score:$monetary_score");
 		return $monetary_score;
+	}
+
+	public function sync_all_users()
+	{
+		$twitter_user_data_model = new TwitterUserDataModel;
+		$twitter_user_model = new TwitterUserModel;
+		$total = $twitter_user_data_model->count();
+		$size = config('config.default_page_size');
+		$page = $total / $size;
+		for ($i = 0; $i <= $page; ++$i)
+		{
+			$users = $twitter_user_data_model->get_users($i, $size);
+			foreach ($users as $user)
+			{
+				$json_user = json_decode($user['data'], true);	
+				$insert_flag = 0;
+				if (isset($json_user['contributors_enabled']))
+				{
+					if ($twitter_user_model->insert($json_user))
+					{
+						$insert_flag = 1;
+					}	
+				}
+				else {
+					if ($twitter_user_model->insert2($json_user))
+					{
+						$insert_flag = 1;
+					}	
+				}
+				if ($insert_flag)
+				{
+					$twitter_user_data_model->update_insert_flag($json_user['id']);	
+				}
+			}
+		}
 	}
 
 }
