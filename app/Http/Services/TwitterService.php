@@ -314,7 +314,7 @@ class TwitterService extends Service
 				}
 				if ($insert_flag)
 				{
-					$twitter_user_data_model->update_insert_flag($json_user['id']);	
+					$twitter_user_data_model->update_insert_flag($user['id']);	
 				}
 			}
 		}
