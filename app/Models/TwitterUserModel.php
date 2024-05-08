@@ -41,7 +41,7 @@ class TwitterUserModel extends Model
 			$this->profile_background_image_url_https = is_null($user['profile_background_image_url_https']) ? '' : $user['profile_background_image_url_https'];
 			$this->profile_image_url = $user['profile_image_url'];
 			$this->profile_image_url_https = $user['profile_image_url_https'];
-			$this->created_at = $user['created_at'];
+			$this->created_at = $this->convert_to_unixtime($user['created_at']);
 			return $this->save();
 		}
 		catch (QueryException $e)

@@ -168,16 +168,16 @@ class TwitterService extends Service
 		$tokon_created_at_min = $etherscan_service->get_column_count_min('created_at');
 		$token_count_max = $etherscan_service->get_column_count_min('token_count');
 		$nft_count_max = $etherscan_service->get_column_count_min('nft_count');
-		Log::info("total:$total");
-		Log::info("followers_count_max:$followers_count_max");
-		Log::info("friends_count_max:$friends_count_max");
-		Log::info("listed_count_max:$listed_count_max");
-		Log::info("favourites_count_max:$favourites_count_max");
-		Log::info("media_count_max:$media_count_max");
-		Log::info("twitter_created_at_min:$twitter_created_at_min");
-		Log::info("token_created_at_min:$twitter_created_at_min");
-		Log::info("token_count_max:$token_count_max");
-		Log::info("nft_count_max:$nft_count_max");
+		Log::debug("total:$total");
+		Log::debug("followers_count_max:$followers_count_max");
+		Log::debug"friends_count_max:$friends_count_max");
+		Log::debug("listed_count_max:$listed_count_max");
+		Log::debug("favourites_count_max:$favourites_count_max");
+		Log::debug("media_count_max:$media_count_max");
+		Log::debug("twitter_created_at_min:$twitter_created_at_min");
+		Log::debug("token_created_at_min:$twitter_created_at_min");
+		Log::debug("token_count_max:$token_count_max");
+		Log::debug("nft_count_max:$nft_count_max");
 		$size = config('config.default_page_size');
 		$page = $total / $size;
 		for ($i = 0; $i <= $page; ++$i)
