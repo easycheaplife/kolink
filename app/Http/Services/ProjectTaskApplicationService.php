@@ -340,6 +340,9 @@ class ProjectTaskApplicationService extends Service
 					ErrorDescs::ERROR_CODE_TASK_APPLICATION_KOL_ENGAGEMENT_IS_NOT_ENOUGH);		
 			}
 		}
+		$this->res['code'] = ErrorCodes::ERROR_CODE_SUCCESS;
+		$this->res['message'] = '';
+		$this->res['data'] = [];
 		return $this->res;
 	}
 

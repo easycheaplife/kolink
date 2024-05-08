@@ -34,12 +34,12 @@ class TwitterService extends Service
 			else {
 				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
 				Log::error($error_message);
-				return $this->error_response($session_id, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $error_message);
+				return $this->error_response($session_id, ErrorCodes::ERROR_CODE_TWITTER_USER_FAILED, $error_message);
 			}
 		} catch (\Exception $e) 
 		{   
 			Log::error($e->getMessage());
-			return $this->error_response($session_id, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $e->getMessage());
+			return $this->error_response($session_id, ErrorCodes::ERROR_CODE_TWITTER_USER_FAILED, $e->getMessage());
 		}  
 		return $this->res;
 	}	
@@ -64,12 +64,12 @@ class TwitterService extends Service
 			else {
 				$error_message = "http post $url failed, status:" . $response->status() . ' ' . $response->body();
 				Log::error($error_message);
-				return $this->error_response($code, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $error_message);
+				return $this->error_response($code, ErrorCodes::ERROR_CODE_TWITTER_USER_FAILED, $error_message);
 			}
 		} catch (\Exception $e) 
 		{   
 			Log::error($e->getMessage());
-			return $this->error_response($code, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $e->getMessage());
+			return $this->error_response($code, ErrorCodes::ERROR_CODE_TWITTER_USER_FAILED, $e->getMessage());
 		}  
 		return $this->res;
 	}	
@@ -97,7 +97,7 @@ class TwitterService extends Service
 			else {
 				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
 				Log::error($error_message);
-				return $this->error_response($session_id, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $error_message);
+				return $this->error_response($session_id, ErrorCodes::ERROR_CODE_TWITTER_USER_FAILED, $error_message);
 			}
 		} catch (\Exception $e) 
 		{   
@@ -105,7 +105,7 @@ class TwitterService extends Service
 				return $this->res;	
 			}
 			Log::error($e);
-			return $this->error_response($session_id, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $e->getMessage());
+			return $this->error_response($session_id, ErrorCodes::ERROR_CODE_TWITTER_USER_FAILED, $e->getMessage());
 		}  
 		return $this->res;
 	}	
@@ -133,7 +133,7 @@ class TwitterService extends Service
 			else {
 				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
 				Log::error($error_message);
-				return $this->error_response($access_token, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $error_message);
+				return $this->error_response($access_token, ErrorCodes::ERROR_CODE_TWITTER_USER_FAILED, $error_message);
 			}
 		} catch (\Exception $e) 
 		{   
@@ -141,7 +141,7 @@ class TwitterService extends Service
 				return $this->res;	
 			}
 			Log::error($e);
-			return $this->error_response($access_token, ErrorCodes::ERROR_CODE_TWITTER_USER_FAULED, $e->getMessage());
+			return $this->error_response($access_token, ErrorCodes::ERROR_CODE_TWITTER_USER_FAILED, $e->getMessage());
 		}  
 		return $this->res;
 	}	

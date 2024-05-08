@@ -63,7 +63,7 @@ class EtherscanService extends Service
 			else {
 				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
 				Log::error($error_message);
-				return $this->error_response($address, ErrorCodes::ERROR_CODE_ETHERSCAN_API_FAULED, $error_message);
+				return $this->error_response($address, ErrorCodes::ERROR_CODE_ETHERSCAN_API_FAILED, $error_message);
 			}
 			$contractaddress = config('config.contractaddress');
 			$offset = 9999;
@@ -85,7 +85,7 @@ class EtherscanService extends Service
 			else {
 				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
 				Log::error($error_message);
-				return $this->error_response($address, ErrorCodes::ERROR_CODE_ETHERSCAN_API_FAULED, $error_message);
+				return $this->error_response($address, ErrorCodes::ERROR_CODE_ETHERSCAN_API_FAILED, $error_message);
 			}
 
 			$url = "$etherscan_url_base?module=account&action=tokennfttx" . 
@@ -111,12 +111,12 @@ class EtherscanService extends Service
 			else {
 				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
 				Log::error($error_message);
-				return $this->error_response($address, ErrorCodes::ERROR_CODE_ETHERSCAN_API_FAULED, $error_message);
+				return $this->error_response($address, ErrorCodes::ERROR_CODE_ETHERSCAN_API_FAILED, $error_message);
 			}
 		} catch (\Exception $e) 
 		{   
 			Log::error($e->getMessage());
-			return $this->error_response($address, ErrorCodes::ERROR_CODE_ETHERSCAN_API_FAULED, $e->getMessage());
+			return $this->error_response($address, ErrorCodes::ERROR_CODE_ETHERSCAN_API_FAILED, $e->getMessage());
 		}  
 	}
 
