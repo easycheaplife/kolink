@@ -155,15 +155,15 @@ class ProjectTaskApplicationService extends Service
 		$task_detail = $task_service->task_detail($application_detail['task_id']);
 		if (empty($task_detail['data']))
 		{
-			return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_IS_NOT_EXIST,
+			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_TASK_IS_NOT_EXIST,
 				ErrorDescs::ERROR_CODE_TASK_IS_NOT_EXIST);		
 		}
 		$upload_ddl_time = $task_detail['data']['upload_ddl_time'];
 		if ($upload_ddl_time > 0)
 		{
-			if (time() > $upload_ddl_time)
+			if (time() > (strtotime($application_detail['created_at']) + $upload_ddl_time * 24 * 60 * 60))
 			{
-				return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_UPLOAD_DDL_TIMEOUT,
+				return $this->error_response($application_id, ErrorCodes::ERROR_CODE_TASK_UPLOAD_DDL_TIMEOUT,
 					ErrorDescs::ERROR_CODE_TASK_UPLOAD_DDL_TIMEOUT);		
 			}
 		}

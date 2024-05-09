@@ -57,7 +57,7 @@ func UpdateProjectTaskApplicationStatus(db* sql.DB, transaction_type int, index_
 	if err != nil {
 		return err
 	}
-	fmt.Printf("update success! index_code%s transaction_type:%d  status:%d", index_code, status)
+	fmt.Printf("update success! index_code:%s transaction_type:%d  status:%d\n", index_code, transaction_type, status)
 	return nil
 }
 
@@ -73,7 +73,7 @@ func InsertEvent(db* sql.DB, index_code string, transaction_type int, block_numb
 	if err != nil {
 		return err
 	}
-	fmt.Printf("insert success! block_number：%d ", block_number)
+	fmt.Printf("insert success! block_number：%d \n", block_number)
 	err = UpdateProjectTaskApplicationStatus(db, transaction_type, index_code)
 	return err
 }
