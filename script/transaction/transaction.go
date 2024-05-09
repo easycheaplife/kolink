@@ -78,31 +78,7 @@ func InsertEvent(db* sql.DB, index_code string, transaction_type int, block_numb
 	return err
 }
 
-func main() {
-	const rpc_url = "http://120.55.165.46:8545"
-	const contract_addr = "0xD7aAdD7BD1d12ee13E1f4Db8BB56458882796bE4"
-	db, err := sql.Open("mysql", "root:F0BYKDqw7@tcp(127.0.0.1:3306)/kolink?parseTime=true&loc=Local")
-	if err != nil {
-		log.Fatal(err)
-	}
-	pingErr := db.Ping()
-	if pingErr != nil {
-		log.Fatal(pingErr)
-	}
-	rows, _ := db.Query("SELECT last_block_number FROM transaction_base")
-	defer rows.Close()
-	var last_block_number int
-	for rows.Next() {
-		if err := rows.Scan(&last_block_number); err != nil {
-			fmt.Errorf("query last_block_number error: %v", err)
-			return;
-		}
-	}
-	fmt.Println("last_block_number:", last_block_number)
-
-	const start_block = 19622170
-	const end_block = 19622200
-
+func Execute(db* sql.DB, rpc_url string, contract_addr string, last_block_number int) {
 	client, err := ethclient.Dial(rpc_url)
 	if err != nil {
 		log.Fatal(err)
@@ -112,7 +88,7 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("Latest Block Number:", latestBlockNumber)
+	fmt.Printf("Execute function called=latest_block_number:%d last_block_number:%d rpc_url:%s contract_addr:%s\n", latestBlockNumber, last_block_number, rpc_url, contract_addr)
 
 	contractAddress := common.HexToAddress(contract_addr)
 	abiData, err := ioutil.ReadFile("AssetLocker.json")
@@ -268,14 +244,30 @@ func main() {
 	if err != nil {
 		log.Fatal(err)
 	}
+}
 
-/*
-	// test
-	index_code_update := "qwert"	
-	err = UpdateProjectTaskApplicationStatus(db, transaction_type_lock_assert, index_code_update)
+// insert into transaction_base (blockchain_id,last_block_number,rpc_url,contract_addr) values(1,38568012,"https://bsc-mainnet.nodereal.io/v1/7a5eca2f07be48d586a09275ea2f687c","0x0BDBb9EBaDBA7e4061e56E533fAb06D10e90aE96");
+func main() {
+	db, err := sql.Open("mysql", "root:F0BYKDqw7@tcp(127.0.0.1:3306)/kolink?parseTime=true&loc=Local")
 	if err != nil {
 		log.Fatal(err)
 	}
-*/
-
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+	rows, _ := db.Query("SELECT blockchain_id,last_block_number,rpc_url,contract_addr FROM transaction_base")
+	defer rows.Close()
+	var last_block_number int
+	var blockchain_id int
+	var rpc_url string
+	var contract_addr string
+	for rows.Next() {
+		if err := rows.Scan(&blockchain_id,&last_block_number,&rpc_url,&contract_addr); err != nil {
+			fmt.Errorf("query transaction_base error: %v", err)
+			return;
+		}
+		fmt.Printf("transaction_base=blockchain_id:%d last_block_number:%d rpc_url:%s contract_addr:%s\n", blockchain_id, last_block_number, rpc_url, contract_addr)
+		Execute(db, rpc_url, contract_addr, last_block_number)
+	}
 }

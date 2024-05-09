@@ -33,7 +33,6 @@ class EtherscanService extends Service
 	}
 
 	public function address_info($address)
-
 	{
 		$created_at = time();
 		$token_count = 0;
