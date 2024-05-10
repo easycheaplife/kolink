@@ -26,10 +26,35 @@ class KolService extends Service
 			return $this->error_response($token, ErrorCodes::ERROR_CODE_VERIFICATION_CODE_ERROR,
 				ErrorDescs::ERROR_CODE_VERIFICATION_CODE_ERROR);		
 		}
+
+		$twitter_like_count = 0;
+		$twitter_following_count = 0;
+		$monetary_score = 0;
+		$engagement_score = 0;
+		$age_score = 0;
+		$composite_score = 0;
+		$twitter_service = new TwitterService;
+		$twitter_user = $twitter_service->get_user($twitter_user_id);
+		if (!empty($twitter_user))
+		{
+			$twitter_service->calc_user_score($twitter_user, $token);
+			$twitter_user_name = $twitter_user['screen_name'];			
+			$twitter_avatar = $twitter_user['profile_image_url'];			
+			$twitter_followers = $twitter_user['followers_count'];			
+			$twitter_like_count = $twitter_user['like_count'];			
+			$twitter_following_count = $twitter_user['following_count'];			
+			$monetary_score = $twitter_user['monetary_score'];
+			$engagement_score = $twitter_user['engagement_score'];
+			$age_score = $twitter_user['age_score'];
+			$composite_score = $twitter_user['composite_score'];
+		}
+
 		$last_insert_id = 0;
 		$kol_model = new KolModel;
 		if (!$kol_model->insert($token, $email, $twitter_user_id, $twitter_user_name, $twitter_avatar, $twitter_followers, 
-			$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id, $last_insert_id))
+			$twitter_subscriptions, $twitter_like_count, $twitter_following_count,
+			$monetary_score, $engagement_score, $age_score, $composite_score,
+			$region_id, $category_id, $language_id, $channel_id, $last_insert_id))
 		{
 			return $this->error_response($token, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		

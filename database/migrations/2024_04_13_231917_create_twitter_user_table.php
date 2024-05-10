@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('description', 512)->default('');
             $table->string('url', 512)->default('');
             $table->integer('followers_count')->default(0);
+            $table->integer('like_count')->default(0);
             $table->integer('friends_count')->default(0);
             $table->integer('listed_count')->default(0);
             $table->integer('favourites_count')->default(0);

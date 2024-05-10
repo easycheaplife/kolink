@@ -78,6 +78,7 @@ class TwitterUserModel extends Model
 			$this->friends_count = $user['public_metrics']['following_count'];
 			$this->listed_count = $user['public_metrics']['listed_count'];
 			$this->favourites_count = $user['public_metrics']['like_count'];
+			$this->like_count = $user['public_metrics']['like_count'];
 			$this->statuses_count = $user['public_metrics']['tweet_count'];
 			$this->profile_image_url = $user['profile_image_url'];
 			$this->created_at = $this->convert_to_unixtime($user['created_at']);
@@ -97,7 +98,7 @@ class TwitterUserModel extends Model
 
 	public function get($user_id)
 	{
-		return $this->select('user_id', 'name', 'screen_name', 'location', 'description', 'url', 'followers_count', 
+		return $this->select('user_id', 'name', 'screen_name', 'location', 'description', 'url', 'followers_count', 'like_count', 
 			'friends_count', 'listed_count', 'favourites_count', 'following_count', 'media_count', 
 			'statuses_count', 'lang', 'profile_image_url')
 			->where('user_id', $user_id)
@@ -111,7 +112,7 @@ class TwitterUserModel extends Model
 
 	public function get_users($page, $size)
 	{
-		return $this->select('user_id', 'name', 'screen_name', 'location', 'description', 'url', 'followers_count', 
+		return $this->select('user_id', 'name', 'screen_name', 'location', 'description', 'url', 'followers_count', 'like_count', 
 			'friends_count', 'listed_count', 'favourites_count', 'following_count', 'media_count', 
 			'statuses_count', 'lang', 'profile_image_url', 'created_at')
 			->skip($page * $size)

@@ -17,7 +17,9 @@ class KolModel extends Model
 	protected $table = 'kol';
 
 	public function insert($token, $email, $twitter_user_id, $twitter_user_name, $twitter_avatar, $twitter_followers, 
-		$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id, &$last_insert_id)
+		$twitter_subscriptions, $twitter_like_count, $twitter_following_count,
+		$monetary_score, $engagement_score, $age_score, $composite_score,
+		$region_id, $category_id, $language_id, $channel_id, &$last_insert_id)
 	{
 		try {
 			$this->token = $token;
@@ -27,6 +29,12 @@ class KolModel extends Model
 			$this->twitter_avatar = $twitter_avatar;
 			$this->twitter_followers = $twitter_followers;
 			$this->twitter_subscriptions = $twitter_subscriptions;
+			$this->twitter_like_count = $twitter_like_count;
+			$this->twitter_following_count = $twitter_following_count;
+			$this->monetary_score = $monetary_score;
+			$this->engagement_score = $engagement_score;
+			$this->age_score = $age_score;
+			$this->composite_score = $composite_score;
 			$this->region_id = $region_id;
 			$this->category_id = $category_id;
 			$this->language_id = $language_id;

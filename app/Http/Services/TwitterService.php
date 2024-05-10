@@ -153,7 +153,7 @@ class TwitterService extends Service
 	public function get_user($user_id)
 	{
 		$twitter_user_model = new TwitterUserModel;
-		return $twitter_user_model->get_user($user_id);
+		return $twitter_user_model->get($user_id);
 	}
 
 	public function load_all_users()
@@ -165,7 +165,7 @@ class TwitterService extends Service
 		$followers_count_max = $twitter_user_model->get_column_count_max('followers_count');
 		$friends_count_max = $twitter_user_model->get_column_count_max('friends_count');
 		$listed_count_max = $twitter_user_model->get_column_count_max('listed_count');
-		$favourites_count_max = $twitter_user_model->get_column_count_max('favourites_count');
+		$like_count_max = $twitter_user_model->get_column_count_max('like_count');
 		$media_count_max = $twitter_user_model->get_column_count_max('media_count');
 		$twitter_created_at_min = $twitter_user_model->get_column_count_min('created_at');
 		$tokon_created_at_min = $etherscan_service->get_column_count_min('created_at');
@@ -175,7 +175,7 @@ class TwitterService extends Service
 		Log::debug("followers_count_max:$followers_count_max");
 		Log::debug("friends_count_max:$friends_count_max");
 		Log::debug("listed_count_max:$listed_count_max");
-		Log::debug("favourites_count_max:$favourites_count_max");
+		Log::debug("like_count_max:$like_count_max");
 		Log::debug("media_count_max:$media_count_max");
 		Log::debug("twitter_created_at_min:$twitter_created_at_min");
 		Log::debug("token_created_at_min:$twitter_created_at_min");
@@ -188,12 +188,13 @@ class TwitterService extends Service
 			$users = $twitter_user_model->get_users($i, $size);
 			foreach ($users as $user)
 			{
+				Log::debug("twitter_user_id:" . $user['user_id']);
 				$kol = $kol_service->get_by_twitter_user_id($user['user_id']);
 				$token = empty($kol) ? '' : $kol['token'];
 				$token_user = $this->get_token_user($token);
 				$user['engagement_score'] = $this->calc_engagement_score($user, 
 					$followers_count_max, $listed_count_max, $friends_count_max,
-					$favourites_count_max, $media_count_max);
+					$like_count_max, $media_count_max);
 				$user['age_score'] = $this->calc_age_score($user, $token_user, $twitter_created_at_min, $twitter_created_at_min);
 				$user['monetary_score'] = $this->calc_monetary_score($token_user, $token_count_max, $nft_count_max);
 				$user['composite_score'] = $user['engagement_score'] + $user['age_score'] + $user['monetary_score'];
@@ -225,17 +226,17 @@ class TwitterService extends Service
 	}
 
 	public function calc_engagement_score($user, $followers_count_max, 
-		$listed_count_max, $friends_count_max, $favourites_count_max, $media_count_max)
+		$listed_count_max, $friends_count_max, $like_count_max, $media_count_max)
 	{
 		$followers_count_max = $followers_count_max > 0 ? $followers_count_max : 1; 
 		$listed_count_max = $listed_count_max > 0 ? $listed_count_max : 1; 
 		$friends_count_max = $friends_count_max > 0 ? $friends_count_max : 1; 
-		$favourites_count_max = $favourites_count_max > 0 ? $favourites_count_max : 1; 
+		$like_count_max = $like_count_max > 0 ? $like_count_max : 1; 
 		$media_count_max = $media_count_max > 0 ? $media_count_max : 1; 
 		$engagement_score = number_format($user['followers_count'] / $followers_count_max * 20, 2)
 			+ number_format($user['listed_count'] / $listed_count_max * 20, 2)	
 			+ number_format($user['friends_count'] / $friends_count_max * 10, 2)	
-			+ number_format($user['favourites_count'] / $favourites_count_max * 10, 2)
+			+ number_format($user['like_count'] / $like_count_max * 10, 2)
 			+ number_format($user['media_count'] / $media_count_max * 10, 2);	
 		Log::debug("engagement_score:$engagement_score");
 		return $engagement_score;
@@ -321,6 +322,31 @@ class TwitterService extends Service
 				}
 			}
 		}
+	}
+
+	public function calc_user_score($user, $token)
+	{
+		$kol_service = new KolService;
+		$twitter_user_model = new TwitterUserModel;
+		$etherscan_service = new EtherscanService;
+		$total = $twitter_user_model->count();
+		$followers_count_max = $twitter_user_model->get_column_count_max('followers_count');
+		$friends_count_max = $twitter_user_model->get_column_count_max('friends_count');
+		$listed_count_max = $twitter_user_model->get_column_count_max('listed_count');
+		$like_count_max = $twitter_user_model->get_column_count_max('like_count');
+		$media_count_max = $twitter_user_model->get_column_count_max('media_count');
+		$twitter_created_at_min = $twitter_user_model->get_column_count_min('created_at');
+		$tokon_created_at_min = $etherscan_service->get_column_count_min('created_at');
+		$token_count_max = $etherscan_service->get_column_count_min('token_count');
+		$nft_count_max = $etherscan_service->get_column_count_min('nft_count');
+		$user['engagement_score'] = $this->calc_engagement_score($user, 
+			$followers_count_max, $listed_count_max, $friends_count_max,
+			$like_count_max, $media_count_max);
+		$token_user = $this->get_token_user($token);
+		$user['age_score'] = $this->calc_age_score($user, $token_user, $twitter_created_at_min, $twitter_created_at_min);
+		$user['monetary_score'] = $this->calc_monetary_score($token_user, $token_count_max, $nft_count_max);
+		$user['composite_score'] = $user['engagement_score'] + $user['age_score'] + $user['monetary_score'];
+		Log::info($user);
 	}
 
 }

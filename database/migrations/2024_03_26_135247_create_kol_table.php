@@ -20,6 +20,8 @@ return new class extends Migration
             $table->string('twitter_avatar', 512)->default('');
             $table->integer('twitter_followers')->default(0);
             $table->integer('twitter_subscriptions')->default(0);
+            $table->integer('twitter_like_count')->default(0);
+            $table->integer('twitter_following_count')->default(0);
             $table->integer('twitter_friends_count')->default(0);
             $table->integer('twitter_favourites_count')->default(0);
             $table->integer('twitter_listed_count')->default(0);
