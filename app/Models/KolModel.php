@@ -122,13 +122,13 @@ class KolModel extends Model
 
 	public function get($kol_id)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score')
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count')
 			->where('id', $kol_id)->first();
 	}
 
 	public function login($token)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score')
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count')
 			->where('token', $token)->first();
 	}
 
@@ -148,7 +148,7 @@ class KolModel extends Model
 
 	public function get_by_twitter_user_id($twitter_user_id)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score')
+		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count')
 			->where('twitter_user_id', $twitter_user_id)->first();
 	}
 
@@ -194,6 +194,8 @@ class KolModel extends Model
 			'composite_score' => $twitter_user['composite_score'], 
 			'twitter_followers' => $twitter_user['followers_count'], 
 			'twitter_subscriptions' => $twitter_user['favourites_count'], 
+			'twitter_like_count' => $twitter_user['like_count'], 
+			'twitter_following_count' => $twitter_user['following_count'], 
 			'twitter_friends_count' => $twitter_user['friends_count'], 
 			'twitter_listed_count' => $twitter_user['listed_count'], 
 			'twitter_statuses_count' => $twitter_user['statuses_count'], 

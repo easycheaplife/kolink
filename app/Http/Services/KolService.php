@@ -79,7 +79,24 @@ class KolService extends Service
 	{
 		$kol_model = new KolModel;
 		$this->res['data'] = $kol_model->get($kol_id);
+		$this->res['data']['engagement'] = $this->engagement_score($this->res['data']);
 		return $this->res;
+	}
+
+	public function engagement_score($kol_detail)
+	{
+		if (empty($kol_detail))
+		{
+			return 0;
+		}
+		$engagement = 1;
+		$followers = $kol_detail['twitter_followers'];
+		$likes = $kol_detail['twitter_like_count'];
+		if ($followers > 0 && $likes > 0)
+		{
+			$engagement = number_format($likes / $followers * 100, 2);	
+		}
+		return $engagement;
 	}
 
     public function login($token)

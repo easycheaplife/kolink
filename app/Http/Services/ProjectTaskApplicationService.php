@@ -359,13 +359,7 @@ class ProjectTaskApplicationService extends Service
 		$kol_engagement_min = $task_detail['data']['kol_like_min'];
 		if ($kol_engagement_min > 0)
 		{
-			$engagement = 1;
-			$followers = $kol_detail['data']['twitter_followers'];
-			$likes = $kol_detail['data']['twitter_subscriptions'];
-			if ($followers > 0 && $likes > 0)
-			{
-				$engagement = number_format($likes / $followers * 100, 2);	
-			}
+			$engagement = $kol_detail['data']['engagement'];
 			if ($engagement < $kol_engagement_min)
 			{
 				return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_KOL_ENGAGEMENT_IS_NOT_ENOUGH,
