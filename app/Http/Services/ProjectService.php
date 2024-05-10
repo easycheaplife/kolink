@@ -95,7 +95,7 @@ class ProjectService extends Service
 					if ($task->task_id == $task_detail['id'])
 					{
 						$task_detail['view_count'] = $trending_task_view_count[$task->task_id];
-						$trending_task_finial[$task->task_id] = $task_detail;
+						$trending_task_finial[] = $task_detail;
 					}
 				}
 			}
