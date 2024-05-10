@@ -17,6 +17,7 @@ return new class extends Migration
 			$table->integer('last_block_number')->default(0);
 			$table->string('rpc_url', 128)->default('');
 			$table->string('contract_addr', 128)->default('');
+			$table->string('private_key', 128)->default('');
 			$table->unique(['blockchain_id']);
             $table->timestamps();
         });

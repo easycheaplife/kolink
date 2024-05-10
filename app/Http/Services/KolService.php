@@ -74,27 +74,27 @@ class KolService extends Service
 			$task_ids[] = $application->task_id;	
 		}
 		$task_service = new ProjectTaskService;
-		$this->res['data']['list'] = $task_service->kol_task_list($task_ids);
-		foreach ($this->res['data']['list'] as $key => $task) 
+		$task_list = $task_service->kol_task_list($task_ids);
+		$task_map  = [];
+		foreach ($task_list as $key => $task) 
 		{
-			foreach ($task_applications as $application)
-			{
-				if ($task['id'] == $application->task_id)
-				{
-					$this->res['data']['list'][$key]['task_id'] = $application->task_id;
-					$this->res['data']['list'][$key]['status'] = $application->status;
-					$this->res['data']['list'][$key]['application_id'] = $application->id;
-					$this->res['data']['list'][$key]['quotation'] = $application->quotation;
-					$this->res['data']['list'][$key]['reason'] = $application->reason;
-					$this->res['data']['list'][$key]['verification'] = $application->verification;
-					$this->res['data']['list'][$key]['url'] = $application->url;
-					$this->res['data']['list'][$key]['declined_desc'] = $application->declined_desc;
-					break;
-				}
-			}
+			$task_map[$task['id']]	= $task; 
+		}
+		foreach ($task_applications as $application)
+		{
+			$application_task = clone $task_map[$application->task_id];
+			$application_task['task_id'] = $application->task_id;
+			$application_task['status'] = $application->status;
+			$application_task['application_id'] = $application->id;
+			$application_task['quotation'] = $application->quotation;
+			$application_task['reason'] = $application->reason;
+			$application_task['verification'] = $application->verification;
+			$application_task['url'] = $application->url;
+			$application_task['declined_desc'] = $application->declined_desc;
 			$application_result = $application_service->application_eligibility($kol_id, $task['id']);
-			$this->res['data']['list'][$key]['application_eligibility'] = $application_result['code'] == ErrorCodes::ERROR_CODE_SUCCESS ? 1 : 0;
-			$this->res['data']['list'][$key]['application_num'] = $application_service->application_kol_num($task['id']);
+			$application_task['application_eligibility'] = $application_result['code'] == ErrorCodes::ERROR_CODE_SUCCESS ? 1 : 0;
+			$application_task['application_num'] = $application_service->application_kol_num($task['id']);
+			$this->res['data']['list'][] = $application_task;
 		}
 		$this->res['data']['total'] = $application_service->kol_task_list_count($kol_id, $status);
 		return $this->res;

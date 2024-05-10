@@ -304,6 +304,7 @@ class ProjectTaskApplicationService extends Service
 			return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_IS_NOT_EXIST,
 				ErrorDescs::ERROR_CODE_TASK_IS_NOT_EXIST);		
 		}
+
 		$max_kol_num = $task_detail['data']['kol_max'];
 		if ($max_kol_num > 0)
 		{
@@ -319,9 +320,10 @@ class ProjectTaskApplicationService extends Service
 		$kol_detail = $kol_service->kol_detail($kol_id);
 		if (empty($kol_detail['data']))
 		{
-			return $this->error_response($task_id, ErrorCodes::ERROR_CODE_KOL_IS_NOT_EXIST,
+			return $this->error_response($kol_id, ErrorCodes::ERROR_CODE_KOL_IS_NOT_EXIST,
 				ErrorDescs::ERROR_CODE_KOL_IS_NOT_EXIST);		
 		}
+
 		$kol_min_followers = $task_detail['data']['kol_min_followers'];
 		if ($kol_min_followers > 0)
 		{
@@ -370,6 +372,7 @@ class ProjectTaskApplicationService extends Service
 					ErrorDescs::ERROR_CODE_TASK_APPLICATION_KOL_ENGAGEMENT_IS_NOT_ENOUGH);		
 			}
 		}
+
 		$this->res['code'] = ErrorCodes::ERROR_CODE_SUCCESS;
 		$this->res['message'] = '';
 		$this->res['data'] = [];
