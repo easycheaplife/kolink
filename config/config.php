@@ -82,18 +82,18 @@ return [
 	'verification_subject' => array(0 => 'KOLink - Confirm Your Email Address', 1 => 'KOLink - Confirm Your Email Address'), 
 	'verification_body' => array(
 		0 => 
-	"Thank you for joining KOLink! We're excited to have you on board as we work together to redefine content creation and influencer marketing.\n\n" .
-	"Your verification code is: %s \n\n" .
-	"If you did not initiate this request, please ignore this message.\n\n" .
-	"We look forward to seeing the amazing content you'll create and the connections you'll build.\n\n" .
-	"Warm regards,\n" .
+	"Thank you for joining KOLink! We're excited to have you on board as we work together to redefine content creation and influencer marketing.<br><br>" .
+	"<span style='font-size: 20px;'>Your verification code is: <strong>%s</strong></span><br><br>" .
+	"If you did not initiate this request, please ignore this message.<br><br>" .
+	"We look forward to seeing the amazing content you'll create and the connections you'll build.<br><br>" .
+	"Warm regards,<br>" .
 	"The KOLink Team", 
 		1 => 
-	"Welcome to KOLink, the hub where projects meet top-tier influencers! Please confirm your email to begin your journey: \n\n" .
-	"Verification Code: %s \n\n" .
-	"If you did not initiate this request, please ignore this message. \n\n" .
-	"Thank you for choosing KOLink. \n\n" .
-	"Warm regards,\n" .
+	"Welcome to KOLink, the hub where projects meet top-tier influencers! Please confirm your email to begin your journey: <br><br>" .
+	"<span style='font-size: 20px;'>Verification code: <strong>%s</strong></span><br><br>" .
+	"If you did not initiate this request, please ignore this message. <br><br>" .
+	"Thank you for choosing KOLink. <br><br>" .
+	"Warm regards,<br>" .
 	"The KOLink Team"
 	), 
 	'task_review_timeout' => 7,

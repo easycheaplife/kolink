@@ -42,6 +42,7 @@ class MailService extends Service
 	{
 		$mail = new PHPMailer(true);
 		try {
+			$mail->isHTML(true);
 			$mail->isSMTP();
 			$mail->Host = env('MAIL_HOST');
 			$mail->SMTPAuth = true;
