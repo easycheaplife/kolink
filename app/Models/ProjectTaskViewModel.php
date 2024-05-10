@@ -51,12 +51,13 @@ class ProjectTaskViewModel extends Model
 		return $this->where('project_id', $project_id)->count();
 	}
 
-	public function trending_task()
+	public function trending_task($size = 8)
 	{
 		return DB::table($this->table)
 			->select('task_id', DB::raw('COUNT(task_id) as view_count'))
 			->groupBy('task_id')
 			->orderByDesc('view_count')
+		    ->take($size)
 			->get();	
 	}
 

@@ -78,20 +78,28 @@ class ProjectService extends Service
 		$application_service = new ProjectTaskApplicationService;
 		$trending_task = $view_service->trending_task();
 		$task_ids = [];
-		$trending_task_tmp = [];
+		$trending_task_view_count = [];
 		if (count($trending_task))
 		{
 			foreach ($trending_task as $task)
 			{
 				$task_ids[] = $task->task_id;	
-				$trending_task_tmp[$task->task_id] = $task->view_count;
+				$trending_task_view_count[$task->task_id] = $task->view_count;
 			}
 			$tasks = $task_service->kol_task_list($task_ids);
-			foreach ($tasks as $task)
+			$trending_task_finial = [];
+			foreach ($trending_task as $task)
 			{
-				$task['view_count'] = $trending_task_tmp[$task['id']];
+				foreach ($tasks as $task_detail)
+				{
+					if ($task->task_id == $task_detail['id'])
+					{
+						$task_detail['view_count'] = $trending_task_view_count[$task->task_id];
+						$trending_task_finial[$task->task_id] = $task_detail;
+					}
+				}
 			}
-			$this->res['data']['trending_task'] = $tasks;
+			$this->res['data']['trending_task'] = $trending_task_finial;
 		}
 		else
 		{

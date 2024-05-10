@@ -18,7 +18,7 @@ return [
 	),
 	'category_list' => array(
 		'All' => 0,
-		'Gamefi' => 1,
+		'GameFi' => 1,
 		'SocialFi' => 2,
 		'DEX' => 3,
 		'CEX' => 4,
@@ -29,7 +29,8 @@ return [
 		'Tool' => 9,
 		'AI' => 10,
 		'RWA' => 11,
-		'MEME' => 12,
+		'Meme' => 12,
+		'DePin' => 13,
 		'Other' => 99,
 	),
 	'region_list' => array(
