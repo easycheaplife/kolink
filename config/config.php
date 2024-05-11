@@ -82,7 +82,7 @@ return [
 	'verification_subject' => array(0 => 'KOLink - Confirm Your Email Address', 1 => 'KOLink - Confirm Your Email Address'), 
 	'verification_body' => array(
 		0 => 
-	"Thank you for joining KOLink! We're excited to have you on board as we work together to redefine content creation and influencer marketing.<br><br>" .
+	"Thank you for joining KOLink! We're excited to have you onboard as we work together to redefine content creation and influencer marketing.<br><br>" .
 	"<span style='font-size: 20px;'>Your verification code is: <strong>%s</strong></span><br><br>" .
 	"If you did not initiate this request, please ignore this message.<br><br>" .
 	"We look forward to seeing the amazing content you'll create and the connections you'll build.<br><br>" .

@@ -163,7 +163,8 @@ class KolModel extends Model
 			$this->age_score = $twitter_user['age_score'];
 			$this->composite_score = $twitter_user['composite_score'];
 			$this->twitter_followers = $twitter_user['followers_count'];
-			$this->twitter_subscriptions = $twitter_user['favourites_count'];
+			$this->twitter_like_count = $twitter_user['like_count'];
+			$this->twitter_following_count = $twitter_user['following_count'];
 			$this->twitter_friends_count = $twitter_user['friends_count'];
 			$this->twitter_listed_count = $twitter_user['listed_count'];
 			$this->twitter_statuses_count = $twitter_user['statuses_count'];
@@ -186,6 +187,7 @@ class KolModel extends Model
 
 	public function update_twitter_user($twitter_user)
 	{
+		// like_count(new version), favourites_count(old version) are the same meaning, twitter_subscriptions is deprecated.
 		return $this->where('twitter_user_id', $twitter_user['user_id'])->update([
 			'twitter_user_name' => $twitter_user['screen_name'], 
 			'twitter_avatar' => $twitter_user['profile_image_url'], 
@@ -193,7 +195,6 @@ class KolModel extends Model
 			'age_score' => $twitter_user['age_score'], 
 			'composite_score' => $twitter_user['composite_score'], 
 			'twitter_followers' => $twitter_user['followers_count'], 
-			'twitter_subscriptions' => $twitter_user['favourites_count'], 
 			'twitter_like_count' => $twitter_user['like_count'], 
 			'twitter_following_count' => $twitter_user['following_count'], 
 			'twitter_friends_count' => $twitter_user['friends_count'], 
