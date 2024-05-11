@@ -26,8 +26,7 @@ class EtherscanService extends Service
 			$tokens = $kol_service->get_tokens($i, $size);
 			foreach ($tokens as $token)
 			{
-				$this->address_info($token);
-				Log::info("token:$token");
+				$this->address_info($token['token']);
 			}
 		}
 	}
@@ -48,6 +47,7 @@ class EtherscanService extends Service
 			$url = "$etherscan_url_base?module=account&action=txlist" .
 				"&address=$address&startblock=$start_block&endblock=$end_block" .
 				"&page=$page&offset=$offset&sort=asc&apikey=$etherscan_api_key";
+			Log::info($url);
 			$response = Http::withHeaders($headers)
 				->timeout(config('config.http_timeout'))
 				->get($url);
@@ -67,9 +67,10 @@ class EtherscanService extends Service
 			$contractaddress = config('config.contractaddress');
 			$offset = 9999;
 			$url = "$etherscan_url_base?module=account&action=tokentx" .
-				"&contractaddress=$contractaddress&address=$address" . 
+				"&address=$address" . 
 				"&page=$page&offset=$offset&startblock=$start_block" . 
 				"&endblock=$end_block&sort=asc&apikey=$etherscan_api_key";
+			Log::info($url);
 			$response = Http::withHeaders($headers)
 				->timeout(config('config.http_timeout'))
 				->get($url);
@@ -88,12 +89,13 @@ class EtherscanService extends Service
 			}
 
 			$url = "$etherscan_url_base?module=account&action=tokennfttx" . 
-				"&contractaddress=$contractaddress&address=$address" .
+				"&address=$address" .
 				"&page=$page&offset=$offset&startblock=$start_block&endblock=$end_block" . 
 				"&sort=asc&apikey=$etherscan_api_key";
 			$response = Http::withHeaders($headers)
 				->timeout(config('config.http_timeout'))
 				->get($url);
+			Log::info($url);
 			if ($response->successful()) {
 				$data = $response->json();
 				Log::info($data);
@@ -103,9 +105,7 @@ class EtherscanService extends Service
 				}
 				$etherscan_service = new EtherscanModel;
 				$etherscan_service->insert($address, $created_at, $token_count, $nft_count);
-				Log::info("created_at:$created_at");
-				Log::info("token_count:$token_count");
-				Log::info("nft_count:$nft_count");
+				Log::info("address_info===address:$address,created_at:$created_at,token_count:$token_count,nft_count:$nft_count");
 			}
 			else {
 				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
@@ -122,8 +122,7 @@ class EtherscanService extends Service
 	public function get_token($address)
 	{
 		$etherscan_service = new EtherscanModel;
-		$etherscan_service->get($address);
-	
+		return $etherscan_service->get($address);
 	}
 
 	public function get_column_count_max($column_name)

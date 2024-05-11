@@ -164,6 +164,7 @@ class KolModel extends Model
 			$this->twitter_user_id = $twitter_user['user_id'];
 			$this->twitter_user_name = $twitter_user['screen_name'];
 			$this->twitter_avatar = $twitter_user['profile_image_url'];
+			$this->monetary_score = $twitter_user['monetary_score'];
 			$this->engagement_score = $twitter_user['engagement_score'];
 			$this->age_score = $twitter_user['age_score'];
 			$this->composite_score = $twitter_user['composite_score'];
@@ -196,6 +197,7 @@ class KolModel extends Model
 		return $this->where('twitter_user_id', $twitter_user['user_id'])->update([
 			'twitter_user_name' => $twitter_user['screen_name'], 
 			'twitter_avatar' => $twitter_user['profile_image_url'], 
+			'monetary_score' => $twitter_user['monetary_score'], 
 			'engagement_score' => $twitter_user['engagement_score'], 
 			'age_score' => $twitter_user['age_score'], 
 			'composite_score' => $twitter_user['composite_score'], 

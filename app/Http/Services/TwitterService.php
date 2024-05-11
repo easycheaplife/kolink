@@ -169,8 +169,8 @@ class TwitterService extends Service
 		$media_count_max = $twitter_user_model->get_column_count_max('media_count');
 		$twitter_created_at_min = $twitter_user_model->get_column_count_min('created_at');
 		$tokon_created_at_min = $etherscan_service->get_column_count_min('created_at');
-		$token_count_max = $etherscan_service->get_column_count_min('token_count');
-		$nft_count_max = $etherscan_service->get_column_count_min('nft_count');
+		$token_count_max = $etherscan_service->get_column_count_max('token_count');
+		$nft_count_max = $etherscan_service->get_column_count_max('nft_count');
 		Log::debug("total:$total");
 		Log::debug("followers_count_max:$followers_count_max");
 		Log::debug("friends_count_max:$friends_count_max");
@@ -283,8 +283,8 @@ class TwitterService extends Service
 		}
 		$token_count_max = $token_count_max > 0 ? $token_count_max : 1; 
 		$nft_count_max = $nft_count_max > 0 ? $nft_count_max : 1; 
-		$monetary_score = number_format($token_user['token_count'] / $token_count_max * 20, 2) 
-			+ number_format($token_user['nft_count'] / $nft_count_max * 20, 2);
+		$monetary_score = number_format($token_user['token_count'] / $token_count_max * 10, 2) 
+			+ number_format($token_user['nft_count'] / $nft_count_max * 10, 2);
 		Log::debug("monetary_score:$monetary_score");
 		return $monetary_score;
 	}

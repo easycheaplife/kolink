@@ -76,7 +76,7 @@ return [
 	'default_page_size' => 10,
 	'mail_try_times' => 3,
 	'twitter_url_base' => 'http://localhost:8010',
-	'http_timeout' => 3,
+	'http_timeout' => 10,
 	'verification_code_valid_time' => 300,
 	'verification_type' => array('kol' => 0, 'project' => 1), 
 	'verification_subject' => array(0 => 'KOLink - Confirm Your Email Address', 1 => 'KOLink - Confirm Your Email Address'), 
