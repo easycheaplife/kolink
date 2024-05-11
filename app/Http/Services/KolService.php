@@ -146,12 +146,10 @@ class KolService extends Service
 		return $this->res;
 	}
 
-	public function kol_setting($kol_id, $email, $twitter_user_name, $twitter_avatar, $twitter_followers, 
-		$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id)
+	public function kol_setting($kol_id, $email, $region_id, $category_id, $language_id, $channel_id)
 	{
 		$kol_model = new KolModel;
-		if (!$kol_model->setting($kol_id, $email, $twitter_user_name, $twitter_avatar, $twitter_followers,
-			$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id))
+		if (!$kol_model->setting($kol_id, $email, $region_id, $category_id, $language_id, $channel_id))
 		{
 			return $this->error_response($kol_id, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		

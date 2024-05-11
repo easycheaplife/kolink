@@ -141,14 +141,10 @@ class KolModel extends Model
 			->where('token', $token)->first();
 	}
 
-	public function setting($kol_id, $email, $twitter_user_name, $twitter_avatar, $twitter_followers, 
-		$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id)
+	public function setting($kol_id, $email, $region_id, $category_id, $language_id, $channel_id)
 	{
 		return $this->where('id', $kol_id)->update([
 			'email' => $email, 
-			'twitter_user_name' => $twitter_user_name, 
-			'twitter_avatar' => $twitter_avatar, 
-			'twitter_subscriptions' => $twitter_subscriptions, 
 			'region_id' => $region_id, 
 			'category_id' => $category_id, 
 			'language_id' => $language_id, 

@@ -141,10 +141,6 @@ class KolController extends Controller
 			$validated_data = $request->validate([
 				'kol_id' => 'required|integer',
 				'email' => 'required|email',
-				'twitter_user_name' => 'required|string',
-				'twitter_avatar' => 'required|string',
-				'twitter_followers' => 'required|integer',
-				'twitter_subscriptions' => 'required|integer',
 				'region_id' => 'required|string',
 				'category_id' => 'required|string',
 				'language_id' => 'required|string'
@@ -159,10 +155,6 @@ class KolController extends Controller
 		return $service->kol_setting(
 			$validated_data['kol_id'],
 			$validated_data['email'],
-			$validated_data['twitter_user_name'],
-			$validated_data['twitter_avatar'],
-			$validated_data['twitter_followers'],
-			$validated_data['twitter_subscriptions'],
 			$validated_data['region_id'],
 			$validated_data['category_id'],
 			$validated_data['language_id'],
