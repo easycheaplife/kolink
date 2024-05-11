@@ -79,8 +79,11 @@ class KolService extends Service
 	{
 		$kol_model = new KolModel;
 		$this->res['data'] = $kol_model->get($kol_id);
-		$this->res['data']['engagement'] = $this->engagement_score($this->res['data']);
-		$this->res['data']['monetary_score'] = empty($this->res['data']['monetary_score']) ? 0 : $this->res['data']['monetary_score'];
+		if (!empty($this->res['data']))
+		{
+			$this->res['data']['engagement'] = $this->engagement_score($this->res['data']);
+			$this->res['data']['monetary_score'] = empty($this->res['data']['monetary_score']) ? 0 : $this->res['data']['monetary_score'];
+		}
 		return $this->res;
 	}
 
