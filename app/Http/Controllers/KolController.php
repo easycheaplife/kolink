@@ -14,18 +14,18 @@ class KolController extends Controller
 	public function kol_new(Request $request)
 	{
 		$twitter_user_id = $request->input('twitter_user_id', 0);
+		$twitter_user_name = $request->input('twitter_user_name', '');
+		$twitter_avatar = $request->input('twitter_avatar', '');
+		$twitter_followers = $request->input('twitter_followers', 0);
+		$twitter_subscriptions = $request->input('twitter_subscriptions', 0);
 		$channel_id = $request->input('channel_id', 0);
 		try {
 			$validated_data = $request->validate([
 				'token' => 'required|string',
 				'email' => 'required|email',
-				'twitter_user_name' => 'required|string',
-				'twitter_avatar' => 'required|string',
-				'twitter_followers' => 'required|integer',
-				'twitter_subscriptions' => 'required|integer',
-				'region_id' => 'required|integer',
+				'region_id' => 'required|string',
 				'category_id' => 'required|string',
-				'language_id' => 'required|integer',
+				'language_id' => 'required|string',
 				'code' => 'required|integer'
 			]);
 		}
@@ -39,10 +39,10 @@ class KolController extends Controller
 			$validated_data['token'],
 			$validated_data['email'],
 			$twitter_user_id,
-			$validated_data['twitter_user_name'],
-			$validated_data['twitter_avatar'],
-			$validated_data['twitter_followers'],
-			$validated_data['twitter_subscriptions'],
+			$twitter_user_name,
+			$twitter_avatar,
+			$twitter_followers,
+			$twitter_subscriptions,
 			$validated_data['region_id'],
 			$validated_data['category_id'],
 			$validated_data['language_id'],
@@ -57,9 +57,9 @@ class KolController extends Controller
 		$size = $request->input('size', config('config.default_page_size'));
 		$sort_type = $request->input('sort_type', 0);
 		$sort_field = $request->input('sort_field', 0);
-		$region_id = $request->input('region_id', '0');
+		$region_id = $request->input('region_id', '');
 		$category_id = $request->input('category_id', '');
-		$language_id = $request->input('language_id', '0');
+		$language_id = $request->input('language_id', '');
 		$channel_id = $request->input('channel_id', '0');
 		$service = new KolService();
 		return $service->kol_list(
@@ -145,9 +145,9 @@ class KolController extends Controller
 				'twitter_avatar' => 'required|string',
 				'twitter_followers' => 'required|integer',
 				'twitter_subscriptions' => 'required|integer',
-				'region_id' => 'required|integer',
+				'region_id' => 'required|string',
 				'category_id' => 'required|string',
-				'language_id' => 'required|integer'
+				'language_id' => 'required|string'
 			]);
 		}
 		catch (ValidationException $e)

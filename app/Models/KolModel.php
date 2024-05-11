@@ -57,15 +57,24 @@ class KolModel extends Model
 	public function list($region_id, $category_id, $language_id, $channel_id, $sort_type, $sort_field, $page, $size)
 	{
 		$query = DB::table($this->table);
-		if ($region_id != '0') {
-			$query->whereIn('region_id', explode(",", $region_id));
-		}
-		if ($language_id != '0') {
-			$query->whereIn('language_id', explode(",", $language_id));
-		}
 		if ($channel_id != '0') {
 			$query->whereIn('channel_id', explode(",", $channel_id));
 		}
+
+		if ($region_id != '') {
+			$items = explode(",", $region_id);
+			foreach ($items as $item) {
+				$query->orWhereRaw("FIND_IN_SET($item, region_id) > 0");
+			}
+		}
+
+		if ($language_id != '') {
+			$items = explode(",", $language_id);
+			foreach ($items as $item) {
+				$query->orWhereRaw("FIND_IN_SET($item, language_id) > 0");
+			}
+		}
+
 		if ($category_id != '') {
 			$items = explode(",", $category_id);
 			foreach ($items as $item) {

@@ -28,8 +28,8 @@ return new class extends Migration
             $table->integer('twitter_statuses_count')->default(0);
             $table->integer('twitter_media_count')->default(0);
             $table->integer('twitter_created_at')->default(0);
-            $table->integer('region_id')->default(0)->default(0);
-            $table->integer('language_id')->default(0);
+            $table->string('region_id', 64)->default('');
+            $table->string('language_id', 64)->default('');
             $table->string('category_id', 64)->default('');
             $table->integer('channel_id')->default(0);
             $table->string('monetary_score', 24)->default('');
