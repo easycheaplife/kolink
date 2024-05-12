@@ -14,7 +14,7 @@ class ProjectTaskModel extends Model
 {
     use HasFactory;
 	protected $table = 'project_task';
-	public function insert($project_id, $title, $desc, $social_platform_id, $kol_max, $kol_min_followers,
+	public function insert($project_id, $title, $desc, $backgroup_image, $social_platform_id, $kol_max, $kol_min_followers,
 		$kol_like_min, $kol_score_min, $start_time, $applition_ddl_time, $upload_ddl_time, $blockchain_id,
 		$token_id, $reward_min)
 	{
@@ -22,6 +22,7 @@ class ProjectTaskModel extends Model
 			$this->project_id = $project_id;
 			$this->title = $title;
 			$this->desc = $desc;
+			$this->backgroup_image = $backgroup_image;
 			$this->social_platform_id = $social_platform_id;
 			$this->kol_max = $kol_max;
 			$this->kol_min_followers = $kol_min_followers;
@@ -48,7 +49,7 @@ class ProjectTaskModel extends Model
 
 	public function list($project_id, $page, $size)
 	{
-		return $this->select('id','project_id','title','desc','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
+		return $this->select('id','project_id','title','desc','backgroup_image','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
 			->where('project_id', $project_id)
 			->where('close', '!=', 1)
 			->orderByDesc('updated_at')
@@ -59,7 +60,7 @@ class ProjectTaskModel extends Model
 
 	public function count($project_id)
 	{
-		return $this->select('id','project_id','title','desc','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
+		return $this->select('id','project_id','title','desc','backgroup_image','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
 			->where('project_id', $project_id)
 			->where('close', '!=', 1)
 			->count();
@@ -67,7 +68,7 @@ class ProjectTaskModel extends Model
 
 	public function get_tasks($task_ids)
 	{
-		return $this->select('id','project_id','title','desc','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
+		return $this->select('id','project_id','title','desc','backgroup_image','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
 			->whereIn('id', $task_ids)
 			->orderByDesc('updated_at')
 			->get();
@@ -75,7 +76,7 @@ class ProjectTaskModel extends Model
 
 	public function upcoming_task()
 	{
-		return $this->select('id','project_id','title','desc','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
+		return $this->select('id','project_id','title','desc','backgroup_image','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
 			->where('start_time', '>=', time())
 			->where('close', '!=', 1)
 			->orderByDesc('updated_at')
@@ -84,7 +85,7 @@ class ProjectTaskModel extends Model
 
 	public function upcoming_task_count()
 	{
-		return $this->select('id','project_id','title','desc','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
+		return $this->select('id','project_id','title','desc','backgroup_image','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
 			->where('start_time', '>=', time())
 			->where('close', '!=', 1)
 			->count();
@@ -92,7 +93,7 @@ class ProjectTaskModel extends Model
 
 	public function trending_task()
 	{
-		return $this->select('id','project_id','title','desc','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
+		return $this->select('id','project_id','title','desc','backgroup_image','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
 			->where('start_time', '<', time())
 			->where('close', '!=', 1)
 			->orderByDesc('updated_at')
@@ -101,13 +102,13 @@ class ProjectTaskModel extends Model
 
 	public function detail($task_id)
 	{
-		return $this->select('id','project_id','title','desc','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
+		return $this->select('id','project_id','title','desc','backgroup_image','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
 			->where('id', $task_id)->first();
 	}
 
 	public function ongoing_task($page, $size)
 	{
-		return $this->select('id','project_id','title','desc','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
+		return $this->select('id','project_id','title','desc','backgroup_image','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
 			->where('start_time', '<=', time())
 			->where('upload_ddl_time', '>=', time())
 			->where('close', '!=', 1)
@@ -119,7 +120,7 @@ class ProjectTaskModel extends Model
 
 	public function ongoing_task_count()
 	{
-		return $this->select('id','project_id','title','desc','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
+		return $this->select('id','project_id','title','desc','backgroup_image','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
 			->where('start_time', '>=', time())
 			->where('upload_ddl_time', '>', time())
 			->where('close', '!=', 1)
@@ -129,7 +130,7 @@ class ProjectTaskModel extends Model
 
 	public function all_task($page, $size)
 	{
-		return $this->select('id','project_id','title','desc','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
+		return $this->select('id','project_id','title','desc','backgroup_image','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
 			->where('close', '!=', 1)
 			->orderByDesc('updated_at')
 			->skip($page * $size)
