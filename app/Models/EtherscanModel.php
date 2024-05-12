@@ -31,11 +31,21 @@ class EtherscanModel extends Model
 		{
 			if ($e->errorInfo[1] == ErrorCodes::ERROR_CODE_DUPLICATE_ENTRY)
 			{
+				$this->update_count($address, $token_count, $nft_count);
 				return true;	
 			}
 			Log::error($e->getMessage());
 		}
 		return false;
+	}
+
+	public function update_count($address, $token_count, $nft_count)
+	{
+		return $this->where('address', $address)->update([
+			'updated_at' => time(), 
+			'token_count' => $token_count, 
+			'nft_count' => $nft_count 
+		]);	
 	}
 
 	public function get($address)
