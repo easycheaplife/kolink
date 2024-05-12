@@ -158,6 +158,7 @@ class ProjectTaskService extends Service
 			}
 			$application_result = $application_service->application_eligibility($kol_id, $task->id);
 			$this->res['data']['list'][$key]['application_eligibility'] = $application_result['code'] == ErrorCodes::ERROR_CODE_SUCCESS ? 1 : 0;
+			$this->res['data']['list'][$key]['application_eligibility_desc'] = $application_result['message'];
 		}
 		return $this->res;
 	}

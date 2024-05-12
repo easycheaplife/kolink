@@ -121,12 +121,14 @@ class ProjectService extends Service
 			$this->res['data']['trending_task'][$key]['project_detail'] = $project_model->get($task->project_id);
 			$application_result = $application_service->application_eligibility($kol_id, $task->id);
 			$this->res['data']['trending_task'][$key]['application_eligibility'] = $application_result['code'] == ErrorCodes::ERROR_CODE_SUCCESS ? 1 : 0;
+			$this->res['data']['trending_task'][$key]['application_eligibility_desc'] = $application_result['message'];
 			$this->res['data']['trending_task'][$key]['application_num'] = $application_service->application_kol_num($task->id);
 		}
 		foreach ($this->res['data']['upcoming_task'] as $key => $task)
 		{
 			$application_result = $application_service->application_eligibility($kol_id, $task->id);
 			$this->res['data']['upcoming_task'][$key]['application_eligibility'] = $application_result['code'] == ErrorCodes::ERROR_CODE_SUCCESS ? 1 : 0;
+			$this->res['data']['upcoming_task'][$key]['application_eligibility_desc'] = $application_result['message'];
 			$this->res['data']['upcoming_task'][$key]['application_num'] = $application_service->application_kol_num($task->id);
 		}
 		return $this->res;

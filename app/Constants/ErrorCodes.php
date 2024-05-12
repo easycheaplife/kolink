@@ -36,33 +36,31 @@ class ErrorCodes
 	const ERROR_CODE_DUPLICATE_ENTRY = 1062;
 }
 
-class ErrorDescs
-{
+class ErrorDescs {
 	const ERROR_CODE_SUCCESS = '';
-	const ERROR_CODE_INPUT_PARAM_ERROR = 'input param error!';
-	const ERROR_CODE_DB_ERROR = 'db error!';
+	const ERROR_CODE_INPUT_PARAM_ERROR = 'Input parameter error!';
+	const ERROR_CODE_DB_ERROR = 'Database error!';
 	const ERROR_CODE_VERIFICATION_CODE_ERROR = 'The captcha is invalid or has expired!';
 	const ERROR_CODE_TASK_APPLICATION_IS_MISSING = 'The task application does not match!';
-	const ERROR_CODE_TASK_APPLICATION_IS_NOT_YOURS = 'Task application is not yours!';
-	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_EDIT = 'Current task application status can not edit!';
-	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_REVIEW = 'Current task application status can not review!';
-	const ERROR_CODE_TASK_APPLICATION_STATUS_CODE_ERROR = 'Input param status error, only panding,accept,declined are allowed.';
-	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_UPLOAD = 'Current task application status can not upload!';
-	const ERROR_CODE_PROJECT_IS_NOT_YOURS = 'Project is not yours!';
-	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_FINISH = 'Current task application status can not finish!';
-	const ERROR_CODE_UPLOAD_FILE_IS_NOT_EXIST = 'File is not exist!';
+	const ERROR_CODE_TASK_APPLICATION_IS_NOT_YOURS = 'Task application does not belong to you!';
+	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_EDIT = 'Current task application status cannot be edited!';
+	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_REVIEW = 'Current task application status cannot be reviewed!';
+	const ERROR_CODE_TASK_APPLICATION_STATUS_CODE_ERROR = 'Invalid input parameter for status, only "pending," "accept," or "declined" are allowed.';
+	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_UPLOAD = 'Current task application status cannot be uploaded!';
+	const ERROR_CODE_PROJECT_IS_NOT_YOURS = 'Project does not belong to you!';
+	const ERROR_CODE_TASK_APPLICATION_STATUS_CAN_NOT_FINISH = 'Current task application status cannot be finished!';
+	const ERROR_CODE_UPLOAD_FILE_IS_NOT_EXIST = 'File does not exist!';
 	const ERROR_CODE_TASK_NOT_BELONG_TO_PROJECT = 'The task does not belong to the project.';
-	const ERROR_CODE_TASK_IS_IN_PROGRESS = 'Task is in progress, can not close the task!';
-	const ERROR_CODE_TWITTER_AUTH_URL_FAILED = 'Get twitter auth url failed!';
-	const ERROR_CODE_TWITTER_USER_FAILED = 'Get twitter use data failed!';
-	const ERROR_CODE_ETHERSCAN_API_FAILED = 'Get etherscan api failed!';
-	const ERROR_CODE_TASK_IS_NOT_EXIST = 'Task is not exit!';
-	const ERROR_CODE_KOL_IS_NOT_EXIST = 'Kol is not exist!';
-	const ERROR_CODE_TASK_APPLICATION_REACH_MAX_KOL_UPLIMIT = 'Task application is reach the uplimit of the kol!';
-	const ERROR_CODE_TASK_APPLICATION_KOL_FOLLOWERS_IS_NOT_ENOUGH = "Kol's followers is not enouth!";
-	const ERROR_CODE_TASK_APPLICATION_KOL_ENGAGEMENT_IS_NOT_ENOUGH = "Kol's engagement is not enouth!";
-	const ERROR_CODE_TASK_APPLICATION_KOL_SCORE_IS_NOT_ENOUGH = "Kol's engagement is not enouth!";
+	const ERROR_CODE_TASK_IS_IN_PROGRESS = 'Task is in progress, cannot close the task!';
+	const ERROR_CODE_TWITTER_AUTH_URL_FAILED = 'Failed to get Twitter authentication URL!';
+	const ERROR_CODE_TWITTER_USER_FAILED = 'Failed to get Twitter user data!';
+	const ERROR_CODE_ETHERSCAN_API_FAILED = 'Failed to retrieve data from Etherscan API!';
+	const ERROR_CODE_TASK_IS_NOT_EXIST = 'Task does not exist!';
+	const ERROR_CODE_KOL_IS_NOT_EXIST = 'KOL does not exist!';
+	const ERROR_CODE_TASK_APPLICATION_REACH_MAX_KOL_UPLIMIT = 'Task application has reached the maximum KOL limit!';
+	const ERROR_CODE_TASK_APPLICATION_KOL_FOLLOWERS_IS_NOT_ENOUGH = "KOL's followers are not enough!";
+	const ERROR_CODE_TASK_APPLICATION_KOL_ENGAGEMENT_IS_NOT_ENOUGH = "KOL's engagement is not enough!";
+	const ERROR_CODE_TASK_APPLICATION_KOL_SCORE_IS_NOT_ENOUGH = "KOL's score is not enough!";
 	const ERROR_CODE_TASK_APPLICATION_DDL_TIMEOUT = 'The current time has exceeded the application deadline.';
 	const ERROR_CODE_TASK_UPLOAD_DDL_TIMEOUT= 'The current time has exceeded the upload deadline.';
 }
-
