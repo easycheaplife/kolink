@@ -285,7 +285,9 @@ func SetLogFormat() {
 	log.SetOutput(os.Stdout)
 }
 
-// insert into transaction_base (blockchain_id,last_block_number,rpc_url,contract_addr) values(1,38568012,"https://bsc-mainnet.nodereal.io/v1/7a5eca2f07be48d586a09275ea2f687c","0x0BDBb9EBaDBA7e4061e56E533fAb06D10e90aE96");
+// insert into transaction_base (blockchain_id,last_block_number,rpc_url,contract_addr, private_key) values(1,38568012,"https://bsc-mainnet.nodereal.io/v1/7a5eca2f07be48d586a09275ea2f687c","0x0BDBb9EBaDBA7e4061e56E533fAb06D10e90aE96", "9499650b6b62927e2f2324e5b5026ea1472a1f6db262abd63d8004ef624ddcc3");
+
+// insert into transaction_base (blockchain_id,last_block_number,rpc_url,contract_addr, private_key) values(2,19816769,"http://120.55.165.46:8545","0xD7aAdD7BD1d12ee13E1f4Db8BB56458882796bE4", "6a4843f986e41899fa98984f0a559d8e870f2bb5552bfeb79b427c1199386710");
 func main() {
 	SetLogFormat()
 	db, err := sql.Open("mysql", "root:F0BYKDqw7@tcp(127.0.0.1:3306)/kolink?parseTime=true&loc=Local")
