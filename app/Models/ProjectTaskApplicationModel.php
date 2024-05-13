@@ -157,6 +157,17 @@ class ProjectTaskApplicationModel extends Model
 			->first();
 	}
 
+	public function task_upload_timeout()
+	{
+		$timeout_days = config('config.task_accept_timeout');
+		return $this->select('id', 'web3_hash')
+			->where('status', config('config.task_status')['accept'])
+			->where('web3_hash', '!=', '')
+			->whereRaw("updated_at + INTERVAL $timeout_days DAY <= NOW()")
+			->orderBy('updated_at', 'asc')
+			->first();
+	}
+
 	public function application_kol_num($task_id)
 	{
 		$task_status = array(

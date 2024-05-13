@@ -14,7 +14,9 @@ return [
 		'lock_pending' => 9,
 		'cancel_pending' => 10,
 		'settle_pending' => 11,
-		'delegate_settle_pending' => 12
+		'delegate_settle_pending' => 12,
+		'upload_timeout_cancel_pending' => 13,
+		'upload_timeout_cancel' => 14,
 	),
 	'category_list' => array(
 		'All' => 0,
@@ -96,6 +98,7 @@ return [
 	"Warm regards,<br>" .
 	"The KOLink Team"
 	), 
+	'task_accept_timeout' => 7,
 	'task_review_timeout' => 7,
 	'etherscan_api_key' => '3IEU6UYCNQN43DFVF5BJM9SP32HH5PZHH8',
 	'etherscan_url_base' => 'https://api.etherscan.io/api',

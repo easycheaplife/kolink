@@ -4,19 +4,26 @@ import (
 	"contracts"
 	"context"
 	"time"
-	"fmt"
 	"github.com/ethereum/go-ethereum/accounts/abi/bind"
 	"github.com/ethereum/go-ethereum/common"
 	"github.com/ethereum/go-ethereum/crypto"
 	"github.com/ethereum/go-ethereum/ethclient"
 	"log"
+	"os"
 	"math/big"
 	_ "github.com/go-sql-driver/mysql"
 	"database/sql"
 )
 
+const max_transaction_try_times = 3
+const transaction_type_lock_assert = 0;
+const transaction_type_settle = 1;
+const transaction_type_delegate_settle = 2;
+const transaction_type_cancel_lock = 3;
+
 func DelegateSettleCall(client *ethclient.Client, instance *contracts.Contracts, auth *bind.TransactOpts, indexCode string) uint64 {
-	tx, err := instance.DelegateSettle(auth, indexCode)
+	indexCodeSlice := []string{indexCode}
+	tx, err := instance.DelegateSettle(auth, indexCodeSlice)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -25,7 +32,7 @@ func DelegateSettleCall(client *ethclient.Client, instance *contracts.Contracts,
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("DelegateSettleCall receipt.Status:", receipt.Status)
+	log.Println("DelegateSettleCall receipt.Status:", receipt.Status)
 	return receipt.Status
 }
 
@@ -36,7 +43,7 @@ func UpdateTransactionFlag(db* sql.DB, id int, transaction_flag int, transaction
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("update success! id:%d, transaction_flag:%d, transaction_try_times:%d", id, transaction_flag, transaction_try_times)
+	log.Printf("update success! id:%d, transaction_flag:%d, transaction_try_times:%d", id, transaction_flag, transaction_try_times)
 }
 
 func CancelLockCall(client *ethclient.Client, instance *contracts.Contracts, auth *bind.TransactOpts, indexCode string) uint64 {
@@ -49,33 +56,20 @@ func CancelLockCall(client *ethclient.Client, instance *contracts.Contracts, aut
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Println("CancelLockCall receipt.Status:", receipt.Status)
+	log.Println("CancelLockCall receipt.Status:", receipt.Status)
 	return receipt.Status
 }
 
-func main() {
-	const max_transaction_try_times = 3
-	const transaction_type_lock_assert = 0;
-	const transaction_type_settle = 1;
-	const transaction_type_delegate_settle = 2;
-	const transaction_type_cancel_lock = 3;
-
-	db, err := sql.Open("mysql", "root:F0BYKDqw7@tcp(127.0.0.1:3306)/kolink?parseTime=true&loc=Local")
-	client, err := ethclient.Dial("http://120.55.165.46:8545")
+func Execute(db* sql.DB, rpc_url string, contract_addr string, private_key string) {
+	client, err := ethclient.Dial(rpc_url)
 	if err != nil {
 		log.Fatal(err)
 	}
-	pingErr := db.Ping()
-	if pingErr != nil {
-		log.Fatal(pingErr)
-	}
-	fmt.Println("mysql connected!")
-
-	const owner_pvk = "6a4843f986e41899fa98984f0a559d8e870f2bb5552bfeb79b427c1199386710"
-	privateKey, err := crypto.HexToECDSA(owner_pvk)
+	privateKey, err := crypto.HexToECDSA(private_key)
 	if err != nil {
 		log.Fatal(err)
 	}
+	log.Println("privateKey:", privateKey)
 	chainID := big.NewInt(1)
 	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, chainID)
 	if err != nil {
@@ -85,9 +79,9 @@ func main() {
 	auth.GasLimit = uint64(1000000)
 	auth.GasPrice = big.NewInt(3000000000000)
 	fromAddress := auth.From
-	fmt.Println("owner address:", fromAddress.String())
+	log.Println("owner address:", fromAddress.String())
 
-	contractAddress := common.HexToAddress("0xD7aAdD7BD1d12ee13E1f4Db8BB56458882796bE4")
+	contractAddress := common.HexToAddress(contract_addr)
 	instance, err := contracts.NewContracts(contractAddress, client)
 	if err != nil {
 		log.Fatal(err)
@@ -103,11 +97,11 @@ func main() {
 	var transaction_try_times int
 	for rows.Next() {
 		if err := rows.Scan(&id, &index_node, &transaction_type, &transaction_try_times); err != nil {
-			fmt.Errorf("query last_block_number error: %v", err)
+			log.Printf("query last_block_number error: %v", err)
 			return;
 		}
 		var status uint64
-		fmt.Println("id,index_node, transaction_type,transaction_try_times", id, index_node, transaction_type, transaction_try_times) 
+		log.Println("id,index_node, transaction_type,transaction_try_times", id, index_node, transaction_type, transaction_try_times) 
 		switch transaction_type {
 		case transaction_type_delegate_settle:
 			status = DelegateSettleCall(client, instance, auth, indexCode)
@@ -120,5 +114,47 @@ func main() {
 			UpdateTransactionFlag(db, id, 0, transaction_try_times + 1)
 		}
 	}
+}
 
+func SetLogFormat() {
+	currentTime := time.Now()
+	date := currentTime.Format("2006-01-02") 
+	fileName := "logs/call_log_" + date + ".txt"
+	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	log.SetFlags(log.Ldate | log.Ltime)
+	// log.SetOutput(file)
+	log.SetOutput(os.Stdout)
+}
+
+func main() {
+	SetLogFormat()
+	db, err := sql.Open("mysql", "root:F0BYKDqw7@tcp(127.0.0.1:3306)/kolink?parseTime=true&loc=Local")
+	if err != nil {
+		log.Fatal(err)
+	}
+	pingErr := db.Ping()
+	if pingErr != nil {
+		log.Fatal(pingErr)
+	}
+	log.Println("mysql connected!")
+
+
+	rows, _ := db.Query("SELECT rpc_url,contract_addr,private_key FROM transaction_base")
+	defer rows.Close()
+	var rpc_url string
+	var contract_addr string
+	var private_key string
+	for rows.Next() {
+		if err := rows.Scan(&rpc_url, &contract_addr, &private_key); err != nil {
+			log.Printf("query transaction_base error: %v", err)
+			return;
+		}
+		log.Printf("rpc_url:%s contract_addr:%s private_key:%s\n", rpc_url, contract_addr, private_key)
+		Execute(db, rpc_url, contract_addr, private_key)
+	}
 }

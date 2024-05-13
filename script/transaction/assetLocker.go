@@ -31,7 +31,7 @@ var (
 
 // ContractsMetaData contains all meta data concerning the Contracts contract.
 var ContractsMetaData = &bind.MetaData{
-	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"previousAdmin\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newAdmin\",\"type\":\"address\"}],\"name\":\"AdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"beacon\",\"type\":\"address\"}],\"name\":\"BeaconUpgraded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_indexCode\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_locker\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amt\",\"type\":\"uint256\"}],\"name\":\"CancelLock\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_indexCode\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_locker\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amt\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_fee\",\"type\":\"uint256\"}],\"name\":\"DelegateSettle\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_indexCode\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_lockAmt\",\"type\":\"uint256\"}],\"name\":\"LockAsset\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_oldFeeRate\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_newFeeRate\",\"type\":\"uint256\"}],\"name\":\"SetPlatformFeeRate\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_oldReceiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_newReceiver\",\"type\":\"address\"}],\"name\":\"SetPlatformFeeReceiver\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"_tokenList\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"bool[]\",\"name\":\"_flagList\",\"type\":\"bool[]\"}],\"name\":\"SetTokenLockable\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_indexCode\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amt\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_fee\",\"type\":\"uint256\"}],\"name\":\"Settle\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_indexCode\",\"type\":\"string\"}],\"name\":\"cancelLock\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_indexCode\",\"type\":\"string\"}],\"name\":\"delegateSettle\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_tokenList\",\"type\":\"address[]\"},{\"internalType\":\"uint256\",\"name\":\"_platformFeeRate\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_platformFeeReceiver\",\"type\":\"address\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_indexCode\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_lockAmt\",\"type\":\"uint256\"}],\"name\":\"lockAsset\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"indexCode\",\"type\":\"string\"}],\"name\":\"orderLockInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"locker\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amt\",\"type\":\"uint256\"},{\"internalType\":\"enumAssetLocker.OrderStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"platformFeeRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"platformFeeReceiver\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_newFeeRate\",\"type\":\"uint256\"}],\"name\":\"setPlatformFeeRate\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newReceiver\",\"type\":\"address\"}],\"name\":\"setPlatformFeeReceiver\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_tokenList\",\"type\":\"address[]\"},{\"internalType\":\"bool[]\",\"name\":\"_flagList\",\"type\":\"bool[]\"}],\"name\":\"setTokenLockable\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_indexCode\",\"type\":\"string\"}],\"name\":\"settle\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"tokenLockable\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"lockable\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newImplementation\",\"type\":\"address\"}],\"name\":\"upgradeTo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"userLockedBal\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"amt\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"version\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
+	ABI: "[{\"inputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"constructor\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"previousAdmin\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"newAdmin\",\"type\":\"address\"}],\"name\":\"AdminChanged\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"beacon\",\"type\":\"address\"}],\"name\":\"BeaconUpgraded\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_indexCode\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_locker\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amt\",\"type\":\"uint256\"}],\"name\":\"CancelLock\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_indexCode\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_locker\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amt\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_fee\",\"type\":\"uint256\"}],\"name\":\"DelegateSettle\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint8\",\"name\":\"version\",\"type\":\"uint8\"}],\"name\":\"Initialized\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_indexCode\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_user\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_lockAmt\",\"type\":\"uint256\"}],\"name\":\"LockAsset\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"previousOwner\",\"type\":\"address\"},{\"indexed\":true,\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"OwnershipTransferred\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Paused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_oldFeeRate\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_newFeeRate\",\"type\":\"uint256\"}],\"name\":\"SetPlatformFeeRate\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_oldReceiver\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_newReceiver\",\"type\":\"address\"}],\"name\":\"SetPlatformFeeReceiver\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"_mngerList\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"bool[]\",\"name\":\"_flagList\",\"type\":\"bool[]\"}],\"name\":\"SetPlatformMngerList\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address[]\",\"name\":\"_tokenList\",\"type\":\"address[]\"},{\"indexed\":false,\"internalType\":\"bool[]\",\"name\":\"_flagList\",\"type\":\"bool[]\"}],\"name\":\"SetTokenLockable\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"string\",\"name\":\"_indexCode\",\"type\":\"string\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_amt\",\"type\":\"uint256\"},{\"indexed\":false,\"internalType\":\"uint256\",\"name\":\"_fee\",\"type\":\"uint256\"}],\"name\":\"Settle\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":false,\"internalType\":\"address\",\"name\":\"account\",\"type\":\"address\"}],\"name\":\"Unpaused\",\"type\":\"event\"},{\"anonymous\":false,\"inputs\":[{\"indexed\":true,\"internalType\":\"address\",\"name\":\"implementation\",\"type\":\"address\"}],\"name\":\"Upgraded\",\"type\":\"event\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_indexCode\",\"type\":\"string\"}],\"name\":\"cancelLock\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string[]\",\"name\":\"_indexCodeList\",\"type\":\"string[]\"}],\"name\":\"delegateSettle\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_tokenList\",\"type\":\"address[]\"},{\"internalType\":\"uint256\",\"name\":\"_platformFeeRate\",\"type\":\"uint256\"},{\"internalType\":\"address\",\"name\":\"_platformFeeReceiver\",\"type\":\"address\"},{\"internalType\":\"address[]\",\"name\":\"_platformMngerList\",\"type\":\"address[]\"}],\"name\":\"initialize\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"}],\"name\":\"isMnger\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"isMnger\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_indexCode\",\"type\":\"string\"},{\"internalType\":\"address\",\"name\":\"_to\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"_token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"_lockAmt\",\"type\":\"uint256\"}],\"name\":\"lockAsset\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"indexCode\",\"type\":\"string\"}],\"name\":\"orderLockInfo\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"locker\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"to\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"},{\"internalType\":\"uint256\",\"name\":\"amt\",\"type\":\"uint256\"},{\"internalType\":\"uint256\",\"name\":\"fee\",\"type\":\"uint256\"},{\"internalType\":\"enumAssetLocker.OrderStatus\",\"name\":\"status\",\"type\":\"uint8\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"owner\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"pause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"paused\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"platformFeeRate\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"platformFeeReceiver\",\"outputs\":[{\"internalType\":\"address\",\"name\":\"\",\"type\":\"address\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"proxiableUUID\",\"outputs\":[{\"internalType\":\"bytes32\",\"name\":\"\",\"type\":\"bytes32\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"renounceOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"uint256\",\"name\":\"_newFeeRate\",\"type\":\"uint256\"}],\"name\":\"setPlatformFeeRate\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"_newReceiver\",\"type\":\"address\"}],\"name\":\"setPlatformFeeReceiver\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_mngerList\",\"type\":\"address[]\"},{\"internalType\":\"bool[]\",\"name\":\"_flagList\",\"type\":\"bool[]\"}],\"name\":\"setPlatformManager\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address[]\",\"name\":\"_tokenList\",\"type\":\"address[]\"},{\"internalType\":\"bool[]\",\"name\":\"_flagList\",\"type\":\"bool[]\"}],\"name\":\"setTokenLockable\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"string\",\"name\":\"_indexCode\",\"type\":\"string\"}],\"name\":\"settle\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"tokenLockable\",\"outputs\":[{\"internalType\":\"bool\",\"name\":\"lockable\",\"type\":\"bool\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newOwner\",\"type\":\"address\"}],\"name\":\"transferOwnership\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"unpause\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newImplementation\",\"type\":\"address\"}],\"name\":\"upgradeTo\",\"outputs\":[],\"stateMutability\":\"nonpayable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"newImplementation\",\"type\":\"address\"},{\"internalType\":\"bytes\",\"name\":\"data\",\"type\":\"bytes\"}],\"name\":\"upgradeToAndCall\",\"outputs\":[],\"stateMutability\":\"payable\",\"type\":\"function\"},{\"inputs\":[{\"internalType\":\"address\",\"name\":\"user\",\"type\":\"address\"},{\"internalType\":\"address\",\"name\":\"token\",\"type\":\"address\"}],\"name\":\"userLockedBal\",\"outputs\":[{\"internalType\":\"uint256\",\"name\":\"amt\",\"type\":\"uint256\"}],\"stateMutability\":\"view\",\"type\":\"function\"},{\"inputs\":[],\"name\":\"version\",\"outputs\":[{\"internalType\":\"string\",\"name\":\"\",\"type\":\"string\"}],\"stateMutability\":\"pure\",\"type\":\"function\"},{\"stateMutability\":\"payable\",\"type\":\"receive\"}]",
 }
 
 // ContractsABI is the input ABI used to generate the binding from.
@@ -180,14 +180,46 @@ func (_Contracts *ContractsTransactorRaw) Transact(opts *bind.TransactOpts, meth
 	return _Contracts.Contract.contract.Transact(opts, method, params...)
 }
 
+// IsMnger is a free data retrieval call binding the contract method 0x54a7e60e.
+//
+// Solidity: function isMnger(address user) view returns(bool isMnger)
+func (_Contracts *ContractsCaller) IsMnger(opts *bind.CallOpts, user common.Address) (bool, error) {
+	var out []interface{}
+	err := _Contracts.contract.Call(opts, &out, "isMnger", user)
+
+	if err != nil {
+		return *new(bool), err
+	}
+
+	out0 := *abi.ConvertType(out[0], new(bool)).(*bool)
+
+	return out0, err
+
+}
+
+// IsMnger is a free data retrieval call binding the contract method 0x54a7e60e.
+//
+// Solidity: function isMnger(address user) view returns(bool isMnger)
+func (_Contracts *ContractsSession) IsMnger(user common.Address) (bool, error) {
+	return _Contracts.Contract.IsMnger(&_Contracts.CallOpts, user)
+}
+
+// IsMnger is a free data retrieval call binding the contract method 0x54a7e60e.
+//
+// Solidity: function isMnger(address user) view returns(bool isMnger)
+func (_Contracts *ContractsCallerSession) IsMnger(user common.Address) (bool, error) {
+	return _Contracts.Contract.IsMnger(&_Contracts.CallOpts, user)
+}
+
 // OrderLockInfo is a free data retrieval call binding the contract method 0x78342fb9.
 //
-// Solidity: function orderLockInfo(string indexCode) view returns(address locker, address to, address token, uint256 amt, uint8 status)
+// Solidity: function orderLockInfo(string indexCode) view returns(address locker, address to, address token, uint256 amt, uint256 fee, uint8 status)
 func (_Contracts *ContractsCaller) OrderLockInfo(opts *bind.CallOpts, indexCode string) (struct {
 	Locker common.Address
 	To     common.Address
 	Token  common.Address
 	Amt    *big.Int
+	Fee    *big.Int
 	Status uint8
 }, error) {
 	var out []interface{}
@@ -198,6 +230,7 @@ func (_Contracts *ContractsCaller) OrderLockInfo(opts *bind.CallOpts, indexCode 
 		To     common.Address
 		Token  common.Address
 		Amt    *big.Int
+		Fee    *big.Int
 		Status uint8
 	})
 	if err != nil {
@@ -208,7 +241,8 @@ func (_Contracts *ContractsCaller) OrderLockInfo(opts *bind.CallOpts, indexCode 
 	outstruct.To = *abi.ConvertType(out[1], new(common.Address)).(*common.Address)
 	outstruct.Token = *abi.ConvertType(out[2], new(common.Address)).(*common.Address)
 	outstruct.Amt = *abi.ConvertType(out[3], new(*big.Int)).(**big.Int)
-	outstruct.Status = *abi.ConvertType(out[4], new(uint8)).(*uint8)
+	outstruct.Fee = *abi.ConvertType(out[4], new(*big.Int)).(**big.Int)
+	outstruct.Status = *abi.ConvertType(out[5], new(uint8)).(*uint8)
 
 	return *outstruct, err
 
@@ -216,12 +250,13 @@ func (_Contracts *ContractsCaller) OrderLockInfo(opts *bind.CallOpts, indexCode 
 
 // OrderLockInfo is a free data retrieval call binding the contract method 0x78342fb9.
 //
-// Solidity: function orderLockInfo(string indexCode) view returns(address locker, address to, address token, uint256 amt, uint8 status)
+// Solidity: function orderLockInfo(string indexCode) view returns(address locker, address to, address token, uint256 amt, uint256 fee, uint8 status)
 func (_Contracts *ContractsSession) OrderLockInfo(indexCode string) (struct {
 	Locker common.Address
 	To     common.Address
 	Token  common.Address
 	Amt    *big.Int
+	Fee    *big.Int
 	Status uint8
 }, error) {
 	return _Contracts.Contract.OrderLockInfo(&_Contracts.CallOpts, indexCode)
@@ -229,12 +264,13 @@ func (_Contracts *ContractsSession) OrderLockInfo(indexCode string) (struct {
 
 // OrderLockInfo is a free data retrieval call binding the contract method 0x78342fb9.
 //
-// Solidity: function orderLockInfo(string indexCode) view returns(address locker, address to, address token, uint256 amt, uint8 status)
+// Solidity: function orderLockInfo(string indexCode) view returns(address locker, address to, address token, uint256 amt, uint256 fee, uint8 status)
 func (_Contracts *ContractsCallerSession) OrderLockInfo(indexCode string) (struct {
 	Locker common.Address
 	To     common.Address
 	Token  common.Address
 	Amt    *big.Int
+	Fee    *big.Int
 	Status uint8
 }, error) {
 	return _Contracts.Contract.OrderLockInfo(&_Contracts.CallOpts, indexCode)
@@ -509,46 +545,46 @@ func (_Contracts *ContractsTransactorSession) CancelLock(_indexCode string) (*ty
 	return _Contracts.Contract.CancelLock(&_Contracts.TransactOpts, _indexCode)
 }
 
-// DelegateSettle is a paid mutator transaction binding the contract method 0x849650c2.
+// DelegateSettle is a paid mutator transaction binding the contract method 0x081047c0.
 //
-// Solidity: function delegateSettle(string _indexCode) returns()
-func (_Contracts *ContractsTransactor) DelegateSettle(opts *bind.TransactOpts, _indexCode string) (*types.Transaction, error) {
-	return _Contracts.contract.Transact(opts, "delegateSettle", _indexCode)
+// Solidity: function delegateSettle(string[] _indexCodeList) returns()
+func (_Contracts *ContractsTransactor) DelegateSettle(opts *bind.TransactOpts, _indexCodeList []string) (*types.Transaction, error) {
+	return _Contracts.contract.Transact(opts, "delegateSettle", _indexCodeList)
 }
 
-// DelegateSettle is a paid mutator transaction binding the contract method 0x849650c2.
+// DelegateSettle is a paid mutator transaction binding the contract method 0x081047c0.
 //
-// Solidity: function delegateSettle(string _indexCode) returns()
-func (_Contracts *ContractsSession) DelegateSettle(_indexCode string) (*types.Transaction, error) {
-	return _Contracts.Contract.DelegateSettle(&_Contracts.TransactOpts, _indexCode)
+// Solidity: function delegateSettle(string[] _indexCodeList) returns()
+func (_Contracts *ContractsSession) DelegateSettle(_indexCodeList []string) (*types.Transaction, error) {
+	return _Contracts.Contract.DelegateSettle(&_Contracts.TransactOpts, _indexCodeList)
 }
 
-// DelegateSettle is a paid mutator transaction binding the contract method 0x849650c2.
+// DelegateSettle is a paid mutator transaction binding the contract method 0x081047c0.
 //
-// Solidity: function delegateSettle(string _indexCode) returns()
-func (_Contracts *ContractsTransactorSession) DelegateSettle(_indexCode string) (*types.Transaction, error) {
-	return _Contracts.Contract.DelegateSettle(&_Contracts.TransactOpts, _indexCode)
+// Solidity: function delegateSettle(string[] _indexCodeList) returns()
+func (_Contracts *ContractsTransactorSession) DelegateSettle(_indexCodeList []string) (*types.Transaction, error) {
+	return _Contracts.Contract.DelegateSettle(&_Contracts.TransactOpts, _indexCodeList)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0x72483bf9.
+// Initialize is a paid mutator transaction binding the contract method 0x87b66f19.
 //
-// Solidity: function initialize(address[] _tokenList, uint256 _platformFeeRate, address _platformFeeReceiver) returns()
-func (_Contracts *ContractsTransactor) Initialize(opts *bind.TransactOpts, _tokenList []common.Address, _platformFeeRate *big.Int, _platformFeeReceiver common.Address) (*types.Transaction, error) {
-	return _Contracts.contract.Transact(opts, "initialize", _tokenList, _platformFeeRate, _platformFeeReceiver)
+// Solidity: function initialize(address[] _tokenList, uint256 _platformFeeRate, address _platformFeeReceiver, address[] _platformMngerList) returns()
+func (_Contracts *ContractsTransactor) Initialize(opts *bind.TransactOpts, _tokenList []common.Address, _platformFeeRate *big.Int, _platformFeeReceiver common.Address, _platformMngerList []common.Address) (*types.Transaction, error) {
+	return _Contracts.contract.Transact(opts, "initialize", _tokenList, _platformFeeRate, _platformFeeReceiver, _platformMngerList)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0x72483bf9.
+// Initialize is a paid mutator transaction binding the contract method 0x87b66f19.
 //
-// Solidity: function initialize(address[] _tokenList, uint256 _platformFeeRate, address _platformFeeReceiver) returns()
-func (_Contracts *ContractsSession) Initialize(_tokenList []common.Address, _platformFeeRate *big.Int, _platformFeeReceiver common.Address) (*types.Transaction, error) {
-	return _Contracts.Contract.Initialize(&_Contracts.TransactOpts, _tokenList, _platformFeeRate, _platformFeeReceiver)
+// Solidity: function initialize(address[] _tokenList, uint256 _platformFeeRate, address _platformFeeReceiver, address[] _platformMngerList) returns()
+func (_Contracts *ContractsSession) Initialize(_tokenList []common.Address, _platformFeeRate *big.Int, _platformFeeReceiver common.Address, _platformMngerList []common.Address) (*types.Transaction, error) {
+	return _Contracts.Contract.Initialize(&_Contracts.TransactOpts, _tokenList, _platformFeeRate, _platformFeeReceiver, _platformMngerList)
 }
 
-// Initialize is a paid mutator transaction binding the contract method 0x72483bf9.
+// Initialize is a paid mutator transaction binding the contract method 0x87b66f19.
 //
-// Solidity: function initialize(address[] _tokenList, uint256 _platformFeeRate, address _platformFeeReceiver) returns()
-func (_Contracts *ContractsTransactorSession) Initialize(_tokenList []common.Address, _platformFeeRate *big.Int, _platformFeeReceiver common.Address) (*types.Transaction, error) {
-	return _Contracts.Contract.Initialize(&_Contracts.TransactOpts, _tokenList, _platformFeeRate, _platformFeeReceiver)
+// Solidity: function initialize(address[] _tokenList, uint256 _platformFeeRate, address _platformFeeReceiver, address[] _platformMngerList) returns()
+func (_Contracts *ContractsTransactorSession) Initialize(_tokenList []common.Address, _platformFeeRate *big.Int, _platformFeeReceiver common.Address, _platformMngerList []common.Address) (*types.Transaction, error) {
+	return _Contracts.Contract.Initialize(&_Contracts.TransactOpts, _tokenList, _platformFeeRate, _platformFeeReceiver, _platformMngerList)
 }
 
 // LockAsset is a paid mutator transaction binding the contract method 0xbd2f5fdb.
@@ -654,6 +690,27 @@ func (_Contracts *ContractsSession) SetPlatformFeeReceiver(_newReceiver common.A
 // Solidity: function setPlatformFeeReceiver(address _newReceiver) returns()
 func (_Contracts *ContractsTransactorSession) SetPlatformFeeReceiver(_newReceiver common.Address) (*types.Transaction, error) {
 	return _Contracts.Contract.SetPlatformFeeReceiver(&_Contracts.TransactOpts, _newReceiver)
+}
+
+// SetPlatformManager is a paid mutator transaction binding the contract method 0xefed74b6.
+//
+// Solidity: function setPlatformManager(address[] _mngerList, bool[] _flagList) returns()
+func (_Contracts *ContractsTransactor) SetPlatformManager(opts *bind.TransactOpts, _mngerList []common.Address, _flagList []bool) (*types.Transaction, error) {
+	return _Contracts.contract.Transact(opts, "setPlatformManager", _mngerList, _flagList)
+}
+
+// SetPlatformManager is a paid mutator transaction binding the contract method 0xefed74b6.
+//
+// Solidity: function setPlatformManager(address[] _mngerList, bool[] _flagList) returns()
+func (_Contracts *ContractsSession) SetPlatformManager(_mngerList []common.Address, _flagList []bool) (*types.Transaction, error) {
+	return _Contracts.Contract.SetPlatformManager(&_Contracts.TransactOpts, _mngerList, _flagList)
+}
+
+// SetPlatformManager is a paid mutator transaction binding the contract method 0xefed74b6.
+//
+// Solidity: function setPlatformManager(address[] _mngerList, bool[] _flagList) returns()
+func (_Contracts *ContractsTransactorSession) SetPlatformManager(_mngerList []common.Address, _flagList []bool) (*types.Transaction, error) {
+	return _Contracts.Contract.SetPlatformManager(&_Contracts.TransactOpts, _mngerList, _flagList)
 }
 
 // SetTokenLockable is a paid mutator transaction binding the contract method 0xb362d3ce.
@@ -2182,6 +2239,141 @@ func (_Contracts *ContractsFilterer) WatchSetPlatformFeeReceiver(opts *bind.Watc
 func (_Contracts *ContractsFilterer) ParseSetPlatformFeeReceiver(log types.Log) (*ContractsSetPlatformFeeReceiver, error) {
 	event := new(ContractsSetPlatformFeeReceiver)
 	if err := _Contracts.contract.UnpackLog(event, "SetPlatformFeeReceiver", log); err != nil {
+		return nil, err
+	}
+	event.Raw = log
+	return event, nil
+}
+
+// ContractsSetPlatformMngerListIterator is returned from FilterSetPlatformMngerList and is used to iterate over the raw logs and unpacked data for SetPlatformMngerList events raised by the Contracts contract.
+type ContractsSetPlatformMngerListIterator struct {
+	Event *ContractsSetPlatformMngerList // Event containing the contract specifics and raw log
+
+	contract *bind.BoundContract // Generic contract to use for unpacking event data
+	event    string              // Event name to use for unpacking event data
+
+	logs chan types.Log        // Log channel receiving the found contract events
+	sub  ethereum.Subscription // Subscription for errors, completion and termination
+	done bool                  // Whether the subscription completed delivering logs
+	fail error                 // Occurred error to stop iteration
+}
+
+// Next advances the iterator to the subsequent event, returning whether there
+// are any more events found. In case of a retrieval or parsing error, false is
+// returned and Error() can be queried for the exact failure.
+func (it *ContractsSetPlatformMngerListIterator) Next() bool {
+	// If the iterator failed, stop iterating
+	if it.fail != nil {
+		return false
+	}
+	// If the iterator completed, deliver directly whatever's available
+	if it.done {
+		select {
+		case log := <-it.logs:
+			it.Event = new(ContractsSetPlatformMngerList)
+			if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+				it.fail = err
+				return false
+			}
+			it.Event.Raw = log
+			return true
+
+		default:
+			return false
+		}
+	}
+	// Iterator still in progress, wait for either a data or an error event
+	select {
+	case log := <-it.logs:
+		it.Event = new(ContractsSetPlatformMngerList)
+		if err := it.contract.UnpackLog(it.Event, it.event, log); err != nil {
+			it.fail = err
+			return false
+		}
+		it.Event.Raw = log
+		return true
+
+	case err := <-it.sub.Err():
+		it.done = true
+		it.fail = err
+		return it.Next()
+	}
+}
+
+// Error returns any retrieval or parsing error occurred during filtering.
+func (it *ContractsSetPlatformMngerListIterator) Error() error {
+	return it.fail
+}
+
+// Close terminates the iteration process, releasing any pending underlying
+// resources.
+func (it *ContractsSetPlatformMngerListIterator) Close() error {
+	it.sub.Unsubscribe()
+	return nil
+}
+
+// ContractsSetPlatformMngerList represents a SetPlatformMngerList event raised by the Contracts contract.
+type ContractsSetPlatformMngerList struct {
+	MngerList []common.Address
+	FlagList  []bool
+	Raw       types.Log // Blockchain specific contextual infos
+}
+
+// FilterSetPlatformMngerList is a free log retrieval operation binding the contract event 0x2f241c323283839f708b795e9ee101275a08becb140da8092fd0f651ee476ae5.
+//
+// Solidity: event SetPlatformMngerList(address[] _mngerList, bool[] _flagList)
+func (_Contracts *ContractsFilterer) FilterSetPlatformMngerList(opts *bind.FilterOpts) (*ContractsSetPlatformMngerListIterator, error) {
+
+	logs, sub, err := _Contracts.contract.FilterLogs(opts, "SetPlatformMngerList")
+	if err != nil {
+		return nil, err
+	}
+	return &ContractsSetPlatformMngerListIterator{contract: _Contracts.contract, event: "SetPlatformMngerList", logs: logs, sub: sub}, nil
+}
+
+// WatchSetPlatformMngerList is a free log subscription operation binding the contract event 0x2f241c323283839f708b795e9ee101275a08becb140da8092fd0f651ee476ae5.
+//
+// Solidity: event SetPlatformMngerList(address[] _mngerList, bool[] _flagList)
+func (_Contracts *ContractsFilterer) WatchSetPlatformMngerList(opts *bind.WatchOpts, sink chan<- *ContractsSetPlatformMngerList) (event.Subscription, error) {
+
+	logs, sub, err := _Contracts.contract.WatchLogs(opts, "SetPlatformMngerList")
+	if err != nil {
+		return nil, err
+	}
+	return event.NewSubscription(func(quit <-chan struct{}) error {
+		defer sub.Unsubscribe()
+		for {
+			select {
+			case log := <-logs:
+				// New log arrived, parse the event and forward to the user
+				event := new(ContractsSetPlatformMngerList)
+				if err := _Contracts.contract.UnpackLog(event, "SetPlatformMngerList", log); err != nil {
+					return err
+				}
+				event.Raw = log
+
+				select {
+				case sink <- event:
+				case err := <-sub.Err():
+					return err
+				case <-quit:
+					return nil
+				}
+			case err := <-sub.Err():
+				return err
+			case <-quit:
+				return nil
+			}
+		}
+	}), nil
+}
+
+// ParseSetPlatformMngerList is a log parse operation binding the contract event 0x2f241c323283839f708b795e9ee101275a08becb140da8092fd0f651ee476ae5.
+//
+// Solidity: event SetPlatformMngerList(address[] _mngerList, bool[] _flagList)
+func (_Contracts *ContractsFilterer) ParseSetPlatformMngerList(log types.Log) (*ContractsSetPlatformMngerList, error) {
+	event := new(ContractsSetPlatformMngerList)
+	if err := _Contracts.contract.UnpackLog(event, "SetPlatformMngerList", log); err != nil {
 		return nil, err
 	}
 	event.Raw = log

@@ -280,13 +280,20 @@ class ProjectTaskApplicationService extends Service
 	{
 		$application_model = new ProjectTaskApplicationModel;
 		$application_detail = $application_model->task_review_timeout();	
-		if (empty($application_detail))
-		{
-			return;
-		}
 		$transaction_queue_service = new TransactionQueueService;
-		$transaction_queue_service->push($application_detail['web3_hash'], config('config.transaction_type')['delegate_settle']);
-		Log::info($application_detail);
+		if (!empty($application_detail))
+		{
+			$transaction_queue_service->push($application_detail['web3_hash'], config('config.transaction_type')['delegate_settle']);
+			$application_model->update_status($application_detail['id'], config('config.task_status')['delegate_settle_pending']);
+			Log::info("task_review_timeout,application_id:" . strval($application_detail['id']) . " web3_hash:" . $application_detail['web3_hash']);
+		}
+		$application_detail = $application_model->task_upload_timeout();	
+		if (!empty($application_detail))
+		{
+			$transaction_queue_service->push($application_detail['web3_hash'], config('config.transaction_type')['cancel_lock']);
+			$application_model->update_status($application_detail['id'], config('config.task_status')['upload_timeout_cancel_pending']);
+			Log::info("task_upload_timeout,application_id:" . strval($application_detail['id']) . " web3_hash:" . $application_detail['web3_hash']);
+		}
 	}
 
 	public function application_kol_num($task_id)

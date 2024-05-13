@@ -242,6 +242,25 @@
             {
                 "indexed": false,
                 "internalType": "address[]",
+                "name": "_mngerList",
+                "type": "address[]"
+            },
+            {
+                "indexed": false,
+                "internalType": "bool[]",
+                "name": "_flagList",
+                "type": "bool[]"
+            }
+        ],
+        "name": "SetPlatformMngerList",
+        "type": "event"
+    },
+    {
+        "anonymous": false,
+        "inputs": [
+            {
+                "indexed": false,
+                "internalType": "address[]",
                 "name": "_tokenList",
                 "type": "address[]"
             },
@@ -334,9 +353,9 @@
     {
         "inputs": [
             {
-                "internalType": "string",
-                "name": "_indexCode",
-                "type": "string"
+                "internalType": "string[]",
+                "name": "_indexCodeList",
+                "type": "string[]"
             }
         ],
         "name": "delegateSettle",
@@ -360,11 +379,35 @@
                 "internalType": "address",
                 "name": "_platformFeeReceiver",
                 "type": "address"
+            },
+            {
+                "internalType": "address[]",
+                "name": "_platformMngerList",
+                "type": "address[]"
             }
         ],
         "name": "initialize",
         "outputs": [],
         "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address",
+                "name": "user",
+                "type": "address"
+            }
+        ],
+        "name": "isMnger",
+        "outputs": [
+            {
+                "internalType": "bool",
+                "name": "isMnger",
+                "type": "bool"
+            }
+        ],
+        "stateMutability": "view",
         "type": "function"
     },
     {
@@ -423,6 +466,11 @@
             {
                 "internalType": "uint256",
                 "name": "amt",
+                "type": "uint256"
+            },
+            {
+                "internalType": "uint256",
+                "name": "fee",
                 "type": "uint256"
             },
             {
@@ -535,6 +583,24 @@
             }
         ],
         "name": "setPlatformFeeReceiver",
+        "outputs": [],
+        "stateMutability": "nonpayable",
+        "type": "function"
+    },
+    {
+        "inputs": [
+            {
+                "internalType": "address[]",
+                "name": "_mngerList",
+                "type": "address[]"
+            },
+            {
+                "internalType": "bool[]",
+                "name": "_flagList",
+                "type": "bool[]"
+            }
+        ],
+        "name": "setPlatformManager",
         "outputs": [],
         "stateMutability": "nonpayable",
         "type": "function"

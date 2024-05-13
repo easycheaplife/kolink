@@ -2,9 +2,9 @@ package main
 
 import (
 	"context"
-	"fmt"
 	"time"
 	"log"
+	"os"
 	"math/big"
 	"strings"
 	"io/ioutil"
@@ -20,6 +20,9 @@ import (
 const status_cancel = 1
 const status_accept = 4
 const status_finish = 7
+const status_cancel_pending = 10;
+const status_upload_timeout_cancel_pending = 13;
+const status_upload_timeout_cancel = 14;
 
 const transaction_type_lock_assert = 0;
 const transaction_type_settle = 1;
@@ -34,6 +37,20 @@ func GetLatestBlock(client *ethclient.Client) (*big.Int, error) {
 
 	latestBlockNumber := header.Number
 	return latestBlockNumber, nil
+}
+
+func GetProjectTaskApplicationStatus(db* sql.DB, index_code string) (int) {
+	rows, _ := db.Query("SELECT status FROM project_task_application WHERE web3_hash = ?", index_code)
+	defer rows.Close()
+	var status int
+	for rows.Next() {
+		if err := rows.Scan(&status); err != nil {
+			log.Printf("query project_task_application error: %v", err)
+			return -1;
+		}
+	}
+	log.Printf("get task status:index_code=%s  status=%d\n", index_code,  status)
+	return status
 }
 
 func UpdateProjectTaskApplicationStatus(db* sql.DB, transaction_type int, index_code string) (error) {
@@ -51,13 +68,20 @@ func UpdateProjectTaskApplicationStatus(db* sql.DB, transaction_type int, index_
 		case transaction_type_delegate_settle: 
 			status = status_finish 
 		case transaction_type_cancel_lock: 
-			status = status_cancel 
+			cur_status := GetProjectTaskApplicationStatus(db, index_code)
+			if cur_status == status_upload_timeout_cancel_pending {
+				status = status_upload_timeout_cancel 
+			} else if cur_status == status_cancel_pending {
+				status = status_cancel 
+			} else {
+				return nil
+			}
 	}
 	_, err = stmt.Exec(status, index_code)
 	if err != nil {
 		return err
 	}
-	fmt.Printf("update success! index_code:%s transaction_type:%d  status:%d\n", index_code, transaction_type, status)
+	log.Printf("update success! index_code:%s transaction_type:%d  status:%d\n", index_code, transaction_type, status)
 	return nil
 }
 
@@ -73,7 +97,7 @@ func InsertEvent(db* sql.DB, index_code string, transaction_type int, block_numb
 	if err != nil {
 		return err
 	}
-	fmt.Printf("insert success! block_number：%d \n", block_number)
+	log.Printf("insert success! block_number：%d \n", block_number)
 	err = UpdateProjectTaskApplicationStatus(db, transaction_type, index_code)
 	return err
 }
@@ -88,12 +112,12 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, last_block_number
 	if err != nil {
 		log.Fatal(err)
 	}
-	fmt.Printf("Execute function called=latest_block_number:%d last_block_number:%d rpc_url:%s contract_addr:%s\n", latestBlockNumber, last_block_number, rpc_url, contract_addr)
+	log.Printf("Execute function called=latest_block_number:%d last_block_number:%d rpc_url:%s contract_addr:%s\n", latestBlockNumber, last_block_number, rpc_url, contract_addr)
 
 	contractAddress := common.HexToAddress(contract_addr)
 	abiData, err := ioutil.ReadFile("AssetLocker.json")
 	if err != nil {
-		fmt.Println("Failed to read ABI file:", err)
+		log.Println("Failed to read ABI file:", err)
 		return
 	}
 	contractAbi, err := abi.JSON(strings.NewReader(string(abiData)))
@@ -155,63 +179,63 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, last_block_number
 	}
 
 	for _, vLog := range logs {
-		fmt.Println("BlockNumber:",vLog.BlockNumber)
+		log.Println("BlockNumber:",vLog.BlockNumber)
 		block, err := client.BlockByNumber(context.Background(), new(big.Int).SetUint64(vLog.BlockNumber))
 		if err != nil {
 			log.Fatal(err)
 		}
-		fmt.Println("Timestamp:", time.Unix(int64(block.Time()), 0).Format("2006-01-02 15:04:05 MST"))
+		log.Println("Timestamp:", time.Unix(int64(block.Time()), 0).Format("2006-01-02 15:04:05 MST"))
 		switch vLog.Topics[0].Hex() {
 		case lockAssetEventSigHash.Hex():
-			fmt.Printf("Event Name: LockAsset()\n")
+			log.Printf("Event Name: LockAsset()\n")
 
 			var lockAssetEvent ContractsLockAsset
 			err := contractAbi.UnpackIntoInterface(&lockAssetEvent, "LockAsset", vLog.Data)
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Println("lockAssetEvent.IndexCode : ", lockAssetEvent.IndexCode)
-			fmt.Println("lockAssetEvent.User : ", lockAssetEvent.User)
-			fmt.Println("lockAssetEvent.To : ", lockAssetEvent.To)
-			fmt.Println("lockAssetEvent.Token : ", lockAssetEvent.Token)
-			fmt.Println("lockAssetEvent.LockAmt : ", lockAssetEvent.LockAmt)
+			log.Println("lockAssetEvent.IndexCode : ", lockAssetEvent.IndexCode)
+			log.Println("lockAssetEvent.User : ", lockAssetEvent.User)
+			log.Println("lockAssetEvent.To : ", lockAssetEvent.To)
+			log.Println("lockAssetEvent.Token : ", lockAssetEvent.Token)
+			log.Println("lockAssetEvent.LockAmt : ", lockAssetEvent.LockAmt)
 			err = InsertEvent(db, lockAssetEvent.IndexCode, transaction_type_lock_assert, vLog.BlockNumber, lockAssetEvent.User.String(), lockAssetEvent.To.String(), lockAssetEvent.Token.String(), lockAssetEvent.LockAmt.Int64(), 0, block.Time());
 			if err != nil {
 				log.Fatal(err)
 			}
 
 		case settleEventSigHash.Hex():
-			fmt.Printf("Event Name: Settle()\n")
+			log.Printf("Event Name: Settle()\n")
 
 			var settleEvent ContractsSettle
 			err := contractAbi.UnpackIntoInterface(&settleEvent, "Settle", vLog.Data)
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Println("settleEvent.IndexCode : ", settleEvent.IndexCode)
-			fmt.Println("settleEvent.To : ", settleEvent.To)
-			fmt.Println("settleEvent.Token : ", settleEvent.Token)
-			fmt.Println("settleEvent.Amt : ", settleEvent.Amt)
-			fmt.Println("settleEvent.Fee : ", settleEvent.Fee)
+			log.Println("settleEvent.IndexCode : ", settleEvent.IndexCode)
+			log.Println("settleEvent.To : ", settleEvent.To)
+			log.Println("settleEvent.Token : ", settleEvent.Token)
+			log.Println("settleEvent.Amt : ", settleEvent.Amt)
+			log.Println("settleEvent.Fee : ", settleEvent.Fee)
 			err = InsertEvent(db, settleEvent.IndexCode, transaction_type_settle, vLog.BlockNumber, "", settleEvent.To.String(), settleEvent.Token.String(), settleEvent.Amt.Int64(), settleEvent.Fee.Int64(), block.Time());
 			if err != nil {
 				log.Fatal(err)
 			}
 
 		case delegateSettleEventSigHash.Hex():
-			fmt.Printf("Event Name: DelegateSettle()\n")
+			log.Printf("Event Name: DelegateSettle()\n")
 
 			var delegateSettleEvent ContractsDelegateSettle
 			err := contractAbi.UnpackIntoInterface(&delegateSettleEvent, "DelegateSettle", vLog.Data)
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Println("delegateSettleEvent.IndexCode : ", delegateSettleEvent.IndexCode)
-			fmt.Println("delegateSettleEvent.Locker : ", delegateSettleEvent.Locker)
-			fmt.Println("delegateSettleEvent.To : ", delegateSettleEvent.To)
-			fmt.Println("delegateSettleEvent.Token : ", delegateSettleEvent.Token)
-			fmt.Println("delegateSettleEvent.Amt : ", delegateSettleEvent.Amt)
-			fmt.Println("delegateSettleEvent.Fee : ", delegateSettleEvent.Fee)
+			log.Println("delegateSettleEvent.IndexCode : ", delegateSettleEvent.IndexCode)
+			log.Println("delegateSettleEvent.Locker : ", delegateSettleEvent.Locker)
+			log.Println("delegateSettleEvent.To : ", delegateSettleEvent.To)
+			log.Println("delegateSettleEvent.Token : ", delegateSettleEvent.Token)
+			log.Println("delegateSettleEvent.Amt : ", delegateSettleEvent.Amt)
+			log.Println("delegateSettleEvent.Fee : ", delegateSettleEvent.Fee)
 			err = InsertEvent(db, delegateSettleEvent.IndexCode, transaction_type_delegate_settle, vLog.BlockNumber, 
 				delegateSettleEvent.Locker.String(), delegateSettleEvent.To.String(), delegateSettleEvent.Token.String(), delegateSettleEvent.Amt.Int64(), delegateSettleEvent.Fee.Int64(), block.Time());
 			if err != nil {
@@ -219,25 +243,25 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, last_block_number
 			}
 
 		case cancelLockEventSigHash.Hex():
-			fmt.Printf("Event Name: CancelLock()\n")
+			log.Printf("Event Name: CancelLock()\n")
 
 			var cancelLockEvent ContractsCancelLock
 			err := contractAbi.UnpackIntoInterface(&cancelLockEvent, "CancelLock", vLog.Data)
 			if err != nil {
 				log.Fatal(err)
 			}
-			fmt.Println("cancelLockEvent.IndexCode : ", cancelLockEvent.IndexCode)
-			fmt.Println("cancelLockEvent.Locker : ", cancelLockEvent.Locker)
-			fmt.Println("cancelLockEvent.To : ", cancelLockEvent.To)
-			fmt.Println("cancelLockEvent.Token : ", cancelLockEvent.Token)
-			fmt.Println("cancelLockEvent.Amt : ", cancelLockEvent.Amt)
+			log.Println("cancelLockEvent.IndexCode : ", cancelLockEvent.IndexCode)
+			log.Println("cancelLockEvent.Locker : ", cancelLockEvent.Locker)
+			log.Println("cancelLockEvent.To : ", cancelLockEvent.To)
+			log.Println("cancelLockEvent.Token : ", cancelLockEvent.Token)
+			log.Println("cancelLockEvent.Amt : ", cancelLockEvent.Amt)
 			err = InsertEvent(db, cancelLockEvent.IndexCode, transaction_type_cancel_lock, vLog.BlockNumber, 
 				cancelLockEvent.Locker.String(), cancelLockEvent.To.String(), cancelLockEvent.Token.String(), cancelLockEvent.Amt.Int64(), 0, block.Time());
 			if err != nil {
 				log.Fatal(err)
 			}
 		}
-		fmt.Printf("\n\n")
+		log.Printf("\n\n")
 	}
 	sql := "UPDATE transaction_base SET last_block_number = ?"
 	_, err = db.Exec(sql, latestBlockNumber.String())
@@ -246,8 +270,24 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, last_block_number
 	}
 }
 
+func SetLogFormat() {
+	currentTime := time.Now()
+	date := currentTime.Format("2006-01-02") 
+	fileName := "logs/transaction_log_" + date + ".txt"
+	file, err := os.OpenFile(fileName, os.O_CREATE|os.O_WRONLY|os.O_APPEND, 0666)
+	if err != nil {
+		log.Fatal(err)
+	}
+	defer file.Close()
+
+	log.SetFlags(log.Ldate | log.Ltime)
+	// log.SetOutput(file)
+	log.SetOutput(os.Stdout)
+}
+
 // insert into transaction_base (blockchain_id,last_block_number,rpc_url,contract_addr) values(1,38568012,"https://bsc-mainnet.nodereal.io/v1/7a5eca2f07be48d586a09275ea2f687c","0x0BDBb9EBaDBA7e4061e56E533fAb06D10e90aE96");
 func main() {
+	SetLogFormat()
 	db, err := sql.Open("mysql", "root:F0BYKDqw7@tcp(127.0.0.1:3306)/kolink?parseTime=true&loc=Local")
 	if err != nil {
 		log.Fatal(err)
@@ -264,10 +304,13 @@ func main() {
 	var contract_addr string
 	for rows.Next() {
 		if err := rows.Scan(&blockchain_id,&last_block_number,&rpc_url,&contract_addr); err != nil {
-			fmt.Errorf("query transaction_base error: %v", err)
+			log.Printf("query transaction_base error: %v", err)
 			return;
 		}
-		fmt.Printf("transaction_base=blockchain_id:%d last_block_number:%d rpc_url:%s contract_addr:%s\n", blockchain_id, last_block_number, rpc_url, contract_addr)
+		log.Printf("transaction_base=blockchain_id:%d last_block_number:%d rpc_url:%s contract_addr:%s\n", blockchain_id, last_block_number, rpc_url, contract_addr)
 		Execute(db, rpc_url, contract_addr, last_block_number)
 	}
+
+	// UpdateProjectTaskApplicationStatus(db, transaction_type_cancel_lock, "web123456789")
+	// UpdateProjectTaskApplicationStatus(db, transaction_type_delegate_settle, "web123456789")
 }
