@@ -102,7 +102,7 @@ func InsertEvent(db* sql.DB, index_code string, transaction_type int, block_numb
 	return err
 }
 
-func Execute(db* sql.DB, rpc_url string, contract_addr string, last_block_number int) {
+func Execute(db* sql.DB, rpc_url string, contract_addr string, last_block_number int, id int) {
 	client, err := ethclient.Dial(rpc_url)
 	if err != nil {
 		log.Fatal(err)
@@ -263,8 +263,8 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, last_block_number
 		}
 		log.Printf("\n\n")
 	}
-	sql := "UPDATE transaction_base SET last_block_number = ?"
-	_, err = db.Exec(sql, latestBlockNumber.String())
+	sql := "UPDATE transaction_base SET last_block_number = ? where id = ?"
+	_, err = db.Exec(sql, latestBlockNumber.String(), id)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -290,19 +290,20 @@ func main() {
 	if pingErr != nil {
 		log.Fatal(pingErr)
 	}
-	rows, _ := db.Query("SELECT blockchain_id,last_block_number,rpc_url,contract_addr FROM transaction_base")
+	rows, _ := db.Query("SELECT id,blockchain_id,last_block_number,rpc_url,contract_addr FROM transaction_base")
 	defer rows.Close()
+	var id int
 	var last_block_number int
 	var blockchain_id int
 	var rpc_url string
 	var contract_addr string
 	for rows.Next() {
-		if err := rows.Scan(&blockchain_id,&last_block_number,&rpc_url,&contract_addr); err != nil {
+		if err := rows.Scan(&id,&blockchain_id,&last_block_number,&rpc_url,&contract_addr); err != nil {
 			log.Printf("query transaction_base error: %v", err)
 			return;
 		}
-		log.Printf("transaction_base=blockchain_id:%d last_block_number:%d rpc_url:%s contract_addr:%s\n", blockchain_id, last_block_number, rpc_url, contract_addr)
-		Execute(db, rpc_url, contract_addr, last_block_number)
+		log.Printf("transaction_base=id:%d blockchain_id:%d last_block_number:%d rpc_url:%s contract_addr:%s\n", id, blockchain_id, last_block_number, rpc_url, contract_addr)
+		Execute(db, rpc_url, contract_addr, last_block_number, id)
 	}
 
 	// UpdateProjectTaskApplicationStatus(db, transaction_type_cancel_lock, "web123456789")
