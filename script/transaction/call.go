@@ -21,7 +21,25 @@ const transaction_type_settle = 1;
 const transaction_type_delegate_settle = 2;
 const transaction_type_cancel_lock = 3;
 
+func SettleCall(client *ethclient.Client, instance *contracts.Contracts, auth *bind.TransactOpts, indexCode string) uint64 {
+	tx, err := instance.Settle(auth, indexCode)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	receipt, err := bind.WaitMined(context.Background(), client, tx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if 0 == receipt.Status {
+		log.Println(receipt.Logs)		
+	}
+	log.Println("Settle receipt.Status:", receipt.Status)
+	return receipt.Status
+}
+
 func DelegateSettleCall(client *ethclient.Client, instance *contracts.Contracts, auth *bind.TransactOpts, indexCode string) uint64 {
+	log.Println("DelegateSettleCall indexCode:", indexCode)
 	indexCodeSlice := []string{indexCode}
 	tx, err := instance.DelegateSettle(auth, indexCodeSlice)
 	if err != nil {
@@ -31,6 +49,9 @@ func DelegateSettleCall(client *ethclient.Client, instance *contracts.Contracts,
 	receipt, err := bind.WaitMined(context.Background(), client, tx)
 	if err != nil {
 		log.Fatal(err)
+	}
+	if 0 == receipt.Status {
+		log.Println(receipt.Logs)		
 	}
 	log.Println("DelegateSettleCall receipt.Status:", receipt.Status)
 	return receipt.Status
@@ -46,7 +67,26 @@ func UpdateTransactionFlag(db* sql.DB, id int, transaction_flag int, transaction
 	log.Printf("update success! id:%d, transaction_flag:%d, transaction_try_times:%d", id, transaction_flag, transaction_try_times)
 }
 
+func LockAssetCall(client *ethclient.Client, instance *contracts.Contracts, auth *bind.TransactOpts, 
+	indexCode string, address_to common.Address, address_token common.Address, fee *big.Int) uint64 {
+	tx, err := instance.LockAsset(auth, indexCode, address_to, address_to, fee)
+	if err != nil {
+		log.Fatal(err)
+	}
+
+	receipt, err := bind.WaitMined(context.Background(), client, tx)
+	if err != nil {
+		log.Fatal(err)
+	}
+	if 0 == receipt.Status {
+		log.Println(receipt.Logs)		
+	}
+	log.Println("LockAsset receipt.Status:", receipt.Status)
+	return receipt.Status
+}
+
 func CancelLockCall(client *ethclient.Client, instance *contracts.Contracts, auth *bind.TransactOpts, indexCode string) uint64 {
+	log.Println("CancelLockCall indexCode:", indexCode)
 	tx, err := instance.CancelLock(auth, indexCode)
 	if err != nil {
 		log.Fatal(err)
@@ -55,6 +95,9 @@ func CancelLockCall(client *ethclient.Client, instance *contracts.Contracts, aut
 	receipt, err := bind.WaitMined(context.Background(), client, tx)
 	if err != nil {
 		log.Fatal(err)
+	}
+	if 0 == receipt.Status {
+		log.Println(receipt)		
 	}
 	log.Println("CancelLockCall receipt.Status:", receipt.Status)
 	return receipt.Status
@@ -90,7 +133,6 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, private_key strin
 	sql := "SELECT id, index_node, transaction_type,transaction_try_times FROM transaction_queue where transaction_type in (2,3) and transaction_flag = 0 and transaction_try_times < ? order by updated_at"
 	rows, _ := db.Query(sql, max_transaction_try_times)
 	defer rows.Close()
-	indexCode := "0x009"
 	var id int
 	var index_node string 
 	var transaction_type int
@@ -104,9 +146,9 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, private_key strin
 		log.Println("id,index_node, transaction_type,transaction_try_times", id, index_node, transaction_type, transaction_try_times) 
 		switch transaction_type {
 		case transaction_type_delegate_settle:
-			status = DelegateSettleCall(client, instance, auth, indexCode)
+			status = DelegateSettleCall(client, instance, auth, index_node)
 		case transaction_type_cancel_lock:
-			status = CancelLockCall(client, instance, auth, indexCode)
+			status = CancelLockCall(client, instance, auth, index_node)
 		}
 		if (0 != status) {
 			UpdateTransactionFlag(db, id, 1, transaction_try_times + 1)
@@ -114,9 +156,18 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, private_key strin
 			UpdateTransactionFlag(db, id, 0, transaction_try_times + 1)
 		}
 	}
+
+	// test code
+	/*
+	addressTo := common.HexToAddress("0x2a09e7387e4cb1cc5140f8900d3c17ccd9e0a279")
+	address_token := common.HexToAddress("0x97789F1dEA6510D56FbC8EBd44f8F5d6EE1fc7fD")
+	fee := big.NewInt(100)
+	index_node = "test001"
+	LockAssetCall(client, instance, auth, index_node, addressTo, address_token, fee)
+	*/
 }
 
-func SetLogFormat() {
+func main() {
 	currentTime := time.Now()
 	date := currentTime.Format("2006-01-02") 
 	fileName := "logs/call_log_" + date + ".txt"
@@ -127,12 +178,8 @@ func SetLogFormat() {
 	defer file.Close()
 
 	log.SetFlags(log.Ldate | log.Ltime)
-	// log.SetOutput(file)
-	log.SetOutput(os.Stdout)
-}
+	log.SetOutput(file)
 
-func main() {
-	SetLogFormat()
 	db, err := sql.Open("mysql", "root:F0BYKDqw7@tcp(127.0.0.1:3306)/kolink?parseTime=true&loc=Local")
 	if err != nil {
 		log.Fatal(err)
