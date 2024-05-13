@@ -189,8 +189,6 @@ func main() {
 		log.Fatal(pingErr)
 	}
 	log.Println("mysql connected!")
-
-
 	rows, _ := db.Query("SELECT rpc_url,contract_addr,private_key FROM transaction_base")
 	defer rows.Close()
 	var rpc_url string

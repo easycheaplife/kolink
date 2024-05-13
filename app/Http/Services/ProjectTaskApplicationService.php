@@ -23,11 +23,13 @@ class ProjectTaskApplicationService extends Service
 			return $application_result;	
 		}
 		$application_model = new ProjectTaskApplicationModel;
-		if (!$application_model->insert($kol_id, $task_id, $quotation, $reason))
+		$last_insert_id = 0;
+		if (!$application_model->insert($kol_id, $task_id, $quotation, $reason, $last_insert_id))
 		{
 			return $this->error_response($task_id, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
+		$this->res['data']['id'] = $last_insert_id;
 		return $this->res;
 	}	
 
@@ -51,16 +53,18 @@ class ProjectTaskApplicationService extends Service
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_IS_NOT_YOURS,
 				ErrorDescs::ERROR_CODE_TASK_APPLICATION_IS_NOT_YOURS);		
 		}
-		if (!$application_model->update_status($application_id, config('config.task_status')['cancel']))
+		if (empty($application_detail['web3_hash']))
 		{
-			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_DB_ERROR,
-				ErrorDescs::ERROR_CODE_DB_ERROR);		
+			if (!$application_model->update_status($application_id, config('config.task_status')['cancel']))
+			{
+				return $this->error_response($application_id, ErrorCodes::ERROR_CODE_DB_ERROR,
+					ErrorDescs::ERROR_CODE_DB_ERROR);		
+			}
 		}
-/*
-		$transaction_queue_service = new TransactionQueueService;
-		$transaction_queue_service->push($application_detail['web3_hash'], config('config.transaction_type')['cancel_lock']);
-*/
-
+		else {
+			$transaction_queue_service = new TransactionQueueService;
+			$transaction_queue_service->push($application_detail['web3_hash'], config('config.transaction_type')['cancel_lock']);
+		}
 		return $this->res;
 	}
 

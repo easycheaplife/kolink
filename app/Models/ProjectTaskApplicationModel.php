@@ -16,14 +16,16 @@ class ProjectTaskApplicationModel extends Model
 
 	protected $table = 'project_task_application';
 
-	public function insert($kol_id, $task_id, $quotation, $reason)
+	public function insert($kol_id, $task_id, $quotation, $reason, &$last_insert_id)
 	{
 		try {
 			$this->kol_id = $kol_id;
 			$this->task_id = $task_id;
 			$this->quotation = $quotation;
 			$this->reason = $reason;
-			return $this->save();
+			$ret = $this->save();
+			$last_insert_id = DB::connection()->getPdo()->lastInsertId();
+			return $ret;
 		}
 		catch (QueryException $e)
 		{
