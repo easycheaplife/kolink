@@ -53,7 +53,14 @@ class ProjectTaskApplicationService extends Service
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_IS_NOT_YOURS,
 				ErrorDescs::ERROR_CODE_TASK_APPLICATION_IS_NOT_YOURS);		
 		}
-		if (empty($application_detail['web3_hash']))
+		$task_service = new ProjectTaskService;
+		$task_detail = $task_service->task_detail($application_detail['task_id']);
+		if (empty($task_detail['data']))
+		{
+			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_IS_MISSING,
+				ErrorDescs::ERROR_CODE_TASK_APPLICATION_IS_MISSING);		
+		}
+		if (empty($application_detail['web3_hash']) || empty($task_detail['data']['blockchain_id']))
 		{
 			if (!$application_model->update_status($application_id, config('config.task_status')['cancel']))
 			{
@@ -62,8 +69,13 @@ class ProjectTaskApplicationService extends Service
 			}
 		}
 		else {
+			if (!$application_model->update_status($application_id, config('config.task_status')['cancel_pending']))
+			{
+				return $this->error_response($application_id, ErrorCodes::ERROR_CODE_DB_ERROR,
+					ErrorDescs::ERROR_CODE_DB_ERROR);		
+			}
 			$transaction_queue_service = new TransactionQueueService;
-			$transaction_queue_service->push($application_detail['web3_hash'], config('config.transaction_type')['cancel_lock']);
+			$transaction_queue_service->push($application_detail['web3_hash'], config('config.transaction_type')['cancel_lock'], $task_detail['data']['blockchain_id']);
 		}
 		return $this->res;
 	}
@@ -285,16 +297,29 @@ class ProjectTaskApplicationService extends Service
 		$application_model = new ProjectTaskApplicationModel;
 		$application_detail = $application_model->task_review_timeout();	
 		$transaction_queue_service = new TransactionQueueService;
+		$task_service = new ProjectTaskService;
 		if (!empty($application_detail))
 		{
-			$transaction_queue_service->push($application_detail['web3_hash'], config('config.transaction_type')['delegate_settle']);
+			$task_detail = $task_service->task_detail($application_detail['task_id']);
+			if (empty($task_detail['data']))
+			{
+				Log::error("task_review_timeout task is missing,application_id:" . strval($application_detail['id']) . " web3_hash:" . $application_detail['web3_hash']);
+				return;
+			}
+			$transaction_queue_service->push($application_detail['web3_hash'], config('config.transaction_type')['delegate_settle'], $task_detail['data']['blockchain_id']);
 			$application_model->update_status($application_detail['id'], config('config.task_status')['delegate_settle_pending']);
 			Log::info("task_review_timeout,application_id:" . strval($application_detail['id']) . " web3_hash:" . $application_detail['web3_hash']);
 		}
 		$application_detail = $application_model->task_upload_timeout();	
 		if (!empty($application_detail))
 		{
-			$transaction_queue_service->push($application_detail['web3_hash'], config('config.transaction_type')['cancel_lock']);
+			$task_detail = $task_service->task_detail($application_detail['task_id']);
+			if (empty($task_detail['data']))
+			{
+				Log::error("task_upload_timeout task is missing,application_id:" . strval($application_detail['id']) . " web3_hash:" . $application_detail['web3_hash']);
+				return;
+			}
+			$transaction_queue_service->push($application_detail['web3_hash'], config('config.transaction_type')['cancel_lock'], $task_detail['data']['blockchain_id']);
 			$application_model->update_status($application_detail['id'], config('config.task_status')['upload_timeout_cancel_pending']);
 			Log::info("task_upload_timeout,application_id:" . strval($application_detail['id']) . " web3_hash:" . $application_detail['web3_hash']);
 		}

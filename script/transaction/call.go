@@ -103,7 +103,7 @@ func CancelLockCall(client *ethclient.Client, instance *contracts.Contracts, aut
 	return receipt.Status
 }
 
-func Execute(db* sql.DB, rpc_url string, contract_addr string, private_key string) {
+func Execute(db* sql.DB, rpc_url string, contract_addr string, private_key string, blockchain_id int) {
 	client, err := ethclient.Dial(rpc_url)
 	if err != nil {
 		log.Fatal(err)
@@ -112,7 +112,7 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, private_key strin
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Println("privateKey:", privateKey)
+	log.Printf("privateKey:%d,blockchain_id:%d", privateKey, blockchain_id)
 	chainID := big.NewInt(1)
 	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, chainID)
 	if err != nil {
@@ -130,8 +130,8 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, private_key strin
 		log.Fatal(err)
 	}
 
-	sql := "SELECT id, index_node, transaction_type,transaction_try_times FROM transaction_queue where transaction_type in (2,3) and transaction_flag = 0 and transaction_try_times < ? order by updated_at"
-	rows, _ := db.Query(sql, max_transaction_try_times)
+	sql := "SELECT id, index_node, transaction_type,transaction_try_times FROM transaction_queue where blockchain_id = ? and transaction_type in (2,3) and transaction_flag = 0 and transaction_try_times < ? order by updated_at"
+	rows, _ := db.Query(sql, blockchain_id, max_transaction_try_times)
 	defer rows.Close()
 	var id int
 	var index_node string 
@@ -143,7 +143,7 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, private_key strin
 			return;
 		}
 		var status uint64
-		log.Println("id,index_node, transaction_type,transaction_try_times", id, index_node, transaction_type, transaction_try_times) 
+		log.Printf("id=%d,blockchain_id=%d,index_node=%s,transaction_type=%d,transaction_try_times=%d", id, blockchain_id, index_node, transaction_type, transaction_try_times) 
 		switch transaction_type {
 		case transaction_type_delegate_settle:
 			status = DelegateSettleCall(client, instance, auth, index_node)
@@ -189,17 +189,18 @@ func main() {
 		log.Fatal(pingErr)
 	}
 	log.Println("mysql connected!")
-	rows, _ := db.Query("SELECT rpc_url,contract_addr,private_key FROM transaction_base")
+	rows, _ := db.Query("SELECT blockchain_id,rpc_url,contract_addr,private_key FROM transaction_base")
 	defer rows.Close()
+	var blockchain_id int
 	var rpc_url string
 	var contract_addr string
 	var private_key string
 	for rows.Next() {
-		if err := rows.Scan(&rpc_url, &contract_addr, &private_key); err != nil {
+		if err := rows.Scan(&blockchain_id, &rpc_url, &contract_addr, &private_key); err != nil {
 			log.Printf("query transaction_base error: %v", err)
 			return;
 		}
-		log.Printf("rpc_url:%s contract_addr:%s private_key:%s\n", rpc_url, contract_addr, private_key)
-		Execute(db, rpc_url, contract_addr, private_key)
+		log.Printf("blockchain_id:%d rpc_url:%s contract_addr:%s private_key:%s", blockchain_id, rpc_url, contract_addr, private_key)
+		Execute(db, rpc_url, contract_addr, private_key, blockchain_id)
 	}
 }

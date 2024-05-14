@@ -18,8 +18,8 @@ return new class extends Migration
             $table->string('logo', 128)->default('');
             $table->bigInteger('twitter_user_id')->default(0);
             $table->string('twitter_user_name', 64)->default('');
-            $table->string('name', 64)->default('');
-            $table->string('desc', 64)->default('');
+            $table->string('name', 256)->default('');
+            $table->string('desc', 1024)->default('');
             $table->string('website', 128)->default('');
             $table->string('category_id', 64)->default('');
             $table->timestamps();

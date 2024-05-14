@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('project_task', function (Blueprint $table) {
             $table->id();
             $table->integer('project_id')->default(0);
-            $table->string('title', 64)->default('');
+            $table->string('title', 512)->default('');
             $table->string('desc', 2048)->default('');
             $table->string('backgroud_image', 512)->default('');
             $table->integer('social_platform_id')->default(0);

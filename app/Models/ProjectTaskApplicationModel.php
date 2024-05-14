@@ -151,7 +151,7 @@ class ProjectTaskApplicationModel extends Model
 	public function task_review_timeout()
 	{
 		$timeout_days = config('config.task_review_timeout');
-		return $this->select('id', 'web3_hash')
+		return $this->select('id', 'web3_hash', 'task_id')
 			->where('status', config('config.task_status')['upload'])
 			->where('web3_hash', '!=', '')
 			->whereRaw("updated_at + INTERVAL $timeout_days DAY <= NOW()")
@@ -162,7 +162,7 @@ class ProjectTaskApplicationModel extends Model
 	public function task_upload_timeout()
 	{
 		$timeout_days = config('config.task_accept_timeout');
-		return $this->select('id', 'web3_hash')
+		return $this->select('id', 'web3_hash', 'task_id')
 			->where('status', config('config.task_status')['accept'])
 			->where('web3_hash', '!=', '')
 			->whereRaw("updated_at + INTERVAL $timeout_days DAY <= NOW()")

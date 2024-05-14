@@ -12,11 +12,12 @@ class TransactionQueueModel extends Model
 {
     use HasFactory;
 	protected $table = 'transaction_queue';
-	public function insert($web3_hash, $transaction_type)
+	public function insert($web3_hash, $transaction_type, $blockchain_id)
 	{
 		try {
 			$this->index_node = $web3_hash;
 			$this->transaction_type = $transaction_type;
+			$this->blockchain_id = $blockchain_id;
 			return $this->save();
 		}
 		catch (QueryException $e)
