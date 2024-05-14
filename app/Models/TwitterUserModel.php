@@ -68,7 +68,6 @@ class TwitterUserModel extends Model
 
 	public function insert2($user)
 	{
-		Log::info($user);
 		try {
 			$this->user_id = $user['id'];
 			$this->name = $user['name'];

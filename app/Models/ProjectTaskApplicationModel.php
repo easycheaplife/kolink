@@ -95,6 +95,12 @@ class ProjectTaskApplicationModel extends Model
 		}
 		return $query->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash', 'declined_desc')
 			->where('kol_id', $kol_id)
+			->whereIn('id', function ($query) {
+				$query->select(DB::raw('MAX(id)'))
+					->from('project_task_application')
+					->where('kol_id', 1)
+					->groupBy('task_id');
+			   })
 			->orderByDesc('updated_at')
 			->skip($page * $size)
 			->take($size)
@@ -110,6 +116,12 @@ class ProjectTaskApplicationModel extends Model
 		}
 		return $query->select('id')
 			->where('kol_id', $kol_id)
+			->whereIn('id', function ($query) {
+				$query->select(DB::raw('MAX(id)'))
+					->from('project_task_application')
+					->where('kol_id', 1)
+					->groupBy('task_id');
+			   })
 			->count();
 	}
 
@@ -132,6 +144,7 @@ class ProjectTaskApplicationModel extends Model
 		return $this->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash', 'declined_desc')
 			->where('kol_id', $kol_id)
 			->where('task_id', $task_id)   
+			->orderByDesc('updated_at')
 			->first();
 	}
 

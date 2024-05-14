@@ -215,14 +215,14 @@ class TwitterService extends Service
 	{
 		$kol_service = new KolService;
 		$kol_service->insert_twitter_user($twitter_user);
-		Log::info('insert twitter_user_id:' . $twitter_user['user_id']);
+		Log::debug('insert twitter_user_id:' . $twitter_user['user_id']);
 	}
 
 	public function update_kol($twitter_user, $kol_user)
 	{
 		$kol_service = new KolService;
 		$kol_service->update_twitter_user($twitter_user);
-		Log::info('update twitter_user_id:' . $twitter_user['user_id']);
+		Log::debug('update twitter_user_id:' . $twitter_user['user_id']);
 	}
 
 	public function calc_engagement_score($user, $followers_count_max, 
@@ -346,7 +346,6 @@ class TwitterService extends Service
 		$user['age_score'] = $this->calc_age_score($user, $token_user, $twitter_created_at_min, $twitter_created_at_min);
 		$user['monetary_score'] = $this->calc_monetary_score($token_user, $token_count_max, $nft_count_max);
 		$user['composite_score'] = $user['engagement_score'] + $user['age_score'] + $user['monetary_score'];
-		Log::info($user);
 	}
 
 }
