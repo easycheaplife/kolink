@@ -98,7 +98,6 @@ return [
 	"Warm regards,<br>" .
 	"The KOLink Team"
 	), 
-	'task_accept_timeout' => 7,
 	'task_review_timeout' => 7,
 	'etherscan_api_key' => '3IEU6UYCNQN43DFVF5BJM9SP32HH5PZHH8',
 	'etherscan_url_base' => 'https://api.etherscan.io/api',

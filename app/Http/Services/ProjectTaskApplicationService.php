@@ -295,9 +295,9 @@ class ProjectTaskApplicationService extends Service
 	public function tansaction_timeout_check()
 	{
 		$application_model = new ProjectTaskApplicationModel;
-		$application_detail = $application_model->task_review_timeout();	
 		$transaction_queue_service = new TransactionQueueService;
 		$task_service = new ProjectTaskService;
+		$application_detail = $application_model->task_review_timeout();	
 		if (!empty($application_detail))
 		{
 			$task_detail = $task_service->task_detail($application_detail['task_id']);

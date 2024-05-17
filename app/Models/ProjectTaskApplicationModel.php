@@ -172,13 +172,13 @@ class ProjectTaskApplicationModel extends Model
 			->first();
 	}
 
+	// SELECT * FROM project_task_application WHERE web3_hash != '' AND status = 4 AND updated_at + INTERVAL (SELECT upload_ddl_time FROM project_task WHERE id = project_task_application.task_id) DAY <= NOW()
 	public function task_upload_timeout()
 	{
-		$timeout_days = config('config.task_accept_timeout');
 		return $this->select('id', 'web3_hash', 'task_id')
 			->where('status', config('config.task_status')['accept'])
 			->where('web3_hash', '!=', '')
-			->whereRaw("updated_at + INTERVAL $timeout_days DAY <= NOW()")
+			->whereRaw('updated_at + INTERVAL (SELECT upload_ddl_time FROM project_task WHERE id = project_task_application.task_id and upload_ddl_time != 0) DAY <= NOW()')
 			->orderBy('updated_at', 'asc')
 			->first();
 	}
