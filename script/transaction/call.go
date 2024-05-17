@@ -108,21 +108,28 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, private_key strin
 	if err != nil {
 		log.Fatal(err)
 	}
+	header, err := client.HeaderByNumber(context.Background(), nil)
+	if err != nil {
+		log.Fatal(err)
+	}
+	gasPrice, err := client.SuggestGasPrice(context.Background())
+	if err != nil {
+		log.Fatal(err)
+	}
 	privateKey, err := crypto.HexToECDSA(private_key)
 	if err != nil {
 		log.Fatal(err)
 	}
-	log.Printf("privateKey:%d,blockchain_id:%d", privateKey, blockchain_id)
 	chainID := big.NewInt(int64(blockchain_id))
 	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, chainID)
 	if err != nil {
 		log.Fatal(err)
 	}
 	auth.Value = big.NewInt(0)
-	auth.GasLimit = uint64(1000000)
-	auth.GasPrice = big.NewInt(1000000000)
+	auth.GasLimit = uint64(header.GasLimit -1)
+	auth.GasPrice = gasPrice
 	fromAddress := auth.From
-	log.Println("owner address:", fromAddress.String())
+	log.Printf("blockchain_id:%d owner_address:%s gas_limit:%d gas_price:%d", blockchain_id, fromAddress.String(), header.GasLimit, gasPrice)
 
 	contractAddress := common.HexToAddress(contract_addr)
 	instance, err := contracts.NewContracts(contractAddress, client)
@@ -188,7 +195,6 @@ func main() {
 	if pingErr != nil {
 		log.Fatal(pingErr)
 	}
-	log.Println("mysql connected!")
 	rows, _ := db.Query("SELECT blockchain_id,rpc_url,contract_addr,private_key FROM transaction_base")
 	defer rows.Close()
 	var blockchain_id int
