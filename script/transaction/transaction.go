@@ -183,7 +183,7 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, last_block_number
 		if err != nil {
 			log.Fatal(err)
 		}
-		log.Printf("BlockNumber:%d Timestamp:%s", vLog.BlockNumber, time.Unix(int64(block.Time()), 0).Format("2006-01-02 15:04:05 MST"))
+		// log.Printf("BlockNumber:%d Timestamp:%s", vLog.BlockNumber, time.Unix(int64(block.Time()), 0).Format("2006-01-02 15:04:05 MST"))
 		switch vLog.Topics[0].Hex() {
 		case lockAssetEventSigHash.Hex():
 			log.Printf("Event Name: LockAsset()")

@@ -113,14 +113,14 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, private_key strin
 		log.Fatal(err)
 	}
 	log.Printf("privateKey:%d,blockchain_id:%d", privateKey, blockchain_id)
-	chainID := big.NewInt(1)
+	chainID := big.NewInt(int64(blockchain_id))
 	auth, err := bind.NewKeyedTransactorWithChainID(privateKey, chainID)
 	if err != nil {
 		log.Fatal(err)
 	}
 	auth.Value = big.NewInt(0)
 	auth.GasLimit = uint64(1000000)
-	auth.GasPrice = big.NewInt(3000000000000)
+	auth.GasPrice = big.NewInt(1000000000)
 	fromAddress := auth.From
 	log.Println("owner address:", fromAddress.String())
 
