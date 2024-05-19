@@ -88,7 +88,7 @@ func UpdateProjectTaskApplicationStatus(db* sql.DB, transaction_type int, index_
 func InsertEvent(db* sql.DB, index_code string, transaction_type int, block_number uint64, 
 	from_address string, to_address string, token string, amt int64, fee int64, transaction_time uint64) (error) {
 	created_time := time.Now().Unix()
-	stmt, err := db.Prepare("INSERT INTO transaction (index_code, transaction_type, block_number, from_address, to_address, token, amt, fee, transaction_time, created_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)")		
+	stmt, err := db.Prepare("REPLACE INTO transaction (index_code, transaction_type, block_number, from_address, to_address, token, amt, fee, transaction_time, created_time) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?,?)")		
 	if err != nil {
 		return err
 	}
@@ -121,18 +121,6 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, last_block_number
 		return
 	}
 	contractAbi, err := abi.JSON(strings.NewReader(string(abiData)))
-	if err != nil {
-		log.Fatal(err)
-	}
-
-	query := ethereum.FilterQuery{
-		FromBlock: big.NewInt(int64(last_block_number)),
-		ToBlock:   big.NewInt(latestBlockNumber.Int64()),
-		Addresses: []common.Address{
-			contractAddress,
-		},
-	}
-	logs, err := client.FilterLogs(context.Background(), query)
 	if err != nil {
 		log.Fatal(err)
 	}
@@ -178,12 +166,32 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, last_block_number
 		Amt       *big.Int
 	}
 
+	query := ethereum.FilterQuery{
+		FromBlock: big.NewInt(int64(last_block_number)),
+		ToBlock:   big.NewInt(latestBlockNumber.Int64()),
+		Addresses: []common.Address{
+			contractAddress,
+		},
+		Topics: [][]common.Hash{
+			{
+				lockAssetEventSigHash,
+				settleEventSigHash,
+				delegateSettleEventSigHash,
+				cancelLockEventSigHash,
+			},
+		},
+	}
+	logs, err := client.FilterLogs(context.Background(), query)
+	if err != nil {
+		log.Fatal(err)
+	}
+
 	for _, vLog := range logs {
 		block, err := client.BlockByNumber(context.Background(), new(big.Int).SetUint64(vLog.BlockNumber))
 		if err != nil {
 			log.Fatal(err)
 		}
-		// log.Printf("BlockNumber:%d Timestamp:%s", vLog.BlockNumber, time.Unix(int64(block.Time()), 0).Format("2006-01-02 15:04:05 MST"))
+		log.Printf("BlockNumber:%d Timestamp:%s", vLog.BlockNumber, time.Unix(int64(block.Time()), 0).Format("2006-01-02 15:04:05 MST"))
 		switch vLog.Topics[0].Hex() {
 		case lockAssetEventSigHash.Hex():
 			log.Printf("Event Name: LockAsset()")
