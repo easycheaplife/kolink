@@ -95,10 +95,10 @@ class ProjectTaskApplicationModel extends Model
 		}
 		return $query->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash', 'declined_desc')
 			->where('kol_id', $kol_id)
-			->whereIn('id', function ($query) {
+			->whereIn('id', function ($query) use ($kol_id) {
 				$query->select(DB::raw('MAX(id)'))
 					->from('project_task_application')
-					->where('kol_id', 1)
+					->where('kol_id', $kol_id)
 					->groupBy('task_id');
 			   })
 			->orderByDesc('updated_at')
