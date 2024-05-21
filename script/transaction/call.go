@@ -15,7 +15,7 @@ import (
 	"database/sql"
 )
 
-const max_transaction_try_times = 3
+const max_transaction_try_times = 1;
 const transaction_type_lock_assert = 0;
 const transaction_type_settle = 1;
 const transaction_type_delegate_settle = 2;
@@ -126,7 +126,7 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, private_key strin
 		log.Fatal(err)
 	}
 	auth.Value = big.NewInt(0)
-	auth.GasLimit = uint64(header.GasLimit -1)
+	auth.GasLimit = uint64(header.GasLimit)
 	auth.GasPrice = gasPrice
 	fromAddress := auth.From
 	log.Printf("blockchain_id:%d owner_address:%s gas_limit:%d gas_price:%d", blockchain_id, fromAddress.String(), header.GasLimit, gasPrice)
