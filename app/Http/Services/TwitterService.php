@@ -44,10 +44,21 @@ class TwitterService extends Service
 		return $this->res;
 	}	
 
-	public function auth2($redirect_uri, $code)
+	public function auth2($redirect_uri, $code, $debug)
 	{
 		try {
 			$url = 'https://api.twitter.com/2/oauth2/token';
+			if ($debug)
+			{
+				$url = 'http://127.0.0.1:8010/twitter/auth2';
+				$headers = [];
+				$response = Http::withHeaders($headers)
+				->get($url);
+				$data = $response->json();
+				$this->res['data'] = $data['data'];
+				return $this->res;
+			}
+
 			$response = Http::asForm()->post($url, [
 				'code' => $code,
 				'grant_type' => 'authorization_code',
@@ -112,10 +123,14 @@ class TwitterService extends Service
 		return $this->res;
 	}	
 
-	public function user2($access_token)
+	public function user2($access_token, $debug)
 	{
 		$url = "https://api.twitter.com/2/users/me?" . 
 			"user.fields=created_at,description,entities,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified,withheld";
+		if ($debug)
+		{
+			$url = 'http://127.0.0.1:8010/twitter/user2';
+		}
 		try {
 			$headers = ['Authorization' => "Bearer $access_token"];
 			$response = Http::withHeaders($headers)

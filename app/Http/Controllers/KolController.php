@@ -19,6 +19,7 @@ class KolController extends Controller
 		$twitter_followers = $request->input('twitter_followers', 0);
 		$twitter_subscriptions = $request->input('twitter_subscriptions', 0);
 		$channel_id = $request->input('channel_id', 0);
+		$invite_code = $request->input('invite_code', '');
 		try {
 			$validated_data = $request->validate([
 				'token' => 'required|string',
@@ -47,7 +48,8 @@ class KolController extends Controller
 			$validated_data['category_id'],
 			$validated_data['language_id'],
 			$channel_id,
-			$validated_data['code']
+			$validated_data['code'],
+			$invite_code
 		);
 	}
 

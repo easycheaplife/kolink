@@ -36,6 +36,9 @@ return new class extends Migration
             $table->string('engagement_score', 24)->default('');
             $table->string('age_score', 24)->default('');
             $table->string('composite_score', 24)->default('');
+            $table->string('invite_code', 24)->default('');
+            $table->string('invitee_code', 24)->default('');
+            $table->integer('xp')->default(0);
             $table->timestamps();
         });
     }

@@ -104,4 +104,15 @@ return [
 	'contractaddress' => '0xD7aAdD7BD1d12ee13E1f4Db8BB56458882796bE4',
 	'twitter_client_id' => 'emNmLUt4WEt4SlFWekpCMjNxSWw6MTpjaQ',
 	'twitter_redirect_uri' => 'http://localhost:8888/oauth',
+	'reward_task' => array(
+		'auth_twitter' => array('id' => 1, 'xp' => 5, 'type' => 'social'),	
+		'apply_task' => array('id' => 2, 'xp' => 3, 'type' => 'daily'),	
+		'invite_friend' => array('id' => 3, 'xp' => 5, 'type' => 'daily'),	
+		'friend_upload' => array('id' => 4, 'xp' => 5, 'type' => 'daily'),	
+		'accept_task' => array('id' => 5, 'xp' => 5, 'type' => 'daily'),	
+		'upload_task' => array('id' => 6, 'xp' => 5, 'type' => 'daily'),	
+		'finish_task' => array('id' => 7, 'xp' => 10, 'type' => 'daily'),	
+		'follow_twitter' => array('id' => 8, 'xp' => 3, 'type' => 'social'),	
+		'join_telgram' => array('id' => 9, 'xp' => 5, 'type' => 'social'),	
+	),
 ];

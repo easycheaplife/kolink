@@ -13,6 +13,7 @@ use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TwitterController;
+use App\Http\Controllers\RewardController;
 
 
 /*
@@ -142,5 +143,11 @@ Route::post('/twitter/user', [TwitterController::class, 'user']);
 
 Route::get('/twitter/user2', [TwitterController::class, 'user2']);
 Route::post('/twitter/user2', [TwitterController::class, 'user2']);
+
+Route::get('/reward/list', [RewardController::class, 'reward_list']);
+Route::post('/reward/list', [RewardController::class, 'reward_list']);
+
+Route::get('/reward/task/detail', [RewardController::class, 'reward_task_detail']);
+Route::post('/reward/task/detail', [RewardController::class, 'reward_task_detail']);
 
 

@@ -28,6 +28,7 @@ class TwitterController extends Controller
 
 	public function auth2(Request $request)
 	{
+		$debug = $request->input('debug',0);
 		$redirect_uri = $request->input('redirect_uri', config('config.twitter_redirect_uri'));
 		try {
 			$validated_data = $request->validate([
@@ -40,7 +41,7 @@ class TwitterController extends Controller
 				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
 		}
 		$service = new TwitterService();
-		return $service->auth2($redirect_uri, $validated_data['code']);
+		return $service->auth2($redirect_uri, $validated_data['code'], $debug);
 	}
 
 	public function user(Request $request)
@@ -65,6 +66,7 @@ class TwitterController extends Controller
 
 	public function user2(Request $request)
 	{
+		$debug = $request->input('debug',0);
 		try {
 			$validated_data = $request->validate([
 				'access_token' => 'required|string'
@@ -76,7 +78,7 @@ class TwitterController extends Controller
 				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
 		}
 		$service = new TwitterService();
-		return $service->user2($validated_data['access_token']);
+		return $service->user2($validated_data['access_token'], $debug);
 	}
 
 }

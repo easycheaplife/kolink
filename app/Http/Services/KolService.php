@@ -12,12 +12,13 @@ use App\Http\Services\VerificationService;
 use App\Http\Services\ProjectTaskApplicationService;
 use App\Http\Services\ProjectTaskService;
 use App\Http\Services\TwitterService;
+use App\Http\Services\RewardService;
 
 
 class KolService extends Service 
 {
 	public function kol_new($token, $email, $twitter_user_id, $twitter_user_name, $twitter_avatar, $twitter_followers, 
-		$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id, $code)
+		$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id, $code, $invite_code)
 	{
 		$verification_service = new VerificationService;
 		$verification_code = $verification_service->get_code($email, config('config.verification_type')['kol']);
@@ -54,11 +55,31 @@ class KolService extends Service
 		if (!$kol_model->insert($token, $email, $twitter_user_id, $twitter_user_name, $twitter_avatar, $twitter_followers, 
 			$twitter_subscriptions, $twitter_like_count, $twitter_following_count,
 			$monetary_score, $engagement_score, $age_score, $composite_score,
-			$region_id, $category_id, $language_id, $channel_id, $last_insert_id))
+			$region_id, $category_id, $language_id, $channel_id, $invite_code, $last_insert_id))
 		{
 			return $this->error_response($token, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
+
+		$reward_service = new RewardService;
+		$reward_service->add_self_reward($last_insert_id, config('config.reward_task')['auth_twitter']['xp'],config('config.reward_task')['auth_twitter']['id']);
+		$reward_service->add_invite_reward($last_insert_id, config('config.reward_task')['invite_friend']['xp'],config('config.reward_task')['invite_friend']['id']);
+
+/*
+		if (0 != $last_insert_id)
+		{
+			if (!empty($invite_code))
+			{
+				$invite_kol_data = $kol_model->get_id_by_invite_code($invite_code);
+				if (!empty($invite_kol_data))
+				{
+					$reward_service->insert_record($last_insert_id, $invite_kol_data['id'], config('config.reward_task')['invite_friend']['xp'],config('config.reward_task')['invite_friend']['id']); 
+				}
+			}
+			$reward_service->insert_record($last_insert_id, $last_insert_id, config('config.reward_task')['auth_twitter']['xp'],config('config.reward_task')['auth_twitter']['id']); 
+		}
+ */
+
 		$this->res['data']['id'] = $last_insert_id;
 		return $this->res;
 	}	
@@ -107,6 +128,18 @@ class KolService extends Service
 	{
 		$kol_model = new KolModel;
 		$this->res['data'] = $kol_model->login($token);
+		if (!empty($this->res['data']))
+		{
+			$this->res['data']['engagement'] = $this->engagement_score($this->res['data']);
+			$this->res['data']['inviter_twitter_user_name'] = '';
+			$inviter_kol_data = $kol_model->get_inviter_kol_by_invitee_code($this->res['data']['invitee_code']);
+			if (!empty($inviter_kol_data))
+			{
+				$this->res['data']['inviter_twitter_user_name'] = $inviter_kol_data['twitter_user_name'];
+			}
+			$reward_service = new RewardService;
+			$this->res['data']['reward_task_completed_num'] = $reward_service->completed_num($this->res['data']['id']);
+		}
 		return $this->res;
 	}
 
@@ -194,6 +227,36 @@ class KolService extends Service
 	{
 		$kol_model = new KolModel;
 		return $kol_model->token_count();
+	}
+
+	public function update_invite_code($kol_id, $invite_code)
+	{
+		$kol_model = new KolModel;
+		return $kol_model->update_invite_code($kol_id, $invite_code);
+	}
+
+	public function invited_friend_num($invitee_code)
+	{
+		$kol_model = new KolModel;
+		return $kol_model->invited_friend_num($invitee_code);
+	}
+
+	public function get_id_by_invite_code($invite_code)
+	{
+		$kol_model = new KolModel;
+		return $kol_model->get_id_by_invite_code($invite_code);
+	}
+
+	public function inc_xp($kol_id, $xp)
+	{
+		$kol_model = new KolModel;
+		return $kol_model->inc_xp($kol_id, $xp);
+	}
+
+	public function get_kols($kol_ids)
+	{
+		$kol_model = new KolModel;
+		return $kol_model->get_kols($kol_ids);
 	}
 
 }

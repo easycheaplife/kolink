@@ -11,6 +11,7 @@ use App\Models\ProjectTaskApplicationModel;
 use App\Http\Services\KolService;
 use App\Http\Services\ProjectTaskService;
 use App\Http\Services\TransactionQueueService;
+use App\Http\Services\RewardService;
 
 
 class ProjectTaskApplicationService extends Service 
@@ -29,6 +30,8 @@ class ProjectTaskApplicationService extends Service
 			return $this->error_response($task_id, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
+		$rewaed_service = new RewardService;
+		$rewaed_service->add_self_reward($kol_id, config('config.reward_task')['apply_task']['xp'], config('config.reward_task')['apply_task']['id']);
 		$this->res['data']['id'] = $last_insert_id;
 		return $this->res;
 	}	
@@ -148,6 +151,8 @@ class ProjectTaskApplicationService extends Service
 		if ($status == config('config.task_status')['accept'])
 		{
 			$status = config('config.task_status')['lock_pending'];
+			$rewaed_service = new RewardService;
+			$rewaed_service->add_self_reward($application_detail['kol_id'], config('config.reward_task')['accept_task']['xp'], config('config.reward_task')['accept_task']['id']);
 		}
 		if (!$application_model->update_web3_hash_and_status($application_id, $web3_hash, $status, $declined_desc))
 		{
@@ -201,6 +206,9 @@ class ProjectTaskApplicationService extends Service
 			return $this->error_response($application_id, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		
 		}
+		$rewaed_service = new RewardService;
+		$rewaed_service->add_self_reward($application_detail['kol_id'], config('config.reward_task')['upload_task']['xp'], config('config.reward_task')['upload_task']['id']);
+		$rewaed_service->add_invite_reward($application_detail['kol_id'], config('config.reward_task')['upload_task']['xp'], config('config.reward_task')['upload_task']['id']);
 		return $this->res;
 	}
 

@@ -19,7 +19,7 @@ class KolModel extends Model
 	public function insert($token, $email, $twitter_user_id, $twitter_user_name, $twitter_avatar, $twitter_followers, 
 		$twitter_subscriptions, $twitter_like_count, $twitter_following_count,
 		$monetary_score, $engagement_score, $age_score, $composite_score,
-		$region_id, $category_id, $language_id, $channel_id, &$last_insert_id)
+		$region_id, $category_id, $language_id, $channel_id, $invite_code, &$last_insert_id)
 	{
 		try {
 			$this->token = $token;
@@ -39,6 +39,7 @@ class KolModel extends Model
 			$this->category_id = $category_id;
 			$this->language_id = $language_id;
 			$this->channel_id = $channel_id;
+			$this->invitee_code = $invite_code;
 			$ret = $this->save();
 			$last_insert_id = DB::connection()->getPdo()->lastInsertId();
 			return $ret;
@@ -101,7 +102,7 @@ class KolModel extends Model
 				$query->orderByDesc('twitter_followers');	
 			}
 		}
-		return $query->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score')
+		return $query->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
 			->orderByDesc('updated_at')
 			->skip($page * $size)
 			->take($size)
@@ -131,13 +132,13 @@ class KolModel extends Model
 
 	public function get($kol_id)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count')
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
 			->where('id', $kol_id)->first();
 	}
 
 	public function login($token)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count')
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
 			->where('token', $token)->first();
 	}
 
@@ -153,7 +154,7 @@ class KolModel extends Model
 
 	public function get_by_twitter_user_id($twitter_user_id)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count')
+		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
 			->where('twitter_user_id', $twitter_user_id)->first();
 	}
 
@@ -226,6 +227,48 @@ class KolModel extends Model
 			->take($size)
 			->get();
 	
+	}
+
+	public function update_invite_code($kol_id, $invite_code)
+	{
+		return $this->where('id', $kol_id)->update([
+			'invite_code' => $invite_code 
+		]);
+	}
+
+
+	public function get_id_by_invite_code($invite_code)
+	{
+		return $this->select('id')
+			->where('invite_code', $invite_code)->first();
+	}
+
+	public function get_inviter_kol_by_invitee_code($invitee_code)
+	{
+		return $this->select('id', 'twitter_user_name')
+			->where('invite_code', $invitee_code)->first();
+	}
+
+	public function invited_friend_num($invitee_code)
+	{
+		return $this->select('id') 
+			->where('invitee_code', $invitee_code)
+			->count();
+	}
+
+	public function inc_xp($kol_id, $xp)
+	{
+		$kol = $this->find($kol_id);
+		$kol->xp += $xp;
+		$kol->save();
+	}
+
+	public function get_kols($kol_ids)
+	{
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
+			->whereIn('id', $kol_ids)
+			->orderByDesc('updated_at')
+			->get();
 	}
 
 }

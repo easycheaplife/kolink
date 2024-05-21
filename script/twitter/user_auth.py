@@ -82,6 +82,41 @@ user_res = {
 		"message": ""
 }
 
+auth2_res = {
+		"code": 0,
+		"message": "",
+		"data": {
+			"token_type": "bearer",
+			"expires_in": 7200,
+			"access_token": "S0NmZGlIbWdWeFRGUm9NR1JrWVRHNU5sMjFva2lzODJiS2hRM1hsU1NlODA3OjE3MTQzODQ2OTQwMjc6MToxOmF0OjE",
+			"scope": "users.read follows.read tweet.read follows.write"
+			}
+		}
+
+
+user2_res = {
+		"code": 0,
+		"message": "",
+		"data": {
+			"profile_image_url": "https://abs.twimg.com/sticky/default_profile_images/default_profile_normal.png",
+			"name": "kolinksystem",
+			"created_at": "2024-04-17T08:33:54.000Z",
+			"username": "kolinksystem00000",
+			"protected": False,
+			"verified": False,
+			"description": "",
+			"id": "1780514896670756865",
+			"public_metrics": {
+				"followers_count": 3,
+				"following_count": 4,
+				"tweet_count": 3,
+				"listed_count": 3,
+				"like_count": 3
+				}
+			}
+		}
+
+
 @app.route('/twitter/auth', methods=['GET'])
 def auth_twitter():
     response = {
@@ -118,6 +153,14 @@ def auth_twitter_callback():
     logging.info(json.dumps(user._json))
     response['data'] = user._json
     return response
+
+@app.route('/twitter/auth2', methods=['GET'])
+def auth_twitter2():
+	return auth2_res
+
+@app.route('/twitter/user2', methods=['GET'])
+def auth_twitter_callback2():
+	return user2_res
 
 if __name__ == '__main__':
     app.run(debug=True, host=host, port=port)

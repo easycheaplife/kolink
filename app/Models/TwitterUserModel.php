@@ -68,6 +68,7 @@ class TwitterUserModel extends Model
 
 	public function insert2($user)
 	{
+		Log::info($user);
 		try {
 			$this->user_id = $user['id'];
 			$this->name = $user['name'];
@@ -87,13 +88,28 @@ class TwitterUserModel extends Model
 		{
 			if ($e->errorInfo[1] == ErrorCodes::ERROR_CODE_DUPLICATE_ENTRY)
 			{
-				return true;	
+				return $this->update2($user);
 			}
 			Log::error($e->getMessage());
 		}
 		return false;
 	}
 
+	public function update2($user)
+	{
+		return $this->where('user_id', $user['id'])->update([
+			'name' => $user['name'], 
+			'screen_name' => $user['username'], 
+			'description' => $user['description'], 
+			'followers_count' => $user['public_metrics']['followers_count'], 
+			'friends_count' => $user['public_metrics']['following_count'], 
+			'listed_count' => $user['public_metrics']['listed_count'], 
+			'favourites_count' => $user['public_metrics']['like_count'], 
+			'like_count' => $user['public_metrics']['like_count'], 
+			'statuses_count' => $user['public_metrics']['tweet_count'], 
+			'profile_image_url' => $user['profile_image_url'], 
+			'updated_at' => time()]);
+	}
 
 	public function get($user_id)
 	{

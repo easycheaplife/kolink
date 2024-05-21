@@ -12,10 +12,10 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule): void
     {
-        // $schedule->command('inspire')->hourly();
-		// $schedule->command('app:email-command')->everySecond();
 		$schedule->command('app:email-command')->everySecond();
-		$schedule->command('app:transaction-command')->everySecond();
+		$schedule->command('app:transaction-command')->everyMinute();
+		$schedule->command('app:twitter-command')->everyFiveMinutes();
+		$schedule->command('app:etherscan-command')->everyTenMinutes();
     }
 
     /**
