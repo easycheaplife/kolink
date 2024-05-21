@@ -239,18 +239,30 @@ class KolModel extends Model
 
 	public function get_id_by_invite_code($invite_code)
 	{
+		if ('' == $invite_code)
+		{
+			return array();
+		}
 		return $this->select('id')
 			->where('invite_code', $invite_code)->first();
 	}
 
 	public function get_inviter_kol_by_invitee_code($invitee_code)
 	{
+		if ('' == $invitee_code)
+		{
+			return array();
+		}
 		return $this->select('id', 'twitter_user_name')
 			->where('invite_code', $invitee_code)->first();
 	}
 
 	public function invited_friend_num($invitee_code)
 	{
+		if ('' == $invitee_code)
+		{
+			return 0;
+		}
 		return $this->select('id') 
 			->where('invitee_code', $invitee_code)
 			->count();

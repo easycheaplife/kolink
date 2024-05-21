@@ -1,6 +1,7 @@
 from flask import Flask, redirect, request
 import tweepy
 import json
+import random
 import time
 import logging
 from datetime import datetime
@@ -116,6 +117,12 @@ user2_res = {
 			}
 		}
 
+def generate_name():
+    first_names = ["Alice", "Bob", "Charlie", "David", "Eva", "Frank"]
+    last_names = ["Smith", "Johnson", "Brown", "Lee", "Garcia", "Wang"]
+    first_name = random.choice(first_names)
+    last_name = random.choice(last_names)
+    return first_name + " " + last_name
 
 @app.route('/twitter/auth', methods=['GET'])
 def auth_twitter():
@@ -160,6 +167,14 @@ def auth_twitter2():
 
 @app.route('/twitter/user2', methods=['GET'])
 def auth_twitter_callback2():
+	user2_res['data']['username'] = generate_name() 
+	user2_res['data']['name'] = user2_res['data']['username'] 
+	user2_res['data']['id'] = random.randint(1111111111, 9999999999) 
+	user2_res['data']['public_metrics']['followers_count'] = random.randint(1, 999) 
+	user2_res['data']['public_metrics']['following_count'] = random.randint(1, 999) 
+	user2_res['data']['public_metrics']['like_count'] = random.randint(1, 999) 
+	user2_res['data']['public_metrics']['listed_count'] = random.randint(1, 999) 
+	user2_res['data']['public_metrics']['tweet_count'] = random.randint(1, 999) 
 	return user2_res
 
 if __name__ == '__main__':

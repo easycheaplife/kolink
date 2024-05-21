@@ -42,9 +42,9 @@ class RewardService extends Service
 		$reward_record_model = new RewardRecordModel;
 		$this->res['data']['list'] = $reward_record_model->list($kol_id, $page, $size);
 		$this->res['data']['invite_code'] = $invite_code;
-		if (empty($kol_detail['data']['invitee_code']))  
+		if (!empty($kol_detail['data']['invite_code']))  
 		{
-			$this->res['data']['invited_friend_num'] = $kol_service->invited_friend_num($kol_detail['data']['invitee_code']);
+			$this->res['data']['invited_friend_num'] = $kol_service->invited_friend_num($kol_detail['data']['invite_code']);
 		}
 		else{
 			$this->res['data']['invited_friend_num'] = 0;
