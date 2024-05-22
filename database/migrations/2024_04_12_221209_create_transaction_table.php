@@ -23,7 +23,7 @@ return new class extends Migration
             $table->bigInteger('fee')->default(0);
             $table->integer('transaction_time')->default(0);
             $table->integer('created_time')->default(0);
-			$table->unique(['block_number');
+			$table->unique('block_number');
         });
     }
 

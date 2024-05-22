@@ -24,7 +24,7 @@ client.login(
 client.save_cookies('cookies.json');
 client.load_cookies(path='cookies.json');
 
-log_file = "get_user.log"
+log_file = "twitter_service.log"
 logging.basicConfig(filename=log_file, level=logging.DEBUG)
 
 
@@ -39,19 +39,21 @@ def get_user():
         "message": "",
         "data": {}
     }
+    public_metrics = {
+        "followers_count" : user.followers_count,
+        "following_count" : user.following_count,
+        "listed_count" : user.listed_count,
+        "like_count" : user.favourites_count,
+        "tweet_count" : user.statuses_count,
+    }
     user_json = {
          "id" : user.id,
          "name" : user.name,
-         "screen_name" : user.screen_name,
+         "username" : user.screen_name,
          "description" : user.description,
          "profile_image_url" : user.profile_image_url,
          "url" : user.url,
-         "followers_count" : user.followers_count,
-         "following_count" : user.following_count,
-         "favourites_count" : user.favourites_count,
-         "listed_count" : user.listed_count,
-         "media_count" : user.media_count,
-         "statuses_count" : user.statuses_count,
+         "public_metrics" : public_metrics,
          "location" : user.location,
          "created_at" : user.created_at,
     } 

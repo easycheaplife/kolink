@@ -363,4 +363,37 @@ class TwitterService extends Service
 		$user['composite_score'] = $user['engagement_score'] + $user['age_score'] + $user['monetary_score'];
 	}
 
+	public function insert_user_from_xlsx($screen_name, $language)
+	{
+		$url = "http://127.0.0.1:8020/twitter/get_user?screen_name=$screen_name" ;
+		try {
+			$headers = [];
+			$response = Http::withHeaders($headers)
+				->get($url);
+			if ($response->successful()) {
+				$data = $response->json();
+				$data['data']['profile_image_url'] = str_replace('_normal', '', $data['data']['profile_image_url']);
+				$this->res['data'] = $data['data'];
+				$twitter_user_model = new TwitterUserModel;
+				$insert_flag = 0;
+				if ($twitter_user_model->insert2($data['data']))
+				{
+					$insert_flag = 1;	
+				}
+				$twitter_user_data_model = new TwitterUserDataModel;
+				$twitter_user_data_model->insert($data['data'], $insert_flag);
+			}
+			else {
+				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
+				Log::error($error_message);
+			}
+		} catch (\Exception $e) 
+		{   
+			if (strpos($e->getMessage(), "" . ErrorCodes::ERROR_CODE_DUPLICATE_ENTRY) !== false) {
+				return $this->res;	
+			}
+			Log::error($e);
+		}  
+	}
+
 }
