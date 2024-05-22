@@ -10,50 +10,9 @@
 /*!40101 SET NAMES utf8mb4 */;
 /*!40103 SET @OLD_TIME_ZONE=@@TIME_ZONE */;
 /*!40103 SET TIME_ZONE='+00:00' */;
-/*!40014 SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0 */;
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
---
--- Table structure for table `twitter_user`
---
-
-DROP TABLE IF EXISTS `twitter_user`;
-/*!40101 SET @saved_cs_client     = @@character_set_client */;
-/*!40101 SET character_set_client = utf8 */;
-CREATE TABLE `twitter_user` (
-  `id` bigint(20) unsigned NOT NULL AUTO_INCREMENT,
-  `user_id` bigint(20) NOT NULL DEFAULT 0,
-  `name` varchar(128) NOT NULL DEFAULT '',
-  `screen_name` varchar(128) NOT NULL DEFAULT '',
-  `location` varchar(256) NOT NULL DEFAULT '',
-  `description` varchar(512) NOT NULL DEFAULT '',
-  `url` varchar(512) NOT NULL DEFAULT '',
-  `followers_count` int(11) NOT NULL DEFAULT 0,
-  `like_count` int(11) NOT NULL DEFAULT 0,
-  `friends_count` int(11) NOT NULL DEFAULT 0,
-  `listed_count` int(11) NOT NULL DEFAULT 0,
-  `favourites_count` int(11) NOT NULL DEFAULT 0,
-  `following_count` int(11) NOT NULL DEFAULT 0,
-  `description_urls` varchar(512) NOT NULL DEFAULT '',
-  `media_count` int(11) NOT NULL DEFAULT 0,
-  `utc_offset` int(11) NOT NULL DEFAULT 0,
-  `time_zone` varchar(128) NOT NULL DEFAULT '',
-  `geo_enabled` int(11) NOT NULL DEFAULT 0,
-  `verified` int(11) NOT NULL DEFAULT 0,
-  `statuses_count` int(11) NOT NULL DEFAULT 0,
-  `lang` varchar(128) NOT NULL DEFAULT '',
-  `profile_background_image_url` varchar(256) NOT NULL DEFAULT '',
-  `profile_background_image_url_https` varchar(256) NOT NULL DEFAULT '',
-  `profile_image_url` varchar(256) NOT NULL DEFAULT '',
-  `profile_image_url_https` varchar(256) NOT NULL DEFAULT '',
-  `created_at` int(11) NOT NULL DEFAULT 0,
-  `updated_at` int(11) NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`),
-  UNIQUE KEY `twitter_user_user_id_unique` (`user_id`)
-) ENGINE=InnoDB AUTO_INCREMENT=97 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-/*!40101 SET character_set_client = @saved_cs_client */;
 
 --
 -- Dumping data for table `twitter_user`
@@ -62,16 +21,16 @@ CREATE TABLE `twitter_user` (
 LOCK TABLES `twitter_user` WRITE;
 /*!40000 ALTER TABLE `twitter_user` DISABLE KEYS */;
 INSERT INTO `twitter_user` VALUES
-(1,29043,'Stanley Do','stanley','','designer, tv junkie, coffee snob, fun size','',451,413,103,43,413,0,'',0,0,'',0,0,3490,'','','','https://pbs.twimg.com/profile_images/3110914613/05b8ac4c0869f0feff64588c600d2390.jpeg','',1164761211,1716385585),
-(3,1780514896670756865,'kolinksystem','kolinksyst61929','','','',5,0,4,0,0,0,'',0,0,'',0,0,0,'','','','https://abs.twimg.com/sticky/default_profile_images/default_profile.png','',1713342834,0),
-(4,1146492710582308864,'0xSun','0xSunNFT','','Founder of 0xSun group - A community for degen\n - 0xSun.eth\n - 进群申请表: https://t.co/qUTmp0nY5Z','',85641,6080,5567,1602,6080,0,'',0,0,'',0,0,3913,'','','','https://pbs.twimg.com/profile_images/1717887110844477440/cIZFSve_.png','',1562180137,0),
-(5,1374985535169552388,'LaserCat397.eth','BitCloutCat','','Builder of @TinFunNFT   @LaserCatNft 🐱','',123148,3909,2138,2446,3909,0,'',0,0,'',0,0,6072,'','','','https://pbs.twimg.com/profile_images/1761761094924894208/9jmd5ltf.jpg','',1616657082,0),
-(6,1528645377619939330,'3amClub','My3amclub','','One of the best Web3 community.\nTG：https://t.co/up8XstUDe2\nDC：https://t.co/HjsJvaHYae','',35325,73,369,534,73,0,'',0,0,'',0,0,462,'','','','https://pbs.twimg.com/profile_images/1528645622709952513/WUdfwVNU.jpg','',1653292475,0),
-(7,1405904249226088455,'撸币养家 | lubiyangjia.eth','lubi366','','所有推文都不是投资理财建议，不要看、不要点、更不要买！#Binance \n\nOKX WEB3.0 钱包支持80+公链使用，跨链Swap交易，价格更优，有NFT 市场、DeFi 挖矿一站式服务、检查钱包授权服务。 WEB 3 入口 一个就够：https://t.co/aPDkJnCmVw','',162378,5649,1820,2273,5649,0,'',0,0,'',0,0,13699,'','','','https://pbs.twimg.com/profile_images/1705223925763080192/3Xarr0jf.jpg','',1624028677,0),
-(8,1002945631407702017,'币圈慈善家','cryptocishanjia','','话痨博主，土狗冲击者，傻逼韭菜，不构成投资建议。\n若想有所改变，应真诚面对自己和他人。\n投资核心：玩得早，买的多，拿得住。\nOKX Web3钱包现已支持70+公链 提供钱包多链，web3入口一个就够：https://t.co/hCZ2he8yFl…','',171443,2837,1092,2628,2837,0,'',0,0,'',0,0,9153,'','','','https://pbs.twimg.com/profile_images/1464518155020083204/OW28mCLv.jpg','',1527955847,0),
-(9,1195728139898376193,'🔮0xWizard🧙‍♂️','0xcryptowizard','','#Bitcoin #Etherum 🦇🔊 \n|| Ordinals BRC20\n|| Defi Degen\n|| NFT Collector \n|| On-Chain Analysis\n|| Metaverse Natives\n|| NFA\n||未来不会发任何链接；推文中出现链接，请不要点。','',139473,8824,5112,3928,8824,0,'',0,0,'',0,0,15807,'','','','https://pbs.twimg.com/profile_images/1664263829910605827/TfE9xCvv.jpg','',1573918789,0),
-(10,1357671168208117760,'Big bottle','bigbottle44','','','',24734,5191,2803,533,5191,0,'',0,0,'',0,0,11687,'','','','https://pbs.twimg.com/profile_images/1674148781095526408/g8Wg51J_.jpg','',1612529014,0),
-(11,1403881130802225152,'大宇','BTCdayu','','最高等级省手续费注册顶级大所\n\n 世界第一大所币安\n https://t.co/FxgwgxNIYN\n\n欧易——出入金好用 \nhttps://t.co/F4T60WPbB5\n\n大宇知识宝库  https://t.co/U5cdAPEjl2','',180383,3014,2665,3251,3014,0,'',0,0,'',0,0,13635,'','','','https://pbs.twimg.com/profile_images/1546148012669292545/BdXvKkv9.jpg','',1623546328,0),
+(1,29043,'Stanley Do','stanley','','designer, tv junkie, coffee snob, fun size','',451,413,103,43,413,0,'',0,0,'',0,0,3490,'','','','https://pbs.twimg.com/profile_images/3110914613/05b8ac4c0869f0feff64588c600d2390.jpeg','',1164761211,1716388171),
+(3,1780514896670756865,'kolinksystem','kolinksyst61929','','','',5,0,4,0,0,0,'',0,0,'',0,0,0,'','','','https://abs.twimg.com/sticky/default_profile_images/default_profile.png','',1713342834,1716388171),
+(4,1146492710582308864,'0xSun','0xSunNFT','','Founder of 0xSun group - A community for degen\n - 0xSun.eth\n - 进群申请表: https://t.co/qUTmp0nY5Z','',85641,6080,5567,1602,6080,0,'',0,0,'',0,0,3913,'','','','https://pbs.twimg.com/profile_images/1717887110844477440/cIZFSve_.png','',1562180137,1716388171),
+(5,1374985535169552388,'LaserCat397.eth','BitCloutCat','','Builder of @TinFunNFT   @LaserCatNft 🐱','',123148,3909,2138,2446,3909,0,'',0,0,'',0,0,6072,'','','','https://pbs.twimg.com/profile_images/1761761094924894208/9jmd5ltf.jpg','',1616657082,1716388171),
+(6,1528645377619939330,'3amClub','My3amclub','','One of the best Web3 community.\nTG：https://t.co/up8XstUDe2\nDC：https://t.co/HjsJvaHYae','',35325,73,369,534,73,0,'',0,0,'',0,0,462,'','','','https://pbs.twimg.com/profile_images/1528645622709952513/WUdfwVNU.jpg','',1653292475,1716388171),
+(7,1405904249226088455,'撸币养家 | lubiyangjia.eth','lubi366','','所有推文都不是投资理财建议，不要看、不要点、更不要买！#Binance \n\nOKX WEB3.0 钱包支持80+公链使用，跨链Swap交易，价格更优，有NFT 市场、DeFi 挖矿一站式服务、检查钱包授权服务。 WEB 3 入口 一个就够：https://t.co/aPDkJnCmVw','',162378,5649,1820,2273,5649,0,'',0,0,'',0,0,13699,'','','','https://pbs.twimg.com/profile_images/1705223925763080192/3Xarr0jf.jpg','',1624028677,1716388171),
+(8,1002945631407702017,'币圈慈善家','cryptocishanjia','','话痨博主，土狗冲击者，傻逼韭菜，不构成投资建议。\n若想有所改变，应真诚面对自己和他人。\n投资核心：玩得早，买的多，拿得住。\nOKX Web3钱包现已支持70+公链 提供钱包多链，web3入口一个就够：https://t.co/hCZ2he8yFl…','',171443,2837,1092,2628,2837,0,'',0,0,'',0,0,9153,'','','','https://pbs.twimg.com/profile_images/1464518155020083204/OW28mCLv.jpg','',1527955847,1716388171),
+(9,1195728139898376193,'🔮0xWizard🧙‍♂️','0xcryptowizard','','#Bitcoin #Etherum 🦇🔊 \n|| Ordinals BRC20\n|| Defi Degen\n|| NFT Collector \n|| On-Chain Analysis\n|| Metaverse Natives\n|| NFA\n||未来不会发任何链接；推文中出现链接，请不要点。','',139473,8824,5112,3928,8824,0,'',0,0,'',0,0,15807,'','','','https://pbs.twimg.com/profile_images/1664263829910605827/TfE9xCvv.jpg','',1573918789,1716388171),
+(10,1357671168208117760,'Big bottle','bigbottle44','','','',24734,5191,2803,533,5191,0,'',0,0,'',0,0,11687,'','','','https://pbs.twimg.com/profile_images/1674148781095526408/g8Wg51J_.jpg','',1612529014,1716388171),
+(11,1403881130802225152,'大宇','BTCdayu','','最高等级省手续费注册顶级大所\n\n 世界第一大所币安\n https://t.co/FxgwgxNIYN\n\n欧易——出入金好用 \nhttps://t.co/F4T60WPbB5\n\n大宇知识宝库  https://t.co/U5cdAPEjl2','',180383,3014,2665,3251,3014,0,'',0,0,'',0,0,13635,'','','','https://pbs.twimg.com/profile_images/1546148012669292545/BdXvKkv9.jpg','',1623546328,1716388171),
 (12,1397728776918765568,'比特肥 || Bitfatty 🦇🔊.B137','Bitfatty','','赌狗 Gambler @BNBBZJ 笨比之家反指总监 DM for collab #closedai 2B$ #base 🐟#based','',38700,3368,976,699,3368,0,'',0,0,'',0,0,4321,'','','','https://pbs.twimg.com/profile_images/1525287875876913152/ToCxWImL.jpg','',1622079493,0),
 (13,1308398957287149568,'Dahuzi.eth','Dahuzi_eth','','胡子，光头，不借钱，不借钱，不借钱。 介绍看这里 https://t.co/Mf8G1XzZcd   乐于分享，单纯无求','',101941,3744,732,1633,3744,0,'',0,0,'',0,0,6263,'','','','https://pbs.twimg.com/profile_images/1605746149541154816/uWIyC88-.jpg','',1600781603,0),
 (14,1031126178994765824,'很大很大的橙子','0xVeryBigOrange','','听说我是币圈著名反指KOL。\n所以我的推特均不构成投资建议，当然你可以反着开。\n\n关于零❌干货铺所有介绍及相关链接：https://t.co/YSWA986tzT','',52630,973,1008,668,973,0,'',0,0,'',0,0,4608,'','','','https://pbs.twimg.com/profile_images/1406527898308136961/jRLnNYIr.jpg','',1534674613,0),
@@ -163,10 +122,9 @@ UNLOCK TABLES;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
 /*!40014 SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS */;
-/*!40014 SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS */;
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;
 /*!40101 SET CHARACTER_SET_RESULTS=@OLD_CHARACTER_SET_RESULTS */;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2024-05-22 22:22:40
+-- Dump completed on 2024-05-22 22:32:58
