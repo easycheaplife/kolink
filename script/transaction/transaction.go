@@ -54,7 +54,7 @@ func GetProjectTaskApplicationStatus(db* sql.DB, index_code string) (int) {
 }
 
 func UpdateProjectTaskApplicationStatus(db* sql.DB, transaction_type int, index_code string) (error) {
-	stmt, err := db.Prepare("UPDATE project_task_application SET status = ? where web3_hash = ?;")	
+	stmt, err := db.Prepare("UPDATE project_task_application SET status = ?, updated_at = ? where web3_hash = ?;")	
 	if err != nil {
 		return err
 	}
@@ -77,7 +77,7 @@ func UpdateProjectTaskApplicationStatus(db* sql.DB, transaction_type int, index_
 				return nil
 			}
 	}
-	_, err = stmt.Exec(status, index_code)
+	_, err = stmt.Exec(status, time.Now(), index_code)
 	if err != nil {
 		return err
 	}

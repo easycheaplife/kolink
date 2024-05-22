@@ -40,7 +40,7 @@ class ProjectTaskApplicationModel extends Model
 
 	public function get($application_id)
 	{
-		return $this->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash', 'declined_desc', 'created_at')
+		return $this->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash', 'declined_desc', 'created_at', 'updated_at')
 			->where('id', $application_id)->first();
 	}
 
@@ -93,7 +93,7 @@ class ProjectTaskApplicationModel extends Model
 		{
 			$query->where('status', $status);
 		}
-		return $query->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash', 'declined_desc')
+		return $query->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash', 'declined_desc', 'updated_at')
 			->where('kol_id', $kol_id)
 			->whereIn('id', function ($query) use ($kol_id) {
 				$query->select(DB::raw('MAX(id)'))
@@ -133,7 +133,7 @@ class ProjectTaskApplicationModel extends Model
 
 	public function list($task_id)
 	{
-		return $this->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash', 'declined_desc')
+		return $this->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash', 'declined_desc', 'updated_at')
 			->where('task_id', $task_id)
 			->orderByDesc('updated_at')
 			->get();
@@ -141,7 +141,7 @@ class ProjectTaskApplicationModel extends Model
 
 	public function kol_task_status($kol_id, $task_id)
 	{
-		return $this->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash', 'declined_desc')
+		return $this->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash', 'declined_desc', 'updated_at')
 			->where('kol_id', $kol_id)
 			->where('task_id', $task_id)   
 			->orderByDesc('updated_at')
@@ -150,7 +150,7 @@ class ProjectTaskApplicationModel extends Model
 
 	public function task_close($task_id)
 	{
-		return $this->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash', 'declined_desc')
+		return $this->select('id', 'task_id', 'kol_id', 'quotation', 'status', 'reason', 'comment', 'verification', 'url', 'web3_hash', 'declined_desc', 'updated_at')
 			->where('task_id', $task_id)->update([
 			'status' => config('config.task_status')['close']]);
 	}

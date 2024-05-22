@@ -170,6 +170,7 @@ class KolService extends Service
 			$application_task['verification'] = $application->verification;
 			$application_task['url'] = $application->url;
 			$application_task['declined_desc'] = $application->declined_desc;
+			$application_task['updated_at'] = $application->updated_at;
 			$application_result = $application_service->application_eligibility($kol_id, $task['id']);
 			$application_task['application_eligibility'] = $application_result['code'] == ErrorCodes::ERROR_CODE_SUCCESS ? 1 : 0;
 			$application_task['application_eligibility_desc'] = $application_result['message'];
