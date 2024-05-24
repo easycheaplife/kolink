@@ -13,6 +13,7 @@ use App\Models\TwitterUserModel;
 use App\Models\TwitterUserDataModel;
 use App\Http\Services\KolService;
 use App\Http\Services\EtherscanService;
+use App\Http\Services\RewardService;
 
 
 class TwitterService extends Service 
@@ -50,7 +51,7 @@ class TwitterService extends Service
 			$url = 'https://api.twitter.com/2/oauth2/token';
 			if ($debug)
 			{
-				$url = 'http://127.0.0.1:8010/twitter/auth2';
+				$url = config('config.twitter_url_base') . '/twitter/auth2';
 				$headers = [];
 				$response = Http::withHeaders($headers)
 				->get($url);
@@ -129,7 +130,7 @@ class TwitterService extends Service
 			"user.fields=created_at,description,entities,id,location,name,pinned_tweet_id,profile_image_url,protected,public_metrics,url,username,verified,withheld";
 		if ($debug)
 		{
-			$url = 'http://127.0.0.1:8010/twitter/user2';
+			$url = config('config.twitter_url_base') . '/twitter/user2';
 		}
 		try {
 			$headers = ['Authorization' => "Bearer $access_token"];
@@ -382,6 +383,34 @@ class TwitterService extends Service
 				}
 				$twitter_user_data_model = new TwitterUserDataModel;
 				$twitter_user_data_model->insert($data['data'], $insert_flag);
+			}
+			else {
+				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
+				Log::error($error_message);
+			}
+		} catch (\Exception $e) 
+		{   
+			if (strpos($e->getMessage(), "" . ErrorCodes::ERROR_CODE_DUPLICATE_ENTRY) !== false) {
+				return $this->res;	
+			}
+			Log::error($e);
+		}  
+	}
+
+	public function get_user_followers()
+	{
+		$url = config('config.twitter_service_url_base') . '/twitter/get_user_followers?debug=1';	
+		try {
+			$headers = [];
+			$response = Http::withHeaders($headers)
+				->get($url);
+			$reward_service = new RewardService;
+			if ($response->successful()) {
+				$data = $response->json();
+				foreach ($data['data']['list'] as $user)
+				{
+					$reward_service->add_twitter_follower_reward($user['user_id']);
+				}
 			}
 			else {
 				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
