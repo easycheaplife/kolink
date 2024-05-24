@@ -155,6 +155,7 @@ class KolModel extends Model
 	public function get_by_twitter_user_id($twitter_user_id)
 	{
 		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
+			->orderByDesc('id')
 			->where('twitter_user_id', $twitter_user_id)->first();
 	}
 
