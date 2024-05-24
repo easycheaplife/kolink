@@ -154,4 +154,20 @@ class RewardService extends Service
 		}
 	}
 
+	public function add_twitter_follower_reward($twitter_user_id)
+	{
+		$kol_service = new KolService;
+		$kol = $kol_service->get_by_twitter_user_id($twitter_user_id);
+		if (empty($kol))
+		{
+			return;
+		}
+		$reward_record_model = new RewardRecordModel;
+		if ($reward_record_model->completed_times($kol['id'], config('config.reward_task')['follow_twitter']['id']))
+		{
+			return;
+		}
+		$this->add_self_reward($kol['id'], config('config.reward_task')['follow_twitter']['xp'], config('config.reward_task')['follow_twitter']['id']);	
+	}
+
 }

@@ -31,6 +31,7 @@ class TwitterCommand extends Command
 		$twitter_service = new TwitterService;
 		$twitter_service->sync_all_users();
 		$twitter_service->load_all_users();
+		$twitter_service->get_user_followers();
 		Log::info("app:twitter-command");
     }
 }
