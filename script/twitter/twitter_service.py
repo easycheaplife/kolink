@@ -1,8 +1,6 @@
 from twikit import Client
 from flask import Flask, redirect, request
 import os
-import pandas as pd
-import mysql.connector
 import json
 import time
 import logging
@@ -27,13 +25,11 @@ client.load_cookies(path='cookies.json');
 log_file = "twitter_service.log"
 logging.basicConfig(filename=log_file, level=logging.DEBUG)
 
-
-
 @app.route('/twitter/get_user', methods=['GET'])
 def get_user():
     screen_name = request.args.get('screen_name')
     user = client.get_user_by_screen_name(screen_name)
-    logging.info("screen name" + screen_name)
+    logging.info("get_user,screen name" + screen_name)
     response = {
         "code": 0,
         "message": "",
@@ -61,6 +57,22 @@ def get_user():
     logging.info(user_json)
     return response
 
+@app.route('/twitter/get_user_followers', methods=['GET'])
+def get_user_followers():
+    user_id = request.args.get('user_id', '1772822956034621440')
+    count = request.args.get('count', 200)
+    logging.info('get_user_followers,user_id:' + str(user_id) + ' count:' + str(count))
+    response = {
+        "code": 0,
+        "message": "",
+        "data": {}
+    }
+    result = client.get_user_followers(user_id, count=count)
+    users = []
+    for user in result:
+        users.append({'user_id' : user.id, 'name' : user.name, 'username' : user.screen_name})
+    response['data']['list'] = users
+    return response
 
 if __name__ == '__main__':
     app.run(debug=False, host=host, port=port)
