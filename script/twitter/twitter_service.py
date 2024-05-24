@@ -13,14 +13,7 @@ client = Client('en-US')
 host = "0.0.0.0"
 port = 8020
 
-## You can comment this `login`` part out after the first time you run the script (and you have the `cookies.json`` file)
-client.login(
-    auth_info_1 = os.getenv("TW_USER_NAME"),
-    password = os.getenv("TW_PWD"),
-)
 
-client.save_cookies('cookies.json');
-client.load_cookies(path='cookies.json');
 
 log_file = "twitter_service.log"
 logging.basicConfig(filename=log_file, level=logging.DEBUG)
@@ -68,10 +61,25 @@ get_user_followers_res = {
             },
         "message": ""
         }
+@app.route('/twitter/login', methods=['GET'])
+def login():
+## You can comment this `login`` part out after the first time you run the script (and you have the `cookies.json`` file)
+    client.login(
+        auth_info_1 = os.getenv("TW_USER_NAME"),
+        password = os.getenv("TW_PWD"),
+    )
+    client.save_cookies('cookies.json');
+    response = {
+        "code": 0,
+        "message": "",
+        "data": {}
+    }
+    return response 
 
 @app.route('/twitter/get_user', methods=['GET'])
 def get_user():
     screen_name = request.args.get('screen_name')
+    client.load_cookies(path='cookies.json');
     user = client.get_user_by_screen_name(screen_name)
     logging.info("get_user,screen name" + screen_name)
     response = {
@@ -116,6 +124,7 @@ def get_user_followers():
         "message": "",
         "data": {}
     }
+    client.load_cookies(path='cookies.json');
     result = client.get_user_followers(user_id, count=count)
     users = []
     for user in result:
@@ -124,4 +133,4 @@ def get_user_followers():
     return response
 
 if __name__ == '__main__':
-    app.run(debug=False, host=host, port=port)
+    app.run(debug=True, host=host, port=port)
