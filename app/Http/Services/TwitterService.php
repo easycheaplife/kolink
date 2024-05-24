@@ -216,7 +216,7 @@ class TwitterService extends Service
 				if (empty($kol))
 				{
 					// insert 	
-					 $this->insert_kol($user);
+					// $this->insert_kol($user);
 				}
 				else {
 					// update

@@ -126,7 +126,8 @@ func Execute(db* sql.DB, rpc_url string, contract_addr string, private_key strin
 		log.Fatal(err)
 	}
 	auth.Value = big.NewInt(0)
-	auth.GasLimit = uint64(header.GasLimit)
+	//auth.GasLimit = uint64(header.GasLimit)
+	auth.GasLimit = 100000
 	auth.GasPrice = gasPrice
 	fromAddress := auth.From
 	log.Printf("blockchain_id:%d owner_address:%s gas_limit:%d gas_price:%d", blockchain_id, fromAddress.String(), header.GasLimit, gasPrice)
