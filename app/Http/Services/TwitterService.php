@@ -399,7 +399,7 @@ class TwitterService extends Service
 
 	public function get_user_followers()
 	{
-		$url = config('config.twitter_service_url_base') . '/twitter/get_user_followers?debug=1';	
+		$url = config('config.twitter_service_url_base') . '/twitter/get_user_followers';	
 		try {
 			$headers = [];
 			$response = Http::withHeaders($headers)
