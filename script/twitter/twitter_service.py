@@ -25,6 +25,50 @@ client.load_cookies(path='cookies.json');
 log_file = "twitter_service.log"
 logging.basicConfig(filename=log_file, level=logging.DEBUG)
 
+get_user_followers_res = {
+        "code": 0,
+        "data": {
+            "list": [
+                {
+                    "name": "Kevinshao",
+                    "user_id": "949852985038745600",
+                    "username": "kevinshao6"
+                    },
+                {
+                    "name": "patrick.eth",
+                    "user_id": "1766004311547695104",
+                    "username": "rui905747990826"
+                    },
+                {
+                    "name": "Pixel",
+                    "user_id": "1513032078832836608",
+                    "username": "Spoonicks_eth"
+                    },
+                {
+                    "name": "web3.0withaname",
+                    "user_id": "1353504283",
+                    "username": "lighostweb3"
+                    },
+                {
+                    "name": "kolinksystem",
+                    "user_id": "1780514896670756865",
+                    "username": "kolinksyst61929"
+                    },
+                {
+                    "name": "Selfmade mfers",
+                    "user_id": "1472975587148926978",
+                    "username": "selfmademfers"
+                    },
+                {
+                    "name": "Etta Toor",
+                    "user_id": "1697888320242450432",
+                    "username": "EttaToor90332"
+                    }
+                ]
+            },
+        "message": ""
+        }
+
 @app.route('/twitter/get_user', methods=['GET'])
 def get_user():
     screen_name = request.args.get('screen_name')
@@ -61,6 +105,11 @@ def get_user():
 def get_user_followers():
     user_id = request.args.get('user_id', '1772822956034621440')
     count = request.args.get('count', 200)
+    debug = request.args.get('debug', 0)
+
+    if debug:
+        return get_user_followers_res
+
     logging.info('get_user_followers,user_id:' + str(user_id) + ' count:' + str(count))
     response = {
         "code": 0,
