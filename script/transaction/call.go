@@ -71,12 +71,14 @@ func LockAssetCall(client *ethclient.Client, instance *contracts.Contracts, auth
 	indexCode string, address_to common.Address, address_token common.Address, fee *big.Int) uint64 {
 	tx, err := instance.LockAsset(auth, indexCode, address_to, address_to, fee)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return 0
 	}
 
 	receipt, err := bind.WaitMined(context.Background(), client, tx)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return 0
 	}
 	if 0 == receipt.Status {
 		log.Println(receipt.Logs)		
@@ -89,12 +91,14 @@ func CancelLockCall(client *ethclient.Client, instance *contracts.Contracts, aut
 	log.Println("CancelLockCall indexCode:", indexCode)
 	tx, err := instance.CancelLock(auth, indexCode)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return 0
 	}
 
 	receipt, err := bind.WaitMined(context.Background(), client, tx)
 	if err != nil {
-		log.Fatal(err)
+		log.Println(err)
+		return 0
 	}
 	if 0 == receipt.Status {
 		log.Println(receipt)		
