@@ -54,11 +54,17 @@ class ProjectTaskViewModel extends Model
 	public function trending_task($size = 8)
 	{
 		return DB::table($this->table)
-			->select('task_id', DB::raw('COUNT(task_id) as view_count'))
-			->groupBy('task_id')
+			->join('project_task', 'project_task_viewer.task_id', '=', 'project_task.id')
+			->where('project_task.close', '=', 0)
+			->where(function ($query) {
+				$query->where('project_task.applition_ddl_time', '>', time())
+					->orWhere('project_task.applition_ddl_time', '=', 0);
+			})
+			->select('project_task_viewer.task_id', DB::raw('COUNT(project_task_viewer.task_id) as view_count'))
+			->groupBy('project_task_viewer.task_id')
 			->orderByDesc('view_count')
-		    ->take($size)
-			->get();	
+			->take($size)
+			->get();
 	}
 
 }

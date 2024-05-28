@@ -110,7 +110,10 @@ class ProjectTaskModel extends Model
 	{
 		return $this->select('id','project_id','title','desc','backgroud_image','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
 			->where('start_time', '<=', time())
-			->where('upload_ddl_time', '>=', time())
+			->where(function ($query) {
+				$query->where('applition_ddl_time', '>', time())
+					->orWhere('applition_ddl_time', '=', 0);
+			})
 			->where('close', '!=', 1)
 			->orderByDesc('updated_at')
 			->skip($page * $size)
@@ -120,18 +123,23 @@ class ProjectTaskModel extends Model
 
 	public function ongoing_task_count()
 	{
-		return $this->select('id','project_id','title','desc','backgroud_image','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
-			->where('start_time', '>=', time())
-			->where('upload_ddl_time', '>', time())
-			->where('close', '!=', 1)
-			->orderByDesc('updated_at')
-			->count();
+		return DB::table($this->table)
+			->where('start_time', '<=', time())
+			->where(function ($query) {
+				$query->where('applition_ddl_time', '>', time())
+					->orWhere('applition_ddl_time', '=', 0);
+			})
+			->where('close', '!=', 1) ->count();
 	}
 
 	public function all_task($page, $size)
 	{
 		return $this->select('id','project_id','title','desc','backgroud_image','social_platform_id','kol_max','kol_min_followers','kol_like_min','kol_score_min','start_time','applition_ddl_time','upload_ddl_time','blockchain_id','token_id', 'reward_min', 'close')
 			->where('close', '!=', 1)
+			->where(function ($query) {
+				$query->where('applition_ddl_time', '>', time())
+					->orWhere('applition_ddl_time', '=', 0);
+			})
 			->orderByDesc('updated_at')
 			->skip($page * $size)
 			->take($size)
@@ -140,7 +148,12 @@ class ProjectTaskModel extends Model
 
 	public function all_task_count()
 	{
-		return DB::table($this->table)->where('close', '!=', 1) ->count();
+		return DB::table($this->table)
+			->where(function ($query) {
+				$query->where('applition_ddl_time', '>', time())
+					->orWhere('applition_ddl_time', '=', 0);
+			})
+			->where('close', '!=', 1) ->count();
 	}
 
 	public function setting($task_id, $title, $desc, $backgroud_image, $social_platform_id, $kol_max, $kol_min_followers,
