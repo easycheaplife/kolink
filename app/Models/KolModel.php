@@ -61,7 +61,7 @@ class KolModel extends Model
 		if ($channel_id != '0') {
 			$query->whereIn('channel_id', explode(",", $channel_id));
 		}
-
+/*
 		if ($region_id != '') {
 			$items = explode(",", $region_id);
 			foreach ($items as $item) {
@@ -81,6 +81,31 @@ class KolModel extends Model
 			foreach ($items as $item) {
 				$query->orWhereRaw("FIND_IN_SET($item, category_id) > 0");
 			}
+		}
+ */
+		if ($region_id != '') {
+			$query->where(function ($query) use ($region_id) {
+				$items = explode(",", $region_id);
+				foreach ($items as $item) {
+					$query->orWhereRaw("FIND_IN_SET($item, region_id) > 0");
+				}
+			});
+		}
+		if ($language_id != '') {
+			$query->where(function ($query) use ($language_id) {
+				$items = explode(",", $language_id);
+				foreach ($items as $item) {
+					$query->orWhereRaw("FIND_IN_SET($item, language_id) > 0");
+				}
+			});
+		}
+		if ($category_id != '') {
+			$query->where(function ($query) use ($category_id) {
+				$items = explode(",", $category_id);
+				foreach ($items as $item) {
+					$query->orWhereRaw("FIND_IN_SET($item, category_id) > 0");
+				}
+			});
 		}
 		if (1 == $sort_field)
 		{
@@ -117,6 +142,7 @@ class KolModel extends Model
 			$query->whereIn('channel_id', explode(",", $channel_id));
 		}
 
+/*
 		if ($region_id != '') {
 			$items = explode(",", $region_id);
 			foreach ($items as $item) {
@@ -137,6 +163,32 @@ class KolModel extends Model
 				$query->orWhereRaw("FIND_IN_SET($item, category_id) > 0");
 			}
 		}
+*/
+		if ($region_id != '') {
+			$query->where(function ($query) use ($region_id) {
+				$items = explode(",", $region_id);
+				foreach ($items as $item) {
+					$query->orWhereRaw("FIND_IN_SET($item, region_id) > 0");
+				}
+			});
+		}
+		if ($language_id != '') {
+			$query->where(function ($query) use ($language_id) {
+				$items = explode(",", $language_id);
+				foreach ($items as $item) {
+					$query->orWhereRaw("FIND_IN_SET($item, language_id) > 0");
+				}
+			});
+		}
+		if ($category_id != '') {
+			$query->where(function ($query) use ($category_id) {
+				$items = explode(",", $category_id);
+				foreach ($items as $item) {
+					$query->orWhereRaw("FIND_IN_SET($item, category_id) > 0");
+				}
+			});
+		}
+
 		return $query->count();
 	}
 
