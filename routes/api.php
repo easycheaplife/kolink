@@ -13,6 +13,7 @@ use App\Http\Controllers\ConfigController;
 use App\Http\Controllers\FileController;
 use App\Http\Controllers\TransactionController;
 use App\Http\Controllers\TwitterController;
+use App\Http\Controllers\YoutubeController;
 use App\Http\Controllers\RewardController;
 
 
@@ -143,6 +144,12 @@ Route::post('/twitter/user', [TwitterController::class, 'user']);
 
 Route::get('/twitter/user2', [TwitterController::class, 'user2']);
 Route::post('/twitter/user2', [TwitterController::class, 'user2']);
+
+Route::get('/youtube/auth', [YoutubeController::class, 'auth']);
+Route::post('/youtube/auth', [YoutubeController::class, 'auth']);
+
+Route::get('/youtube/user', [YoutubeController::class, 'user']);
+Route::post('/youtube/user', [YoutubeController::class, 'user']);
 
 Route::get('/reward/list', [RewardController::class, 'reward_list']);
 Route::post('/reward/list', [RewardController::class, 'reward_list']);

@@ -31,7 +31,9 @@ class ErrorCodes
 	const ERROR_CODE_TASK_APPLICATION_KOL_ENGAGEMENT_IS_NOT_ENOUGH = 22;
 	const ERROR_CODE_TASK_APPLICATION_KOL_SCORE_IS_NOT_ENOUGH = 23;
 	const ERROR_CODE_TASK_APPLICATION_DDL_TIMEOUT = 24;
-	const ERROR_CODE_TASK_UPLOAD_DDL_TIMEOUT = 24;
+	const ERROR_CODE_TASK_UPLOAD_DDL_TIMEOUT = 25;
+	const ERROR_CODE_YOUTUBE_AUTH_URL_FAILED = 26;
+	const ERROR_CODE_YOUTUBE_USER_FAILED = 27;
 	
 	const ERROR_CODE_DUPLICATE_ENTRY = 1062;
 }
@@ -63,4 +65,6 @@ class ErrorDescs {
 	const ERROR_CODE_TASK_APPLICATION_KOL_SCORE_IS_NOT_ENOUGH = "KOL's score is not enough!";
 	const ERROR_CODE_TASK_APPLICATION_DDL_TIMEOUT = 'The current time has exceeded the application deadline.';
 	const ERROR_CODE_TASK_UPLOAD_DDL_TIMEOUT= 'The current time has exceeded the upload deadline.';
+	const ERROR_CODE_YOUTUBE_AUTH_URL_FAILED = 'Failed to get Youtobe authentication URL';
+	const ERROR_CODE_YOUTUBE_USER_FAILED = 'Failed to get Youtobe user data!';
 }
