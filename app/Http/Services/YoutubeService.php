@@ -32,11 +32,10 @@ class YoutubeService extends Service
 
 			$response = Http::asForm()->post($url, [
 				'code' => $code,
-				'grant_type' => 'authorization_code',
 				'client_id' => config('config.youtube_client_id'),
 				'client_secret' => config('config.youtube_client_secret'),
 				'redirect_uri' => $redirect_uri,
-				'grant_type' => 'authorization_code',
+				'grant_type' => 'authorization_code'
 			]);
 
 			if ($response->successful()) {
@@ -70,9 +69,9 @@ class YoutubeService extends Service
 				->get($url);
 			if ($response->successful()) {
 				$data = $response->json();
-				$this->res['data'] = $data['data'];
+				$this->res['data'] = $data;
 				$youtube_user_model = new YoutubeUserModel;
-				$youtube_user_model->insert($data['data']);
+				$youtube_user_model->insert($data);
 			}
 			else {
 				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();

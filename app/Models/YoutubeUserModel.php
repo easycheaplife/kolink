@@ -34,7 +34,7 @@ class YoutubeUserModel extends Model
 		try {
 			$this->user_id = $user['items'][0]['id'];
 			$this->title = $user['items'][0]['snippet']['title'];
-			$this->description = $user['items'][0]['snippet']['title'];
+			$this->description = $user['items'][0]['snippet']['description'];
 			$this->custom_url = $user['items'][0]['snippet']['customUrl'];
 			$this->view_count = $user['items'][0]['statistics']['viewCount'];
 			$this->subscriber_count = $user['items'][0]['statistics']['subscriberCount'];
@@ -58,7 +58,7 @@ class YoutubeUserModel extends Model
 	{
 		return $this->where('user_id', $user['items'][0]['id'])->update([
 			'title' => $user['items'][0]['snippet']['title'], 
-			'description' => $user['items'][0]['snippet']['title'],
+			'description' => $user['items'][0]['snippet']['description'],
 			'custom_url' => $user['items'][0]['snippet']['customUrl'],
 			'view_count' => $user['items'][0]['statistics']['viewCount'],
 			'subscriber_count' => $user['items'][0]['statistics']['subscriberCount'],

@@ -13,7 +13,7 @@ class YoutubeController extends Controller
 	public function auth(Request $request)
 	{
 		$debug = $request->input('debug',0);
-		$redirect_uri = $request->input('redirect_uri', config('config.twitter_redirect_uri'));
+		$redirect_uri = $request->input('redirect_uri', config('config.youtube_redirect_uri'));
 		try {
 			$validated_data = $request->validate([
 				'code' => 'required|string',

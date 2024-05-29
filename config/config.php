@@ -108,7 +108,7 @@ return [
 	'twitter_redirect_uri' => 'http://localhost:8888/oauth',
 	'youtube_client_id' => '745713683583-333ph0haht0q3g04n6mtfuf1ucdrkjbg.apps.googleusercontent.com',
 	'youtube_client_secret' => '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',
-	'youtube_redirect_uri' => 'http://localhost:8888/oauth',
+	'youtube_redirect_uri' => 'http://localhost:8080',
 	'reward_task' => array(
 		'auth_twitter' => array('id' => 1, 'xp' => 5, 'type' => 'social'),	
 		'apply_task' => array('id' => 2, 'xp' => 3, 'type' => 'daily'),	
