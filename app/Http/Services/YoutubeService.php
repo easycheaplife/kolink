@@ -25,8 +25,8 @@ class YoutubeService extends Service
 				$response = Http::withHeaders($headers)
 				->get($url);
 				$data = $response->json();
-				return $data;
-				$this->res['data'] = $data['data'];
+				Log::info($data);
+				$this->res['data'] = $data;
 				return $this->res;
 			}
 

@@ -95,7 +95,7 @@ def generate_name():
 
 @app.route('/youtube/auth', methods=['GET'])
 def auth():
-	return auth_res
+	return auth_res['data']
 
 @app.route('/youtube/user', methods=['GET'])
 def user():
@@ -105,7 +105,7 @@ def user():
 	user_res['data']['items'][0]['statistics']['viewCount'] = random.randint(1, 999)
 	user_res['data']['items'][0]['statistics']['subscriberCount'] = random.randint(1, 999)
 	user_res['data']['items'][0]['statistics']['videoCount'] = random.randint(1, 999)
-	return user_res
+	return user_res['data']
 
 if __name__ == '__main__':
     app.run(debug=True, host=host, port=port)
