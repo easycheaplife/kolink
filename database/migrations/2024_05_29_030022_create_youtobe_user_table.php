@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('user_id', 64)->default(0);
             $table->string('title', 128)->default('');
+            $table->string('profile_image_url', 256)->default('');
             $table->string('description', 512)->default('');
             $table->string('custom_url', 64)->default('');
             $table->integer('view_count')->default(0);
