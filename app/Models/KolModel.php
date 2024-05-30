@@ -17,7 +17,9 @@ class KolModel extends Model
 	protected $table = 'kol';
 
 	public function insert($token, $email, $twitter_user_id, $twitter_user_name, $twitter_avatar, $twitter_followers, 
-		$twitter_subscriptions, $twitter_like_count, $twitter_following_count,
+		$twitter_like_count, $twitter_following_count, $twitter_listed_count, $twitter_statuses_count, $twitter_created_at,
+		$youtube_user_id, $youtube_user_name, $youtube_avatar, $youtube_custom_url, $youtube_view_count,
+		$youtube_subscriber_count, $youtube_video_count, $youtube_created_at,
 		$monetary_score, $engagement_score, $age_score, $composite_score,
 		$region_id, $category_id, $language_id, $channel_id, $invite_code, &$last_insert_id)
 	{
@@ -28,9 +30,19 @@ class KolModel extends Model
 			$this->twitter_user_name = $twitter_user_name;
 			$this->twitter_avatar = $twitter_avatar;
 			$this->twitter_followers = $twitter_followers;
-			$this->twitter_subscriptions = $twitter_subscriptions;
 			$this->twitter_like_count = $twitter_like_count;
 			$this->twitter_following_count = $twitter_following_count;
+			$this->twitter_listed_count = $twitter_listed_count;
+			$this->twitter_statuses_count = $twitter_statuses_count;
+			$this->twitter_created_at = $twitter_created_at;
+			$this->youtube_user_id = $youtube_user_id;
+			$this->youtube_user_name = $youtube_user_name;
+			$this->youtube_avatar = $youtube_avatar;
+			$this->youtube_custom_url = $youtube_custom_url;
+			$this->youtube_view_count = $youtube_view_count;
+			$this->youtube_subscriber_count = $youtube_subscriber_count;
+			$this->youtube_video_count = $youtube_video_count;
+			$this->youtube_created_at = $youtube_created_at;
 			$this->monetary_score = $monetary_score;
 			$this->engagement_score = $engagement_score;
 			$this->age_score = $age_score;
@@ -127,7 +139,7 @@ class KolModel extends Model
 				$query->orderByDesc('twitter_followers');	
 			}
 		}
-		return $query->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
+		return $query->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
 			->orderByDesc('updated_at')
 			->skip($page * $size)
 			->take($size)
@@ -194,13 +206,13 @@ class KolModel extends Model
 
 	public function get($kol_id)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
 			->where('id', $kol_id)->first();
 	}
 
 	public function login($token)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
 			->where('token', $token)->first();
 	}
 
@@ -216,7 +228,7 @@ class KolModel extends Model
 
 	public function get_by_twitter_user_id($twitter_user_id)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
+		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
 			->orderByDesc('id')
 			->where('twitter_user_id', $twitter_user_id)->first();
 	}
@@ -235,11 +247,8 @@ class KolModel extends Model
 			$this->twitter_followers = $twitter_user['followers_count'];
 			$this->twitter_like_count = $twitter_user['like_count'];
 			$this->twitter_following_count = $twitter_user['following_count'];
-			$this->twitter_friends_count = $twitter_user['friends_count'];
 			$this->twitter_listed_count = $twitter_user['listed_count'];
 			$this->twitter_statuses_count = $twitter_user['statuses_count'];
-			$this->twitter_favourites_count = $twitter_user['favourites_count'];
-			$this->twitter_media_count = $twitter_user['media_count'];
 			$this->twitter_created_at = $twitter_user['created_at'];
 			$ret = $this->save();
 			return $ret;
@@ -257,7 +266,6 @@ class KolModel extends Model
 
 	public function update_twitter_user($twitter_user)
 	{
-		// like_count(new version), favourites_count(old version) are the same meaning, twitter_subscriptions is deprecated.
 		return $this->where('twitter_user_id', $twitter_user['user_id'])->update([
 			'twitter_user_name' => $twitter_user['screen_name'], 
 			'twitter_avatar' => $twitter_user['profile_image_url'], 
@@ -268,11 +276,8 @@ class KolModel extends Model
 			'twitter_followers' => $twitter_user['followers_count'], 
 			'twitter_like_count' => $twitter_user['like_count'], 
 			'twitter_following_count' => $twitter_user['following_count'], 
-			'twitter_friends_count' => $twitter_user['friends_count'], 
 			'twitter_listed_count' => $twitter_user['listed_count'], 
-			'twitter_statuses_count' => $twitter_user['statuses_count'], 
-			'twitter_favourites_count' => $twitter_user['favourites_count'], 
-			'twitter_media_count' => $twitter_user['media_count']]);
+			'twitter_statuses_count' => $twitter_user['statuses_count']]);
 	}
 
 	public function token_count()
@@ -340,7 +345,7 @@ class KolModel extends Model
 
 	public function get_kols($kol_ids)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'twitter_subscriptions', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
 			->whereIn('id', $kol_ids)
 			->orderByDesc('updated_at')
 			->get();

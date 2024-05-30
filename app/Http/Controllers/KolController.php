@@ -14,10 +14,7 @@ class KolController extends Controller
 	public function kol_new(Request $request)
 	{
 		$twitter_user_id = $request->input('twitter_user_id', 0);
-		$twitter_user_name = $request->input('twitter_user_name', '');
-		$twitter_avatar = $request->input('twitter_avatar', '');
-		$twitter_followers = $request->input('twitter_followers', 0);
-		$twitter_subscriptions = $request->input('twitter_subscriptions', 0);
+		$youtube_user_id = $request->input('youtube_user_id', 0);
 		$channel_id = $request->input('channel_id', 0);
 		$invite_code = $request->input('invite_code', '');
 		try {
@@ -40,10 +37,7 @@ class KolController extends Controller
 			$validated_data['token'],
 			$validated_data['email'],
 			$twitter_user_id,
-			$twitter_user_name,
-			$twitter_avatar,
-			$twitter_followers,
-			$twitter_subscriptions,
+			$youtube_user_id,
 			$validated_data['region_id'],
 			$validated_data['category_id'],
 			$validated_data['language_id'],

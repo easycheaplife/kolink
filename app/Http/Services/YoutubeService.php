@@ -89,4 +89,10 @@ class YoutubeService extends Service
 		return $this->res;
 	}	
 
+	public function get_user($user_id)
+	{
+		$youtube_user_model = new YoutubeUserModel;
+		return $youtube_user_model->get($user_id);
+	}
+
 }

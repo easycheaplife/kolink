@@ -68,4 +68,12 @@ class YoutubeUserModel extends Model
 			'updated_at' => time()]);
 	}
 
+	public function get($user_id)
+	{
+		return $this->select('user_id', 'title', 'description', 'profile_image_url', 'custom_url', 'view_count', 'subscriber_count', 'video_count', 
+			'created_at', 'updated_at')
+			->where('user_id', $user_id)
+			->first();
+	}
+
 }

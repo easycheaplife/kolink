@@ -12,13 +12,14 @@ use App\Http\Services\VerificationService;
 use App\Http\Services\ProjectTaskApplicationService;
 use App\Http\Services\ProjectTaskService;
 use App\Http\Services\TwitterService;
+use App\Http\Services\YoutubeService;
 use App\Http\Services\RewardService;
 
 
 class KolService extends Service 
 {
-	public function kol_new($token, $email, $twitter_user_id, $twitter_user_name, $twitter_avatar, $twitter_followers, 
-		$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id, $code, $invite_code)
+	public function kol_new($token, $email, $twitter_user_id, $youtube_user_id, 
+		$region_id, $category_id, $language_id, $channel_id, $code, $invite_code)
 	{
 		$verification_service = new VerificationService;
 		$verification_code = $verification_service->get_code($email, config('config.verification_type')['kol']);
@@ -28,8 +29,14 @@ class KolService extends Service
 				ErrorDescs::ERROR_CODE_VERIFICATION_CODE_ERROR);		
 		}
 
+		$twitter_user_name = '';
+		$twitter_avatar = '';
+		$twitter_followers = 0;
 		$twitter_like_count = 0;
 		$twitter_following_count = 0;
+		$twitter_listed_count = 0;
+		$twitter_statuses_count = 0;
+		$twitter_created_at = 0;
 		$monetary_score = 0;
 		$engagement_score = 0;
 		$age_score = 0;
@@ -44,16 +51,41 @@ class KolService extends Service
 			$twitter_followers = $twitter_user['followers_count'];			
 			$twitter_like_count = $twitter_user['like_count'];			
 			$twitter_following_count = $twitter_user['following_count'];			
+			$twitter_listed_count = $twitter_user['listed_count'];
+			$twitter_statuses_count = $twitter_user['statuses_count'];
+			$twitter_created_at = $twitter_user['created_at'];			
 			$monetary_score = $twitter_user['monetary_score'];
 			$engagement_score = $twitter_user['engagement_score'];
 			$age_score = $twitter_user['age_score'];
 			$composite_score = $twitter_user['composite_score'];
 		}
+		
+		$youtube_user_name = '';
+		$youtube_avatar = '';
+		$youtube_custom_url = '';
+		$youtube_subscriber_count = 0;
+		$youtube_view_count = 0;
+		$youtube_video_count = 0;
+		$youtube_created_at = 0;
+		$youtube_service = new YoutubeService;
+		$youtube_user = $youtube_service->get_user($youtube_user_id);
+		if (!empty($youtube_user))
+		{
+			$youtube_user_name = $youtube_user['title'];		
+			$youtube_avatar = $youtube_user['profile_image_url'];		
+			$youtube_custom_url = $youtube_user['custom_url'];		
+			$youtube_subscriber_count = $youtube_user['subscriber_count'];		
+			$youtube_view_count = $youtube_user['view_count'];		
+			$youtube_video_count = $youtube_user['video_count'];		
+			$youtube_created_at = $youtube_user['created_at'];		
+		}
 
 		$last_insert_id = 0;
 		$kol_model = new KolModel;
 		if (!$kol_model->insert($token, $email, $twitter_user_id, $twitter_user_name, $twitter_avatar, $twitter_followers, 
-			$twitter_subscriptions, $twitter_like_count, $twitter_following_count,
+			$twitter_like_count, $twitter_following_count, $twitter_listed_count, $twitter_statuses_count, $twitter_created_at,
+			$youtube_user_id, $youtube_user_name, $youtube_avatar, $youtube_custom_url, $youtube_view_count,
+			$youtube_subscriber_count, $youtube_video_count, $youtube_created_at,
 			$monetary_score, $engagement_score, $age_score, $composite_score,
 			$region_id, $category_id, $language_id, $channel_id, $invite_code, $last_insert_id))
 		{
