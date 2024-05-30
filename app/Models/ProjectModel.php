@@ -71,7 +71,9 @@ class ProjectModel extends Model
 
 	public function top_project()
 	{
-		return $this->all();
+		return $this->take(config('config.default_page_size'))
+			->orderByDesc('updated_at')
+			->get();
 	}
 
 	public function setting($project_id, $name, $desc, $logo, $email)
