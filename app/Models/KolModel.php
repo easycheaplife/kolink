@@ -20,7 +20,6 @@ class KolModel extends Model
 		$twitter_like_count, $twitter_following_count, $twitter_listed_count, $twitter_statuses_count, $twitter_created_at,
 		$youtube_user_id, $youtube_user_name, $youtube_avatar, $youtube_custom_url, $youtube_view_count,
 		$youtube_subscriber_count, $youtube_video_count, $youtube_created_at,
-		$monetary_score, $engagement_score, $age_score, $composite_score,
 		$region_id, $category_id, $language_id, $channel_id, $invite_code, &$last_insert_id)
 	{
 		try {
@@ -43,10 +42,6 @@ class KolModel extends Model
 			$this->youtube_subscriber_count = $youtube_subscriber_count;
 			$this->youtube_video_count = $youtube_video_count;
 			$this->youtube_created_at = $youtube_created_at;
-			$this->monetary_score = $monetary_score;
-			$this->engagement_score = $engagement_score;
-			$this->age_score = $age_score;
-			$this->composite_score = $composite_score;
 			$this->region_id = $region_id;
 			$this->category_id = $category_id;
 			$this->language_id = $language_id;
@@ -73,28 +68,7 @@ class KolModel extends Model
 		if ($channel_id != '0') {
 			$query->whereIn('channel_id', explode(",", $channel_id));
 		}
-/*
-		if ($region_id != '') {
-			$items = explode(",", $region_id);
-			foreach ($items as $item) {
-				$query->orWhereRaw("FIND_IN_SET($item, region_id) > 0");
-			}
-		}
 
-		if ($language_id != '') {
-			$items = explode(",", $language_id);
-			foreach ($items as $item) {
-				$query->orWhereRaw("FIND_IN_SET($item, language_id) > 0");
-			}
-		}
-
-		if ($category_id != '') {
-			$items = explode(",", $category_id);
-			foreach ($items as $item) {
-				$query->orWhereRaw("FIND_IN_SET($item, category_id) > 0");
-			}
-		}
- */
 		if ($region_id != '') {
 			$query->where(function ($query) use ($region_id) {
 				$items = explode(",", $region_id);
@@ -139,7 +113,12 @@ class KolModel extends Model
 				$query->orderByDesc('twitter_followers');	
 			}
 		}
-		return $query->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
+		return $query->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
+			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
+			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar',
+			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
+			'invite_code', 'xp')
 			->orderByDesc('updated_at')
 			->skip($page * $size)
 			->take($size)
@@ -154,28 +133,6 @@ class KolModel extends Model
 			$query->whereIn('channel_id', explode(",", $channel_id));
 		}
 
-/*
-		if ($region_id != '') {
-			$items = explode(",", $region_id);
-			foreach ($items as $item) {
-				$query->orWhereRaw("FIND_IN_SET($item, region_id) > 0");
-			}
-		}
-
-		if ($language_id != '') {
-			$items = explode(",", $language_id);
-			foreach ($items as $item) {
-				$query->orWhereRaw("FIND_IN_SET($item, language_id) > 0");
-			}
-		}
-
-		if ($category_id != '') {
-			$items = explode(",", $category_id);
-			foreach ($items as $item) {
-				$query->orWhereRaw("FIND_IN_SET($item, category_id) > 0");
-			}
-		}
-*/
 		if ($region_id != '') {
 			$query->where(function ($query) use ($region_id) {
 				$items = explode(",", $region_id);
@@ -206,13 +163,24 @@ class KolModel extends Model
 
 	public function get($kol_id)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_created_at', 
+			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
+			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_created_at',
+			'youtube_subscriber_count', 'youtube_view_count', 'youtube_video_count',
+			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
+			'invite_code', 'xp')
 			->where('id', $kol_id)->first();
 	}
 
 	public function login($token)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
+			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
+			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar',
+			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
+			'invite_code', 'xp')
 			->where('token', $token)->first();
 	}
 
@@ -228,7 +196,12 @@ class KolModel extends Model
 
 	public function get_by_twitter_user_id($twitter_user_id)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
+			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
+			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar',
+			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
+			'invite_code', 'xp')
 			->orderByDesc('id')
 			->where('twitter_user_id', $twitter_user_id)->first();
 	}
@@ -304,7 +277,6 @@ class KolModel extends Model
 		]);
 	}
 
-
 	public function get_id_by_invite_code($invite_code)
 	{
 		if ('' == $invite_code)
@@ -345,10 +317,54 @@ class KolModel extends Model
 
 	public function get_kols($kol_ids)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 'invite_code', 'xp')
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
+			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
+			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar',
+			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
+			'invite_code', 'xp')
 			->whereIn('id', $kol_ids)
 			->orderByDesc('updated_at')
 			->get();
+	}
+
+	public function get_column_count_max($column_name)
+	{
+		return $this->select($column_name)->max($column_name);
+	}
+
+	public function get_column_count_min($column_name)
+	{
+		return $this->select($column_name)->min($column_name);
+	}
+
+	public function update_score($kol_id, $engagement_score, $age_score, $monetary_score, $composite_score)
+	{
+		return $this->where('id', $kol_id)->update([
+			'engagement_score' => $engagement_score, 
+			'age_score' => $age_score, 
+			'monetary_score' => $monetary_score, 
+			'composite_score' => $composite_score 
+		]);
+	}
+
+	public function get_users($page, $size)
+	{
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_created_at', 
+			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
+			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_created_at',
+			'youtube_subscriber_count', 'youtube_view_count', 'youtube_video_count',
+			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
+			'invite_code', 'xp')
+			->skip($page * $size)
+			->take($size)
+			->get();
+	}
+
+	public function get_users_count()
+	{
+		return $this->select('id')->count();
 	}
 
 }
