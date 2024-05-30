@@ -111,10 +111,10 @@ class KolModel extends Model
 		{
 			if (0 == $sort_type)
 			{
-				$query->orderBy('composite_score');	
+				$query->orderBy(DB::raw('CAST(composite_score AS FLOAT)'));	
 			}
 			else{
-				$query->orderByDesc('composite_score');	
+				$query->orderByDesc(DB::raw('CAST(composite_score AS FLOAT)'));	
 			}
 		}
 		else if (2 == $sort_field)

@@ -64,6 +64,15 @@ class ProjectService extends Service
 		return $this->res;
 	}
 
+
+	private function top_project_sort($A, $B)
+	{
+		if ($A['view_count'] == $B['view_count']) {
+			return 0;
+		}
+		return ($A['view_count'] > $B['view_count']) ? -1 : 1;
+	}
+
 	public function project_index($kol_id, $days)
 	{
 		$task_service = new ProjectTaskService;				
@@ -75,6 +84,10 @@ class ProjectService extends Service
 		{
 			$this->res['data']['top_project'][$key]['view_count'] = $view_service->get_project_viewer_count($project['id']);	
 		}
+		$top_project = $this->res['data']['top_project']->toArray();
+		usort($top_project, array($this, 'top_project_sort'));
+		$this->res['data']['top_project'] = $top_project;	
+
 		$application_service = new ProjectTaskApplicationService;
 		$trending_task = $view_service->trending_task();
 		$task_ids = [];
