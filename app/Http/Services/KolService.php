@@ -22,6 +22,20 @@ class KolService extends Service
 	public function kol_new($token, $email, $twitter_user_id, $youtube_user_id, 
 		$region_id, $category_id, $language_id, $channel_id, $code, $invite_code)
 	{
+		if (empty($invite_code))
+		{
+			return $this->error_response($token, ErrorCodes::ERROR_CODE_ONLY_INVITED_USER_CAN_CREATE,
+				ErrorDescs::ERROR_CODE_ONLY_INVITED_USER_CAN_CREATE);		
+		}
+
+		$kol_model = new KolModel;
+		$invite_kol = $kol_model->get_id_by_invite_code($invite_code);
+		if (empty($invite_kol))
+		{
+			return $this->error_response($token, ErrorCodes::ERROR_CODE_ONLY_INVITED_USER_CAN_CREATE,
+				ErrorDescs::ERROR_CODE_ONLY_INVITED_USER_CAN_CREATE);		
+		}
+
 		$verification_service = new VerificationService;
 		$verification_code = $verification_service->get_code($email, config('config.verification_type')['kol']);
 		if ($code != $verification_code)
@@ -73,7 +87,6 @@ class KolService extends Service
 		}
 
 		$last_insert_id = 0;
-		$kol_model = new KolModel;
 		if (!$kol_model->insert($token, $email, $twitter_user_id, $twitter_user_name, $twitter_avatar, $twitter_followers, 
 			$twitter_like_count, $twitter_following_count, $twitter_listed_count, $twitter_statuses_count, $twitter_created_at,
 			$youtube_user_id, $youtube_user_name, $youtube_avatar, $youtube_custom_url, $youtube_view_count,
@@ -90,8 +103,11 @@ class KolService extends Service
 
 		$this->res['data']['id'] = $last_insert_id;
 
-		$kol = $kol_model->get($last_insert_id);
-		$this->calc_user_score(array($kol));
+		if ($last_insert_id)
+		{
+			$kol = $kol_model->get($last_insert_id);
+			$this->calc_user_score(array($kol));
+		}
 		return $this->res;
 	}	
 

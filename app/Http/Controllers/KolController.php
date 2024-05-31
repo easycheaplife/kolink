@@ -14,7 +14,7 @@ class KolController extends Controller
 	public function kol_new(Request $request)
 	{
 		$twitter_user_id = $request->input('twitter_user_id', 0);
-		$youtube_user_id = $request->input('youtube_user_id', 0);
+		$youtube_user_id = $request->input('youtube_user_id', '');
 		$channel_id = $request->input('channel_id', 0);
 		$invite_code = $request->input('invite_code', '');
 		try {

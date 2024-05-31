@@ -25,7 +25,7 @@ class KolModel extends Model
 		try {
 			$this->token = $token;
 			$this->email = $email;
-			$this->twitter_user_id = $twitter_user_id;
+			$this->twitter_user_id = $twitter_user_id ? $twitter_user_id : 0;
 			$this->twitter_user_name = $twitter_user_name;
 			$this->twitter_avatar = $twitter_avatar;
 			$this->twitter_followers = $twitter_followers;
@@ -34,7 +34,7 @@ class KolModel extends Model
 			$this->twitter_listed_count = $twitter_listed_count;
 			$this->twitter_statuses_count = $twitter_statuses_count;
 			$this->twitter_created_at = $twitter_created_at;
-			$this->youtube_user_id = $youtube_user_id;
+			$this->youtube_user_id = $youtube_user_id ? $youtube_user_id : '';
 			$this->youtube_user_name = $youtube_user_name;
 			$this->youtube_avatar = $youtube_avatar;
 			$this->youtube_custom_url = $youtube_custom_url;
