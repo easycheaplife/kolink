@@ -22,6 +22,7 @@ return new class extends Migration
             $table->integer('kol_min_followers')->default(0);
             $table->integer('kol_like_min')->default(0);
             $table->integer('kol_score_min')->default(0);
+            $table->integer('kol_view_min')->default(0);
             $table->integer('start_time')->default(0);
             $table->integer('applition_ddl_time')->default(0);
             $table->integer('upload_ddl_time')->default(0);

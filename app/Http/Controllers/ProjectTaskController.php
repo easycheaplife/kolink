@@ -16,6 +16,7 @@ class ProjectTaskController extends Controller
 		$kol_min_followers = $request->input('kol_min_followers', 0);
 		$kol_like_min = $request->input('kol_like_min', 0);
 		$kol_score_min = $request->input('kol_score_min', 0);
+		$kol_view_min = $request->input('kol_view_min', 0);
 		$applition_ddl_time = $request->input('applition_ddl_time', 0);
 		try {
 			$validated_data = $request->validate([
@@ -46,6 +47,7 @@ class ProjectTaskController extends Controller
 			$kol_max,
 			$kol_min_followers,
 			$kol_like_min,
+			$kol_view_min,
 			$kol_score_min,
 			$validated_data['start_time'],
 			$applition_ddl_time,
@@ -126,6 +128,7 @@ class ProjectTaskController extends Controller
 		$kol_min_followers = $request->input('kol_min_followers', 0);
 		$kol_like_min = $request->input('kol_like_min', 0);
 		$kol_score_min = $request->input('kol_score_min', 0);
+		$kol_view_min = $request->input('kol_view_min', 0);
 		$applition_ddl_time = $request->input('applition_ddl_time', 0);
 		try {
 			$validated_data = $request->validate([
@@ -156,6 +159,7 @@ class ProjectTaskController extends Controller
 			$kol_max,
 			$kol_min_followers,
 			$kol_like_min,
+			$kol_view_min,
 			$kol_score_min,
 			$validated_data['start_time'],
 			$applition_ddl_time,
