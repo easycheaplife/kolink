@@ -379,6 +379,17 @@ class ProjectTaskApplicationService extends Service
 			}
 		}
 
+		$kol_view_min = $task_detail['data']['kol_view_min'];
+		if ($kol_view_min > 0)
+		{
+			$view_count = $kol_detail['data']['youtube_view_count'];	
+			if ($view_count < $kol_view_min)
+			{
+				return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_APPLICATION_KOL_VIEW_IS_NOT_ENOUGH,
+					ErrorDescs::ERROR_CODE_TASK_APPLICATION_KOL_VIEW_IS_NOT_ENOUGH);		
+			}
+		}
+
 		$kol_score_min = $task_detail['data']['kol_score_min'];
 		if ($kol_min_followers > 0)
 		{
