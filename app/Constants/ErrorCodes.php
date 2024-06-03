@@ -34,6 +34,8 @@ class ErrorCodes
 	const ERROR_CODE_TASK_UPLOAD_DDL_TIMEOUT = 25;
 	const ERROR_CODE_YOUTUBE_AUTH_URL_FAILED = 26;
 	const ERROR_CODE_YOUTUBE_USER_FAILED = 27;
+	const ERROR_CODE_ONLY_INVITED_USER_CAN_CREATE = 28;
+	const ERROR_CODE_TASK_APPLICATION_KOL_VIEW_IS_NOT_ENOUGH = 29;
 	
 	const ERROR_CODE_DUPLICATE_ENTRY = 1062;
 }
@@ -67,4 +69,6 @@ class ErrorDescs {
 	const ERROR_CODE_TASK_UPLOAD_DDL_TIMEOUT= 'The current time has exceeded the upload deadline.';
 	const ERROR_CODE_YOUTUBE_AUTH_URL_FAILED = 'Failed to get Youtobe authentication URL';
 	const ERROR_CODE_YOUTUBE_USER_FAILED = 'Failed to get Youtobe user data!';
+	const ERROR_CODE_ONLY_INVITED_USER_CAN_CREATE = 'Only invited users can create.';
+	const ERROR_CODE_TASK_APPLICATION_KOL_VIEW_IS_NOT_ENOUGH = "KOl's view are not enough!";
 }

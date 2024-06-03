@@ -12,14 +12,30 @@ use App\Http\Services\VerificationService;
 use App\Http\Services\ProjectTaskApplicationService;
 use App\Http\Services\ProjectTaskService;
 use App\Http\Services\TwitterService;
+use App\Http\Services\YoutubeService;
 use App\Http\Services\RewardService;
+use App\Http\Services\EtherscanService;
 
 
 class KolService extends Service 
 {
-	public function kol_new($token, $email, $twitter_user_id, $twitter_user_name, $twitter_avatar, $twitter_followers, 
-		$twitter_subscriptions, $region_id, $category_id, $language_id, $channel_id, $code, $invite_code)
+	public function kol_new($token, $email, $twitter_user_id, $youtube_user_id, 
+		$region_id, $category_id, $language_id, $channel_id, $code, $invite_code)
 	{
+		if (empty($invite_code))
+		{
+			return $this->error_response($token, ErrorCodes::ERROR_CODE_ONLY_INVITED_USER_CAN_CREATE,
+				ErrorDescs::ERROR_CODE_ONLY_INVITED_USER_CAN_CREATE);		
+		}
+
+		$kol_model = new KolModel;
+		$invite_kol = $kol_model->get_id_by_invite_code($invite_code);
+		if (empty($invite_kol))
+		{
+			return $this->error_response($token, ErrorCodes::ERROR_CODE_ONLY_INVITED_USER_CAN_CREATE,
+				ErrorDescs::ERROR_CODE_ONLY_INVITED_USER_CAN_CREATE);		
+		}
+
 		$verification_service = new VerificationService;
 		$verification_code = $verification_service->get_code($email, config('config.verification_type')['kol']);
 		if ($code != $verification_code)
@@ -28,33 +44,53 @@ class KolService extends Service
 				ErrorDescs::ERROR_CODE_VERIFICATION_CODE_ERROR);		
 		}
 
+		$twitter_user_name = '';
+		$twitter_avatar = '';
+		$twitter_followers = 0;
 		$twitter_like_count = 0;
 		$twitter_following_count = 0;
-		$monetary_score = 0;
-		$engagement_score = 0;
-		$age_score = 0;
-		$composite_score = 0;
+		$twitter_listed_count = 0;
+		$twitter_statuses_count = 0;
+		$twitter_created_at = 0;
 		$twitter_service = new TwitterService;
 		$twitter_user = $twitter_service->get_user($twitter_user_id);
 		if (!empty($twitter_user))
 		{
-			$twitter_service->calc_user_score($twitter_user, $token);
 			$twitter_user_name = $twitter_user['screen_name'];			
 			$twitter_avatar = $twitter_user['profile_image_url'];			
 			$twitter_followers = $twitter_user['followers_count'];			
 			$twitter_like_count = $twitter_user['like_count'];			
 			$twitter_following_count = $twitter_user['following_count'];			
-			$monetary_score = $twitter_user['monetary_score'];
-			$engagement_score = $twitter_user['engagement_score'];
-			$age_score = $twitter_user['age_score'];
-			$composite_score = $twitter_user['composite_score'];
+			$twitter_listed_count = $twitter_user['listed_count'];
+			$twitter_statuses_count = $twitter_user['statuses_count'];
+			$twitter_created_at = $twitter_user['created_at'];			
+		}
+		
+		$youtube_user_name = '';
+		$youtube_avatar = '';
+		$youtube_custom_url = '';
+		$youtube_subscriber_count = 0;
+		$youtube_view_count = 0;
+		$youtube_video_count = 0;
+		$youtube_created_at = 0;
+		$youtube_service = new YoutubeService;
+		$youtube_user = $youtube_service->get_user($youtube_user_id);
+		if (!empty($youtube_user))
+		{
+			$youtube_user_name = $youtube_user['title'];		
+			$youtube_avatar = $youtube_user['profile_image_url'];		
+			$youtube_custom_url = $youtube_user['custom_url'];		
+			$youtube_subscriber_count = $youtube_user['subscriber_count'];		
+			$youtube_view_count = $youtube_user['view_count'];		
+			$youtube_video_count = $youtube_user['video_count'];		
+			$youtube_created_at = $youtube_user['created_at'];		
 		}
 
 		$last_insert_id = 0;
-		$kol_model = new KolModel;
 		if (!$kol_model->insert($token, $email, $twitter_user_id, $twitter_user_name, $twitter_avatar, $twitter_followers, 
-			$twitter_subscriptions, $twitter_like_count, $twitter_following_count,
-			$monetary_score, $engagement_score, $age_score, $composite_score,
+			$twitter_like_count, $twitter_following_count, $twitter_listed_count, $twitter_statuses_count, $twitter_created_at,
+			$youtube_user_id, $youtube_user_name, $youtube_avatar, $youtube_custom_url, $youtube_view_count,
+			$youtube_subscriber_count, $youtube_video_count, $youtube_created_at,
 			$region_id, $category_id, $language_id, $channel_id, $invite_code, $last_insert_id))
 		{
 			return $this->error_response($token, ErrorCodes::ERROR_CODE_DB_ERROR,
@@ -65,22 +101,13 @@ class KolService extends Service
 		$reward_service->add_self_reward($last_insert_id, config('config.reward_task')['auth_twitter']['xp'],config('config.reward_task')['auth_twitter']['id']);
 		$reward_service->add_invite_reward($last_insert_id, config('config.reward_task')['invite_friend']['xp'],config('config.reward_task')['invite_friend']['id']);
 
-/*
-		if (0 != $last_insert_id)
-		{
-			if (!empty($invite_code))
-			{
-				$invite_kol_data = $kol_model->get_id_by_invite_code($invite_code);
-				if (!empty($invite_kol_data))
-				{
-					$reward_service->insert_record($last_insert_id, $invite_kol_data['id'], config('config.reward_task')['invite_friend']['xp'],config('config.reward_task')['invite_friend']['id']); 
-				}
-			}
-			$reward_service->insert_record($last_insert_id, $last_insert_id, config('config.reward_task')['auth_twitter']['xp'],config('config.reward_task')['auth_twitter']['id']); 
-		}
- */
-
 		$this->res['data']['id'] = $last_insert_id;
+
+		if ($last_insert_id)
+		{
+			$kol = $kol_model->get($last_insert_id);
+			$this->calc_user_score(array($kol));
+		}
 		return $this->res;
 	}	
 
@@ -258,6 +285,139 @@ class KolService extends Service
 	{
 		$kol_model = new KolModel;
 		return $kol_model->get_kols($kol_ids);
+	}
+
+	public function calc_user_score($kols)
+	{
+		$kol_model = new KolModel;
+		$twitter_followers_count_max = $kol_model->get_column_count_max('twitter_followers');
+		$twitter_following_count_max = $kol_model->get_column_count_max('twitter_following_count');
+		$twitter_listed_count_max = $kol_model->get_column_count_max('twitter_listed_count');
+		$twitter_like_count_max = $kol_model->get_column_count_max('twitter_like_count');
+		$twitter_statuses_count_max = $kol_model->get_column_count_max('twitter_statuses_count');
+		$twitter_created_at_min = $kol_model->get_column_count_min('twitter_created_at');
+
+		$youtube_subscriber_count_max = $kol_model->get_column_count_max('youtube_subscriber_count');
+		$youtube_view_count_max = $kol_model->get_column_count_max('youtube_view_count');
+		$youtube_video_count_max = $kol_model->get_column_count_max('youtube_video_count');
+		$youtube_created_at_min = $kol_model->get_column_count_min('youtube_created_at');
+
+		$etherscan_service = new EtherscanService;
+		$token_count_max = $etherscan_service->get_column_count_min('token_count');
+		$nft_count_max = $etherscan_service->get_column_count_min('nft_count');
+		$tokon_created_at_min = $etherscan_service->get_column_count_min('created_at');
+
+		foreach ($kols as $kol)
+		{
+			$token_user = $this->get_token_user($kol['token']);
+			$twitter_engagement_score = $this->calc_twitter_engagement_score(
+				$kol, $twitter_followers_count_max, $twitter_listed_count_max,
+				$twitter_following_count_max, $twitter_like_count_max, $twitter_statuses_count_max
+			);	
+			$youtube_engagement_score = $this->calc_youtube_engagement_score(
+				$kol, $youtube_subscriber_count_max, $youtube_view_count_max, $youtube_video_count_max
+			);	
+			$age_score = $this->calc_age_score($kol, $token_user, $twitter_created_at_min, $twitter_created_at_min, $youtube_created_at_min);
+			$monetary_score = $this->calc_monetary_score($token_user, $token_count_max, $nft_count_max);
+			$composite_score = $twitter_engagement_score + $youtube_engagement_score + $age_score + $monetary_score;
+			$kol_model->update_score($kol['id'], $twitter_engagement_score + $youtube_engagement_score,
+				$age_score, $monetary_score, $composite_score);
+			Log::info(strval('kol_id:' . $kol['id']) . " twitter_engagement_score:$twitter_engagement_score,"
+				. "youtube_engagement_score:$youtube_engagement_score,age_score:$age_score,monetary_score:$monetary_score");
+		}
+	}
+
+	public function calc_twitter_engagement_score($user, $followers_count_max, 
+		$listed_count_max, $following_count_max, $like_count_max, $statuses_count_max)
+	{
+		$followers_count_max = $followers_count_max > 0 ? $followers_count_max : 1; 
+		$listed_count_max = $listed_count_max > 0 ? $listed_count_max : 1; 
+		$following_count_max = $following_count_max > 0 ? $following_count_max : 1; 
+		$like_count_max = $like_count_max > 0 ? $like_count_max : 1; 
+		$statuses_count_max = $statuses_count_max > 0 ? $statuses_count_max : 1; 
+		$engagement_score = number_format($user['twitter_followers'] / $followers_count_max * 10, 2)
+			+ number_format($user['twitter_listed_count'] / $listed_count_max * 10, 2)	
+			+ number_format($user['twitter_following_count'] / $following_count_max * 5, 2)	
+			+ number_format($user['twitter_like_count'] / $like_count_max * 5, 2)
+			+ number_format($user['twitter_statuses_count'] / $statuses_count_max * 5, 2);	
+		return $engagement_score;
+	}
+
+	public function calc_youtube_engagement_score($user, $subscriber_count_max, 
+		$view_count_max, $video_count_max)
+	{
+		$subscriber_count_max = $subscriber_count_max > 0 ? $subscriber_count_max : 1; 
+		$view_count_max = $view_count_max > 0 ? $view_count_max : 1; 
+		$video_count_max = $video_count_max > 0 ? $video_count_max : 1; 
+		$engagement_score = number_format($user['youtube_subscriber_count'] / $subscriber_count_max * 10, 2)
+			+ number_format($user['youtube_view_count'] / $view_count_max * 20, 2)
+			+ number_format($user['youtube_video_count'] / $video_count_max * 5, 2);	
+		return $engagement_score;
+	}
+
+	public function calc_age_score($user, $token_user, $twitter_created_at_min, $token_created_at_min, $youtube_created_at_min)
+	{
+		$now_time = time();
+		$twitter_time_score = 0;
+		$twitter_total = $now_time - $twitter_created_at_min;	
+		if (!empty($twitter_total))
+		{
+			$twitter_diff = $now_time - $user['twitter_created_at'];
+			$twitter_time_score = number_format($twitter_diff / $twitter_total * 3, 2);
+		}
+
+		$youtube_time_score = 0;
+		$youtube_total = $now_time - $youtube_created_at_min;	
+		if (!empty($youtube_total))
+		{
+			$youtube_diff = $now_time - $user['youtube_created_at'];
+			$youtube_time_score = number_format($youtube_diff / $youtube_total * 3, 2);
+		}
+
+		$token_time_score = 0;
+		$token_total = $now_time - $token_created_at_min;	
+		if (!empty($token_user) && !empty($token_total))
+		{
+			$token_diff = $now_time - $token_user['created_at'];
+			$token_time_score = number_format($token_diff / $token_total * 4, 2);
+		}
+		return floatval($twitter_time_score) + floatval($youtube_time_score) + floatval($token_time_score);
+	}
+
+	public function get_token_user($token)
+	{
+		if ('' == $token)
+		{
+			return array();
+		}
+		$etherscan_service = new EtherscanService; 
+		return $etherscan_service->get_token($token);
+	}
+
+	public function calc_monetary_score($token_user, $token_count_max, $nft_count_max)
+	{
+		if (empty($token_user))
+		{
+			return 0;
+		}
+		$token_count_max = $token_count_max > 0 ? $token_count_max : 1; 
+		$nft_count_max = $nft_count_max > 0 ? $nft_count_max : 1; 
+		$monetary_score = number_format($token_user['token_count'] / $token_count_max * 10, 2) 
+			+ number_format($token_user['nft_count'] / $nft_count_max * 10, 2);
+		return $monetary_score;
+	}
+
+	public function calc_all_user_score()
+	{
+		$kol_model = new KolModel;
+		$total = $kol_model->get_users_count(); 
+		$size = config('config.default_page_size');
+		$page = $total / $size;
+		for ($i = 0; $i <= $page; ++$i)
+		{
+			$kols = $kol_model->get_users($i, $size);
+			$this->calc_user_score($kols);
+		}
 	}
 
 }

@@ -75,6 +75,7 @@ class TwitterUserModel extends Model
 			$this->description = $user['description'];
 			$this->followers_count = $user['public_metrics']['followers_count'];
 			$this->friends_count = $user['public_metrics']['following_count'];
+			$this->following_count = $user['public_metrics']['following_count'];
 			$this->listed_count = $user['public_metrics']['listed_count'];
 			$this->favourites_count = $user['public_metrics']['like_count'];
 			$this->like_count = $user['public_metrics']['like_count'];
@@ -114,7 +115,7 @@ class TwitterUserModel extends Model
 	{
 		return $this->select('user_id', 'name', 'screen_name', 'location', 'description', 'url', 'followers_count', 'like_count', 
 			'friends_count', 'listed_count', 'favourites_count', 'following_count', 'media_count', 
-			'statuses_count', 'lang', 'profile_image_url')
+			'statuses_count', 'lang', 'profile_image_url', 'created_at')
 			->where('user_id', $user_id)
 			->first();
 	}

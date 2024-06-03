@@ -6,6 +6,7 @@ use Illuminate\Console\Command;
 use PhpOffice\PhpSpreadsheet\IOFactory;
 use Illuminate\Support\Facades\Log;
 use App\Http\Services\TwitterService;
+use App\Http\Services\KolService;
 
 
 class KolCommand extends Command
@@ -29,6 +30,12 @@ class KolCommand extends Command
      */
     public function handle()
     {
+		$kol_service = new KolService;
+		$kol_service->calc_all_user_score();
+    }
+
+	public function load_kol_from_twitter()
+	{
 		$twitter_service = new TwitterService;
         $filePath = 'kol/kol.xlsx';
 		$spreadsheet = IOFactory::load($filePath);
@@ -54,5 +61,6 @@ class KolCommand extends Command
 				sleep(10);
 			}
 		}
-    }
+	
+	}
 }
