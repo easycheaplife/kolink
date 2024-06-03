@@ -31,7 +31,7 @@ class FileController extends Controller
 			$file = Storage::path($file_path);
 			return response()->download($file, $file_name);
 		}
-		return $this->error_response($request->ip(),
+		return $this->error_response($file_name,
 			ErrorCodes::ERROR_CODE_UPLOAD_FILE_IS_NOT_EXIST, ErrorDescs::ERROR_CODE_UPLOAD_FILE_IS_NOT_EXIST);
 	}
 

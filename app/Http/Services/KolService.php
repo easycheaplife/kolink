@@ -402,8 +402,8 @@ class KolService extends Service
 		}
 		$token_count_max = $token_count_max > 0 ? $token_count_max : 1; 
 		$nft_count_max = $nft_count_max > 0 ? $nft_count_max : 1; 
-		$monetary_score = number_format($token_user['token_count'] / $token_count_max * 10, 2) 
-			+ number_format($token_user['nft_count'] / $nft_count_max * 10, 2);
+		$monetary_score = floatval(number_format($token_user['token_count'] / $token_count_max * 10, 2)) 
+			+ floatval(number_format($token_user['nft_count'] / $nft_count_max * 10, 2));
 		return $monetary_score;
 	}
 
