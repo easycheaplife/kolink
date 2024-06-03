@@ -146,7 +146,7 @@ class KolService extends Service
 		$likes = $kol_detail['twitter_like_count'];
 		if ($followers > 0 && $likes > 0)
 		{
-			$engagement = number_format($likes / $followers * 100, 2);	
+			$engagement = round($likes / $followers * 100, 2);	
 		}
 		return $engagement;
 	}
@@ -335,11 +335,11 @@ class KolService extends Service
 		$following_count_max = $following_count_max > 0 ? $following_count_max : 1; 
 		$like_count_max = $like_count_max > 0 ? $like_count_max : 1; 
 		$statuses_count_max = $statuses_count_max > 0 ? $statuses_count_max : 1; 
-		$engagement_score = number_format($user['twitter_followers'] / $followers_count_max * 10, 2)
-			+ number_format($user['twitter_listed_count'] / $listed_count_max * 10, 2)	
-			+ number_format($user['twitter_following_count'] / $following_count_max * 5, 2)	
-			+ number_format($user['twitter_like_count'] / $like_count_max * 5, 2)
-			+ number_format($user['twitter_statuses_count'] / $statuses_count_max * 5, 2);	
+		$engagement_score = round($user['twitter_followers'] / $followers_count_max * 10, 2)
+			+ round($user['twitter_listed_count'] / $listed_count_max * 10, 2)	
+			+ round($user['twitter_following_count'] / $following_count_max * 5, 2)	
+			+ round($user['twitter_like_count'] / $like_count_max * 5, 2)
+			+ round($user['twitter_statuses_count'] / $statuses_count_max * 5, 2);	
 		return $engagement_score;
 	}
 
@@ -349,9 +349,9 @@ class KolService extends Service
 		$subscriber_count_max = $subscriber_count_max > 0 ? $subscriber_count_max : 1; 
 		$view_count_max = $view_count_max > 0 ? $view_count_max : 1; 
 		$video_count_max = $video_count_max > 0 ? $video_count_max : 1; 
-		$engagement_score = number_format($user['youtube_subscriber_count'] / $subscriber_count_max * 10, 2)
-			+ number_format($user['youtube_view_count'] / $view_count_max * 20, 2)
-			+ number_format($user['youtube_video_count'] / $video_count_max * 5, 2);	
+		$engagement_score = round($user['youtube_subscriber_count'] / $subscriber_count_max * 10, 2)
+			+ round($user['youtube_view_count'] / $view_count_max * 20, 2)
+			+ round($user['youtube_video_count'] / $video_count_max * 5, 2);	
 		return $engagement_score;
 	}
 
@@ -363,7 +363,7 @@ class KolService extends Service
 		if (!empty($twitter_total))
 		{
 			$twitter_diff = $now_time - $user['twitter_created_at'];
-			$twitter_time_score = number_format($twitter_diff / $twitter_total * 3, 2);
+			$twitter_time_score = round($twitter_diff / $twitter_total * 3, 2);
 		}
 
 		$youtube_time_score = 0;
@@ -371,7 +371,7 @@ class KolService extends Service
 		if (!empty($youtube_total))
 		{
 			$youtube_diff = $now_time - $user['youtube_created_at'];
-			$youtube_time_score = number_format($youtube_diff / $youtube_total * 3, 2);
+			$youtube_time_score = round($youtube_diff / $youtube_total * 3, 2);
 		}
 
 		$token_time_score = 0;
@@ -379,7 +379,7 @@ class KolService extends Service
 		if (!empty($token_user) && !empty($token_total))
 		{
 			$token_diff = $now_time - $token_user['created_at'];
-			$token_time_score = number_format($token_diff / $token_total * 4, 2);
+			$token_time_score = round($token_diff / $token_total * 4, 2);
 		}
 		return floatval($twitter_time_score) + floatval($youtube_time_score) + floatval($token_time_score);
 	}
