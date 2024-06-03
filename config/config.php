@@ -106,8 +106,8 @@ return [
 	'contractaddress' => '0xD7aAdD7BD1d12ee13E1f4Db8BB56458882796bE4',
 	'twitter_client_id' => 'emNmLUt4WEt4SlFWekpCMjNxSWw6MTpjaQ',
 	'twitter_redirect_uri' => 'http://localhost:8888/oauth',
-	'youtube_client_id' => '745713683583-333ph0haht0q3g04n6mtfuf1ucdrkjbg.apps.googleusercontent.com',
-	'youtube_client_secret' => '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',
+	'youtube_client_id' => '929132609097-pdv3lb9oqsgb9joh03g75a7raa5tc629.apps.googleusercontent.com',
+	'youtube_client_secret' => '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',
 	'youtube_redirect_uri' => 'http://localhost:8080',
 	'reward_task' => array(
 		'auth_twitter' => array('id' => 1, 'xp' => 5, 'type' => 'social'),	
