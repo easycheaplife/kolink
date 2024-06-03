@@ -58,7 +58,7 @@ class KolCommand extends Command
 				$cellValues[0] = str_replace('@', '', $cellValues[0]);
 				$twitter_service->insert_user_from_xlsx($cellValues[0], $cellValues[1]);
 				Log::info($cellValues);
-				sleep(5);
+				sleep(10);
 			}
 		}
 	
