@@ -303,8 +303,8 @@ class KolService extends Service
 		$youtube_created_at_min = $kol_model->get_column_count_min('youtube_created_at');
 
 		$etherscan_service = new EtherscanService;
-		$token_count_max = $etherscan_service->get_column_count_min('token_count');
-		$nft_count_max = $etherscan_service->get_column_count_min('nft_count');
+		$token_count_max = $etherscan_service->get_column_count_max('token_count');
+		$nft_count_max = $etherscan_service->get_column_count_max('nft_count');
 		$tokon_created_at_min = $etherscan_service->get_column_count_min('created_at');
 
 		foreach ($kols as $kol)
@@ -402,9 +402,9 @@ class KolService extends Service
 		}
 		$token_count_max = $token_count_max > 0 ? $token_count_max : 1; 
 		$nft_count_max = $nft_count_max > 0 ? $nft_count_max : 1; 
-		$monetary_score = floatval(number_format($token_user['token_count'] / $token_count_max * 10, 2)) 
-			+ floatval(number_format($token_user['nft_count'] / $nft_count_max * 10, 2));
-		return $monetary_score;
+		$token_score = round($token_user['token_count'] / $token_count_max * 10, 2);
+		$nft_score = round($token_user['nft_count'] / $nft_count_max * 10, 2);
+		return $token_score + $nft_score;
 	}
 
 	public function calc_all_user_score()
