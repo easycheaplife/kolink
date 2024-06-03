@@ -19,6 +19,8 @@ class KolController extends Controller
 		$invite_code = $request->input('invite_code', '');
 		try {
 			$validated_data = $request->validate([
+				'twitter_user_id' => 'required_without:youtube_user_id',
+				'youtube_user_id' => 'required_without:twitter_user_id',
 				'token' => 'required|string',
 				'email' => 'required|email',
 				'region_id' => 'required|string',
