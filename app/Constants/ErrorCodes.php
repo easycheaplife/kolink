@@ -36,6 +36,7 @@ class ErrorCodes
 	const ERROR_CODE_YOUTUBE_USER_FAILED = 27;
 	const ERROR_CODE_ONLY_INVITED_USER_CAN_CREATE = 28;
 	const ERROR_CODE_TASK_APPLICATION_KOL_VIEW_IS_NOT_ENOUGH = 29;
+	const ERROR_CODE_TASK_APPLICATION_KOL_SUBSCRIBERS_IS_NOT_ENOUGH = 30;
 	
 	const ERROR_CODE_DUPLICATE_ENTRY = 1062;
 }
@@ -71,4 +72,5 @@ class ErrorDescs {
 	const ERROR_CODE_YOUTUBE_USER_FAILED = 'Failed to get Youtobe user data!';
 	const ERROR_CODE_ONLY_INVITED_USER_CAN_CREATE = 'Only invited users can create.';
 	const ERROR_CODE_TASK_APPLICATION_KOL_VIEW_IS_NOT_ENOUGH = "KOl's view are not enough!";
+	const ERROR_CODE_TASK_APPLICATION_KOL_SUBSCRIBERS_IS_NOT_ENOUGH = "KOl's subscribers are not enough!";
 }
