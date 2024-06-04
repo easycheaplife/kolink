@@ -208,10 +208,52 @@ class KolService extends Service
 		return $this->res;
 	}
 
-	public function kol_setting($kol_id, $email, $region_id, $category_id, $language_id, $channel_id)
+	public function kol_setting($kol_id, $twitter_user_id, $youtube_user_id, $email, $region_id, $category_id, $language_id, $channel_id)
 	{
 		$kol_model = new KolModel;
-		if (!$kol_model->setting($kol_id, $email, $region_id, $category_id, $language_id, $channel_id))
+		$kol_detail = $kol_model->get($kol_id);
+		if (empty($kol_detail))
+		{
+			return $this->error_response($kol_id, ErrorCodes::ERROR_CODE_KOL_IS_NOT_EXIST,
+				ErrorDescs::ERROR_CODE_KOL_IS_NOT_EXIST);		
+		}
+		$kol_detail['email'] = $email;
+		$kol_detail['region_id'] = $region_id;
+		$kol_detail['category_id'] = $category_id;
+		$kol_detail['language_id'] = $language_id;
+		$kol_detail['channel_id'] = $channel_id;
+		$kol_detail['twitter_user_id'] = is_null($twitter_user_id) ? $kol_detail['twitter_user_id'] : $twitter_user_id;
+		$kol_detail['youtube_user_id'] = is_null($youtube_user_id) ? $kol_detail['youtube_user_id'] : $youtube_user_id;
+		$twitter_service = new TwitterService;
+		$twitter_user = $twitter_service->get_user($twitter_user_id);
+		if (!empty($twitter_user))
+		{
+			$kol_detail['twitter_user_id'] = $twitter_user_id;	
+			$kol_detail['twitter_user_name'] = $twitter_user['screen_name'];			
+			$kol_detail['twitter_avatar'] = $twitter_user['profile_image_url'];			
+			$kol_detail['twitter_followers'] = $twitter_user['followers_count'];			
+			$kol_detail['twitter_like_count'] = $twitter_user['like_count'];			
+			$kol_detail['twitter_following_count'] = $twitter_user['following_count'];			
+			$kol_detail['twitter_listed_count'] = $twitter_user['listed_count'];
+			$kol_detail['twitter_statuses_count'] = $twitter_user['statuses_count'];
+			$kol_detail['twitter_created_at'] = $twitter_user['created_at'];			
+		}
+
+		$youtube_service = new YoutubeService;
+		$youtube_user = $youtube_service->get_user($youtube_user_id);
+		if (!empty($youtube_user))
+		{
+			$kol_detail['youtube_user_id'] = $youtube_user_id;		
+			$kol_detail['youtube_user_name'] = $youtube_user['title'];		
+			$kol_detail['youtube_avatar'] = $youtube_user['profile_image_url'];		
+			$kol_detail['youtube_custom_url'] = $youtube_user['custom_url'];		
+			$kol_detail['youtube_subscriber_count'] = $youtube_user['subscriber_count'];		
+			$kol_detail['youtube_view_count'] = $youtube_user['view_count'];		
+			$kol_detail['youtube_video_count'] = $youtube_user['video_count'];		
+			$kol_detail['youtube_created_at'] = $youtube_user['created_at'];		
+		}
+
+		if (!$kol_model->setting($kol_detail))
 		{
 			return $this->error_response($kol_id, ErrorCodes::ERROR_CODE_DB_ERROR,
 				ErrorDescs::ERROR_CODE_DB_ERROR);		

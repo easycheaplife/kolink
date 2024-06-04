@@ -135,6 +135,8 @@ class KolController extends Controller
 	public function kol_setting(Request $request)
 	{
 		$channel_id = $request->input('channel_id', 0);
+		$twitter_user_id = $request->input('twitter_user_id', 0);
+		$youtube_user_id = $request->input('youtube_user_id', 0);
 		try {
 			$validated_data = $request->validate([
 				'kol_id' => 'required|integer',
@@ -152,6 +154,8 @@ class KolController extends Controller
 		$service = new KolService();
 		return $service->kol_setting(
 			$validated_data['kol_id'],
+			$twitter_user_id,
+			$youtube_user_id,
 			$validated_data['email'],
 			$validated_data['region_id'],
 			$validated_data['category_id'],

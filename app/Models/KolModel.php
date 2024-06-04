@@ -163,7 +163,7 @@ class KolModel extends Model
 
 	public function get($kol_id)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_created_at', 
+		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_created_at', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
 			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_created_at',
@@ -184,14 +184,31 @@ class KolModel extends Model
 			->where('token', $token)->first();
 	}
 
-	public function setting($kol_id, $email, $region_id, $category_id, $language_id, $channel_id)
+	public function setting($kol_detail)
 	{
-		return $this->where('id', $kol_id)->update([
-			'email' => $email, 
-			'region_id' => $region_id, 
-			'category_id' => $category_id, 
-			'language_id' => $language_id, 
-			'channel_id' => $channel_id]);
+		return $this->where('id', $kol_detail['id'])->update([
+			'email' => $kol_detail['email'], 
+			'region_id' => $kol_detail['region_id'], 
+			'category_id' => $kol_detail['category_id'], 
+			'language_id' => $kol_detail['language_id'], 
+			'channel_id' => $kol_detail['channel_id'], 
+			'twitter_user_id' => $kol_detail['twitter_user_id'], 
+			'twitter_user_name' => $kol_detail['twitter_user_name'], 
+			'twitter_avatar' => $kol_detail['twitter_avatar'], 
+			'twitter_followers' => $kol_detail['twitter_followers'], 
+			'twitter_like_count' => $kol_detail['twitter_like_count'], 
+			'twitter_following_count' => $kol_detail['twitter_following_count'], 
+			'twitter_listed_count' => $kol_detail['twitter_listed_count'], 
+			'twitter_statuses_count' => $kol_detail['twitter_statuses_count'], 
+			'twitter_created_at' => $kol_detail['twitter_created_at'], 
+			'youtube_user_id' => $kol_detail['youtube_user_id'], 
+			'youtube_user_name' => $kol_detail['youtube_user_name'], 
+			'youtube_avatar' => $kol_detail['youtube_avatar'], 
+			'youtube_custom_url' => $kol_detail['youtube_custom_url'], 
+			'youtube_subscriber_count' => $kol_detail['youtube_subscriber_count'], 
+			'youtube_view_count' => $kol_detail['youtube_view_count'], 
+			'youtube_video_count' => $kol_detail['youtube_video_count'], 
+			'youtube_created_at' => $kol_detail['youtube_created_at']]);
 	}
 
 	public function get_by_twitter_user_id($twitter_user_id)
