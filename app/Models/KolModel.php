@@ -367,7 +367,7 @@ class KolModel extends Model
 
 	public function get_users($page, $size)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_created_at', 
+		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_created_at', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
 			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_created_at',
