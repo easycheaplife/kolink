@@ -132,5 +132,63 @@ def get_user_followers():
     response['data']['list'] = users
     return response
 
+@app.route('/twitter/get_user_data', methods=['GET'])
+def get_user_data():
+    screen_name = request.args.get('screen_name')
+    client.load_cookies(path='cookies.json');
+    user = client.get_user_by_screen_name(screen_name)
+    logging.info("get_user_data,screen name" + screen_name)
+    tweets = user.get_tweets('Tweets', count=40)
+    reply_count_total = 0
+    favorite_count_total = 0
+    view_count_total = 0
+    retweet_count_total = 0
+    for tweet in tweets:
+        if tweet.view_count is None:
+            tweet.view_count = '0'
+        favorite_count_total = favorite_count_total + tweet.favorite_count
+        reply_count_total = reply_count_total + tweet.reply_count
+        view_count_total = view_count_total + int(tweet.view_count)
+        retweet_count_total = retweet_count_total + tweet.retweet_count
+    more_tweets = tweets.next()
+    for tweet in more_tweets:
+        if tweet.view_count is None:
+            tweet.view_count = '0'
+        favorite_count_total = favorite_count_total + tweet.favorite_count
+        reply_count_total = reply_count_total + tweet.reply_count
+        view_count_total = view_count_total + int(tweet.view_count)
+        retweet_count_total = retweet_count_total + tweet.retweet_count
+
+    response = {
+        "code": 0,
+        "message": "",
+        "data": {}
+    }
+    public_metrics = {
+        "followers_count" : user.followers_count,
+        "following_count" : user.following_count,
+        "listed_count" : user.listed_count,
+        "like_count" : user.favourites_count,
+        "tweet_count" : user.statuses_count,
+        "favorite_count_total" : favorite_count_total, 
+        "reply_count_total" : reply_count_total, 
+        "view_count_total" : view_count_total, 
+        "retweet_count_total" : retweet_count_total, 
+    }
+    user_json = {
+         "id" : user.id,
+         "name" : user.name,
+         "username" : user.screen_name,
+         "description" : user.description,
+         "profile_image_url" : user.profile_image_url,
+         "url" : user.url,
+         "public_metrics" : public_metrics,
+         "location" : user.location,
+         "created_at" : user.created_at,
+    } 
+    response['data'] = user_json
+    logging.info(user_json)
+    return response
+    
 if __name__ == '__main__':
     app.run(debug=True, host=host, port=port)
