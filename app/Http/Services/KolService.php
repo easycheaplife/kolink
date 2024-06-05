@@ -451,6 +451,7 @@ class KolService extends Service
 
 	public function update_all_user_data()
 	{
+		$twitter_service = new TwitterService;
 		$kol_model = new KolModel;
 		$total = $kol_model->get_users_count(); 
 		$size = config('config.default_page_size');
@@ -458,7 +459,16 @@ class KolService extends Service
 		for ($i = 0; $i <= $page; ++$i)
 		{
 			$kols = $kol_model->get_users($i, $size);
-			sleep(60);
+			foreach ($kols as $kol)
+			{
+				$twitter_user = $twitter_service->get_user_data($kol['twitter_user_name']);
+				if (!empty($twitter_user['data']))
+				{
+					$kol_model->update_twitter_data($kol['id'], $twitter_user['data']);			
+				}
+				Log::info('update_all_user_data kol_id:' . $kol['id']);
+				sleep(60);
+			}
 		}
 	}
 

@@ -393,4 +393,19 @@ class KolModel extends Model
 		return $this->select('id')->count();
 	}
 
+	public function update_twitter_data($kol_id, $twitter_user)
+	{
+		return $this->where('id', $kol_id)->update([
+			'twitter_followers' => $twitter_user['public_metrics']['followers_count'], 
+			'twitter_like_count' => $twitter_user['public_metrics']['like_count'], 
+			'twitter_following_count' => $twitter_user['public_metrics']['following_count'], 
+			'twitter_listed_count' => $twitter_user['public_metrics']['listed_count'], 
+			'twitter_statuses_count' => $twitter_user['public_metrics']['tweet_count'], 
+			'twitter_favorite_count_total' => $twitter_user['public_metrics']['favorite_count_total'], 
+			'twitter_reply_count_total' => $twitter_user['public_metrics']['reply_count_total'], 
+			'twitter_retweet_count_total' => $twitter_user['public_metrics']['retweet_count_total'], 
+			'twitter_view_count_total' => $twitter_user['public_metrics']['view_count_total']]);
+	}
+
+
 }

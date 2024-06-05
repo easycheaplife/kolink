@@ -23,6 +23,10 @@ return new class extends Migration
             $table->integer('twitter_following_count')->default(0);
             $table->integer('twitter_listed_count')->default(0);
             $table->integer('twitter_statuses_count')->default(0);
+            $table->integer('twitter_favorite_count_total')->default(0);
+            $table->integer('twitter_reply_count_total')->default(0);
+            $table->integer('twitter_retweet_count_total')->default(0);
+            $table->integer('twitter_view_count_total')->default(0);
             $table->integer('twitter_created_at')->default(0);
             $table->string('youtube_user_id', 64)->default('');
             $table->string('youtube_user_name', 64)->default('');

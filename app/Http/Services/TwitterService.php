@@ -425,7 +425,7 @@ class TwitterService extends Service
 		}  
 	}
 
-	public function get_twitter_user_data($screen_name)
+	public function get_user_data($screen_name)
 	{
 		$url = "http://127.0.0.1:8020/twitter/get_user_data?screen_name=$screen_name" ;
 		try {
