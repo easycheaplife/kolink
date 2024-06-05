@@ -15,7 +15,7 @@ class KolController extends Controller
 	{
 		$twitter_user_id = $request->input('twitter_user_id', 0);
 		$youtube_user_id = $request->input('youtube_user_id', '');
-		$channel_id = $request->input('channel_id', 0);
+		$channel_id = $request->input('channel_id', '');
 		$invite_code = $request->input('invite_code', '');
 		try {
 			$validated_data = $request->validate([
@@ -58,7 +58,7 @@ class KolController extends Controller
 		$region_id = $request->input('region_id', '');
 		$category_id = $request->input('category_id', '');
 		$language_id = $request->input('language_id', '');
-		$channel_id = $request->input('channel_id', '0');
+		$channel_id = $request->input('channel_id', '');
 		$service = new KolService();
 		return $service->kol_list(
 			$region_id,
@@ -134,7 +134,7 @@ class KolController extends Controller
 
 	public function kol_setting(Request $request)
 	{
-		$channel_id = $request->input('channel_id', 0);
+		$channel_id = $request->input('channel_id', '');
 		$twitter_user_id = $request->input('twitter_user_id', 0);
 		$youtube_user_id = $request->input('youtube_user_id', 0);
 		try {
@@ -162,6 +162,5 @@ class KolController extends Controller
 			$validated_data['language_id'],
 			$channel_id);
 	}
-
 
 }

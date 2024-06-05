@@ -35,7 +35,7 @@ return new class extends Migration
             $table->string('region_id', 64)->default('');
             $table->string('language_id', 64)->default('');
             $table->string('category_id', 64)->default('');
-            $table->integer('channel_id')->default(0);
+            $table->integer('channel_id', 64)->default('');
             $table->string('monetary_score', 24)->default('');
             $table->string('engagement_score', 24)->default('');
             $table->string('age_score', 24)->default('');

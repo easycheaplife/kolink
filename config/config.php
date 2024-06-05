@@ -69,6 +69,10 @@ return [
 		'Urdu' => 19,
 		'Other' => 99
 	),
+	'channel_list' => array(
+		'X'	=> 0,
+		'Youtube' => 1
+	),
 	'transaction_type' => array(
 		'lock_assert' => 0,
 		'settle' => 1,
