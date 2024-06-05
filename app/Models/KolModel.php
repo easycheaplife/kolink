@@ -121,7 +121,7 @@ class KolModel extends Model
 		return $query->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
-			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url',
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_subscriber_count',
 			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
 			'invite_code', 'xp')
 			->orderByDesc('updated_at')
@@ -175,7 +175,7 @@ class KolModel extends Model
 		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_created_at', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
-			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_created_at',
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_subscriber_count', 'youtube_created_at',
 			'youtube_subscriber_count', 'youtube_view_count', 'youtube_video_count',
 			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
 			'invite_code', 'xp')
@@ -225,7 +225,7 @@ class KolModel extends Model
 		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
-			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url',
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_subscriber_count',
 			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
 			'invite_code', 'xp')
 			->orderByDesc('id')
@@ -346,7 +346,7 @@ class KolModel extends Model
 		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
-			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url',
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_subscriber_count',
 			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
 			'invite_code', 'xp')
 			->whereIn('id', $kol_ids)
@@ -379,7 +379,7 @@ class KolModel extends Model
 		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_created_at', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
-			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_created_at',
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_subscriber_count', 'youtube_created_at',
 			'youtube_subscriber_count', 'youtube_view_count', 'youtube_video_count',
 			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
 			'invite_code', 'xp')
