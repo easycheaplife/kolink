@@ -65,10 +65,15 @@ class KolModel extends Model
 	public function list($region_id, $category_id, $language_id, $channel_id, $sort_type, $sort_field, $page, $size)
 	{
 		$query = DB::table($this->table);
-		if ($channel_id != '0') {
-			$query->whereIn('channel_id', explode(",", $channel_id));
-		}
 
+		if ($channel_id != '') {
+			$query->where(function ($query) use ($channel_id) {
+				$items = explode(",", $channel_id);
+				foreach ($items as $item) {
+					$query->orWhereRaw("FIND_IN_SET($item, channel_id) > 0");
+				}
+			});
+		}
 		if ($region_id != '') {
 			$query->where(function ($query) use ($region_id) {
 				$items = explode(",", $region_id);
@@ -129,10 +134,14 @@ class KolModel extends Model
 	{
 		$query = DB::table($this->table);
 
-		if ($channel_id != 0) {
-			$query->whereIn('channel_id', explode(",", $channel_id));
+		if ($channel_id != '') {
+			$query->where(function ($query) use ($channel_id) {
+				$items = explode(",", $channel_id);
+				foreach ($items as $item) {
+					$query->orWhereRaw("FIND_IN_SET($item, channel_id) > 0");
+				}
+			});
 		}
-
 		if ($region_id != '') {
 			$query->where(function ($query) use ($region_id) {
 				$items = explode(",", $region_id);
