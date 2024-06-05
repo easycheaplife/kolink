@@ -31,6 +31,7 @@ class KolCommand extends Command
     public function handle()
     {
 		$kol_service = new KolService;
+		$kol_service->update_all_user_data();
 		$kol_service->calc_all_user_score();
     }
 

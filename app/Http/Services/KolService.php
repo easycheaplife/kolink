@@ -449,6 +449,19 @@ class KolService extends Service
 		return $token_score + $nft_score;
 	}
 
+	public function update_all_user_data()
+	{
+		$kol_model = new KolModel;
+		$total = $kol_model->get_users_count(); 
+		$size = config('config.default_page_size');
+		$page = $total / $size;
+		for ($i = 0; $i <= $page; ++$i)
+		{
+			$kols = $kol_model->get_users($i, $size);
+			sleep(60);
+		}
+	}
+
 	public function calc_all_user_score()
 	{
 		$kol_model = new KolModel;

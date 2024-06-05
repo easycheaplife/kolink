@@ -425,4 +425,27 @@ class TwitterService extends Service
 		}  
 	}
 
+	public function get_twitter_user_data($screen_name)
+	{
+		$url = "http://127.0.0.1:8020/twitter/get_user_data?screen_name=$screen_name" ;
+		try {
+			$headers = [];
+			$response = Http::withHeaders($headers)
+				->get($url);
+			if ($response->successful()) {
+				$data = $response->json();
+				$data['data']['profile_image_url'] = str_replace('_normal', '', $data['data']['profile_image_url']);
+				$this->res['data'] = $data['data'];
+			}
+			else {
+				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
+				Log::error($error_message);
+			}
+		} catch (\Exception $e) 
+		{   
+			Log::error($e);
+		}  
+		return $this->res;
+	}
+
 }
