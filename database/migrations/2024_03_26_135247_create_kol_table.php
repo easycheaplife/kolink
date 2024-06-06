@@ -23,6 +23,10 @@ return new class extends Migration
             $table->integer('twitter_following_count')->default(0);
             $table->integer('twitter_listed_count')->default(0);
             $table->integer('twitter_statuses_count')->default(0);
+            $table->integer('twitter_favorite_count_total')->default(0);
+            $table->integer('twitter_reply_count_total')->default(0);
+            $table->integer('twitter_retweet_count_total')->default(0);
+            $table->integer('twitter_view_count_total')->default(0);
             $table->integer('twitter_created_at')->default(0);
             $table->string('youtube_user_id', 64)->default('');
             $table->string('youtube_user_name', 64)->default('');
@@ -35,7 +39,7 @@ return new class extends Migration
             $table->string('region_id', 64)->default('');
             $table->string('language_id', 64)->default('');
             $table->string('category_id', 64)->default('');
-            $table->integer('channel_id')->default(0);
+            $table->integer('channel_id', 64)->default('');
             $table->string('monetary_score', 24)->default('');
             $table->string('engagement_score', 24)->default('');
             $table->string('age_score', 24)->default('');

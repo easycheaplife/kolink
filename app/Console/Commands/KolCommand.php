@@ -31,6 +31,7 @@ class KolCommand extends Command
     public function handle()
     {
 		$kol_service = new KolService;
+		$kol_service->update_all_user_data();
 		$kol_service->calc_all_user_score();
     }
 
@@ -58,7 +59,7 @@ class KolCommand extends Command
 				$cellValues[0] = str_replace('@', '', $cellValues[0]);
 				$twitter_service->insert_user_from_xlsx($cellValues[0], $cellValues[1]);
 				Log::info($cellValues);
-				sleep(10);
+				sleep(20);
 			}
 		}
 	

@@ -16,7 +16,7 @@ class Kernel extends ConsoleKernel
 		$schedule->command('app:transaction-command')->everyMinute();
 		$schedule->command('app:twitter-command')->everyMinute();
 		$schedule->command('app:etherscan-command')->everyTenMinutes();
-		$schedule->command('app:kol-command')->everyTenMinutes();
+		$schedule->command('app:kol-command')->daily();
     }
 
     /**

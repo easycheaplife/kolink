@@ -65,10 +65,15 @@ class KolModel extends Model
 	public function list($region_id, $category_id, $language_id, $channel_id, $sort_type, $sort_field, $page, $size)
 	{
 		$query = DB::table($this->table);
-		if ($channel_id != '0') {
-			$query->whereIn('channel_id', explode(",", $channel_id));
-		}
 
+		if ($channel_id != '') {
+			$query->where(function ($query) use ($channel_id) {
+				$items = explode(",", $channel_id);
+				foreach ($items as $item) {
+					$query->orWhereRaw("FIND_IN_SET($item, channel_id) > 0");
+				}
+			});
+		}
 		if ($region_id != '') {
 			$query->where(function ($query) use ($region_id) {
 				$items = explode(",", $region_id);
@@ -116,7 +121,7 @@ class KolModel extends Model
 		return $query->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
-			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url',
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_subscriber_count',
 			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
 			'invite_code', 'xp')
 			->orderByDesc('updated_at')
@@ -129,10 +134,14 @@ class KolModel extends Model
 	{
 		$query = DB::table($this->table);
 
-		if ($channel_id != 0) {
-			$query->whereIn('channel_id', explode(",", $channel_id));
+		if ($channel_id != '') {
+			$query->where(function ($query) use ($channel_id) {
+				$items = explode(",", $channel_id);
+				foreach ($items as $item) {
+					$query->orWhereRaw("FIND_IN_SET($item, channel_id) > 0");
+				}
+			});
 		}
-
 		if ($region_id != '') {
 			$query->where(function ($query) use ($region_id) {
 				$items = explode(",", $region_id);
@@ -166,7 +175,7 @@ class KolModel extends Model
 		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_created_at', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
-			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_created_at',
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_subscriber_count', 'youtube_created_at',
 			'youtube_subscriber_count', 'youtube_view_count', 'youtube_video_count',
 			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
 			'invite_code', 'xp')
@@ -216,7 +225,7 @@ class KolModel extends Model
 		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
-			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url',
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_subscriber_count',
 			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
 			'invite_code', 'xp')
 			->orderByDesc('id')
@@ -337,7 +346,7 @@ class KolModel extends Model
 		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
-			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url',
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_subscriber_count',
 			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
 			'invite_code', 'xp')
 			->whereIn('id', $kol_ids)
@@ -367,10 +376,10 @@ class KolModel extends Model
 
 	public function get_users($page, $size)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_created_at', 
+		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_created_at', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
-			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_created_at',
+			'youtube_user_id', 'youtube_user_name', 'youtube_avatar', 'youtube_custom_url', 'youtube_subscriber_count', 'youtube_created_at',
 			'youtube_subscriber_count', 'youtube_view_count', 'youtube_video_count',
 			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
 			'invite_code', 'xp')
@@ -383,5 +392,20 @@ class KolModel extends Model
 	{
 		return $this->select('id')->count();
 	}
+
+	public function update_twitter_data($kol_id, $twitter_user)
+	{
+		return $this->where('id', $kol_id)->update([
+			'twitter_followers' => $twitter_user['public_metrics']['followers_count'], 
+			'twitter_like_count' => $twitter_user['public_metrics']['like_count'], 
+			'twitter_following_count' => $twitter_user['public_metrics']['following_count'], 
+			'twitter_listed_count' => $twitter_user['public_metrics']['listed_count'], 
+			'twitter_statuses_count' => $twitter_user['public_metrics']['tweet_count'], 
+			'twitter_favorite_count_total' => $twitter_user['public_metrics']['favorite_count_total'], 
+			'twitter_reply_count_total' => $twitter_user['public_metrics']['reply_count_total'], 
+			'twitter_retweet_count_total' => $twitter_user['public_metrics']['retweet_count_total'], 
+			'twitter_view_count_total' => $twitter_user['public_metrics']['view_count_total']]);
+	}
+
 
 }
