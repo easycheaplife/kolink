@@ -150,7 +150,7 @@ class KolService extends Service
 		}
 		$engagement = 1;
 		$followers = $kol_detail['twitter_followers'];
-		$likes = $kol_detail['twitter_like_count'];
+		$likes = $kol_detail['twitter_favorite_count_total'];
 		if ($followers > 0 && $likes > 0)
 		{
 			$engagement = round($likes / $followers * 100, 2);	
@@ -474,7 +474,7 @@ class KolService extends Service
 					$kol_model->update_twitter_data($kol['id'], $twitter_user['data']);			
 				}
 				Log::info('update_all_user_data kol_id:' . $kol['id']);
-				sleep(60);
+				sleep(120);
 			}
 		}
 	}

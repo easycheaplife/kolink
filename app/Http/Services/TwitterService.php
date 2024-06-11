@@ -439,10 +439,12 @@ class TwitterService extends Service
 			}
 			else {
 				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
+				$this->res['data'] = array();
 				Log::error($error_message);
 			}
 		} catch (\Exception $e) 
 		{   
+			$this->res['data'] = array();
 			Log::error($e);
 		}  
 		return $this->res;
