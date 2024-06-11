@@ -141,12 +141,16 @@ class KolService extends Service
 		{
 			return 0;
 		}
+		$max_statuses_count = 30;
 		$engagement = 1;
-		$followers = $kol_detail['twitter_followers'];
-		$likes = $kol_detail['twitter_favorite_count_total'];
-		if ($followers > 0 && $likes > 0)
+		$reply_count_total = $kol_detail['twitter_reply_count_total'];
+		$favorite_count_total = $kol_detail['twitter_favorite_count_total'];
+		$retweet_count_total = $kol_detail['twitter_retweet_count_total'];
+		$statuses_count = $kol_detail['twitter_statuses_count'];
+		$statuses_count = $statuses_count <= $max_statuses_count ? $statuses_count : $max_statuses_count;
+		if ($statuses_count > 0)
 		{
-			$engagement = round($likes / $followers * 100, 2);	
+			$engagement = round(($reply_count_total + $favorite_count_total + $retweet_count_total) / $statuses_count, 2);	
 		}
 		return $engagement;
 	}
