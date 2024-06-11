@@ -124,4 +124,7 @@ return [
 		'follow_twitter' => array('id' => 8, 'xp' => 3, 'type' => 'social'),	
 		'join_telgram' => array('id' => 9, 'xp' => 5, 'type' => 'social'),	
 	),
+	'recommend_task' => array(
+		'32' => 'https://api.kolink.io/api/file/download/7OUqqrQSw5XclATy0QxVOXmXLclTdoTIzB6ankFa.jpg',
+	),
 ];

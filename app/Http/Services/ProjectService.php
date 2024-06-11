@@ -144,6 +144,33 @@ class ProjectService extends Service
 			$this->res['data']['upcoming_task'][$key]['application_eligibility_desc'] = $application_result['message'];
 			$this->res['data']['upcoming_task'][$key]['application_num'] = $application_service->application_kol_num($task->id);
 		}
+
+		$task_ids = [];
+		foreach (config('config.recommend_task') as $id => $banner)
+		{
+			$task_ids[] = $id;	
+		}
+		$this->res['data']['recommend_task'] = $task_service->kol_task_list($task_ids);
+		foreach ($this->res['data']['recommend_task'] as $key => $task)
+		{
+			$application = $application_service->kol_task_status($kol_id, $task->id);
+			if (!empty($application))
+			{
+				$this->res['data']['recommend_task'][$key]['status'] = $application['status'];
+				$this->res['data']['recommend_task'][$key]['application'] = $application;
+			}
+			else
+			{
+				$this->res['data']['recommend_task'][$key]['status'] = -1;
+				$this->res['data']['recommend_task'][$key]['application'] = array();
+			}
+			$this->res['data']['recommend_task'][$key]['project_detail'] = $project_model->get($task->project_id);
+			$application_result = $application_service->application_eligibility($kol_id, $task->id);
+			$this->res['data']['recommend_task'][$key]['application_eligibility'] = $application_result['code'] == ErrorCodes::ERROR_CODE_SUCCESS ? 1 : 0;
+			$this->res['data']['recommend_task'][$key]['application_eligibility_desc'] = $application_result['message'];
+			$this->res['data']['recommend_task'][$key]['application_num'] = $application_service->application_kol_num($task->id);
+			$this->res['data']['recommend_task'][$key]['banner'] = config('config.recommend_task')[$task->id];
+		}
 		return $this->res;
 	}
 
