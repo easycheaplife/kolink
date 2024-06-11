@@ -107,7 +107,14 @@ class KolService extends Service
 		{
 			$kol = $kol_model->get($last_insert_id);
 			$this->calc_user_score(array($kol));
+
+			$twitter_user_data = $twitter_service->get_user_data($twitter_user_name);
+			if (!empty($twitter_user_data['data']))
+			{
+				$kol_model->update_twitter_data($last_insert_id, $twitter_user_data['data']);			
+			}
 		}
+
 		return $this->res;
 	}	
 
