@@ -170,26 +170,28 @@ def get_user_data():
     client.load_cookies(path='cookies.json');
     user = client.get_user_by_screen_name(screen_name)
     logging.info("get_user_data,screen name" + screen_name)
+
+    tweet_all = []
     tweets = user.get_tweets('Tweets', count=40)
+    for tweet in tweets:
+        tweet_all.append(tweet)
+    more_tweets = tweets.next()
+    for tweet in more_tweets:
+        tweet_all.append(tweet)
+
     reply_count_total = 0
     favorite_count_total = 0
     view_count_total = 0
     retweet_count_total = 0
-    for tweet in tweets:
+    tweet_ids = []
+    for tweet in tweet_all:
         if tweet.view_count is None:
             tweet.view_count = '0'
         favorite_count_total = favorite_count_total + tweet.favorite_count
         reply_count_total = reply_count_total + tweet.reply_count
         view_count_total = view_count_total + int(tweet.view_count)
         retweet_count_total = retweet_count_total + tweet.retweet_count
-    more_tweets = tweets.next()
-    for tweet in more_tweets:
-        if tweet.view_count is None:
-            tweet.view_count = '0'
-        favorite_count_total = favorite_count_total + tweet.favorite_count
-        reply_count_total = reply_count_total + tweet.reply_count
-        view_count_total = view_count_total + int(tweet.view_count)
-        retweet_count_total = retweet_count_total + tweet.retweet_count
+        tweet_ids.append(tweet.id)
 
     response = {
         "code": 0,
@@ -215,6 +217,7 @@ def get_user_data():
          "profile_image_url" : user.profile_image_url,
          "url" : user.url,
          "public_metrics" : public_metrics,
+         'tweet_ids' : tweet_ids,
          "location" : user.location,
          "created_at" : user.created_at,
     } 
