@@ -1,3 +1,4 @@
+from twikit import Client
 from flask import Flask, redirect, request
 import os
 import json
@@ -8,6 +9,7 @@ from datetime import datetime
 
 app = Flask(__name__)
 
+client = Client('en-US')
 host = "0.0.0.0"
 port = 8020
 
