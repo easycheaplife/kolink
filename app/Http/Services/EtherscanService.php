@@ -53,7 +53,7 @@ class EtherscanService extends Service
 				->get($url);
 			if ($response->successful()) {
 				$data = $response->json();
-				Log::info($data);
+				Log::debug($data);
 				if (is_array($data['result']) && !empty($data['result']))
 				{
 					$created_at = $data['result'][0]['timeStamp'];
@@ -76,7 +76,7 @@ class EtherscanService extends Service
 				->get($url);
 			if ($response->successful()) {
 				$data = $response->json();
-				// Log::info($data);
+				Log::debug($data);
 				if (is_array($data['result']) && !empty($data['result']))
 				{
 					$token_count = count($data['result']);
@@ -95,10 +95,10 @@ class EtherscanService extends Service
 			$response = Http::withHeaders($headers)
 				->timeout(config('config.http_timeout'))
 				->get($url);
-			// Log::info($url);
+			Log::info($url);
 			if ($response->successful()) {
 				$data = $response->json();
-				Log::info($data);
+				Log::debug($data);
 				if (is_array($data['result']) && !empty($data['result']))
 				{
 					$nft_count = count($data['result']);

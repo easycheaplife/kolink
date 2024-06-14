@@ -277,6 +277,8 @@ def get_user_tweets():
 
     tweet_data = []
     for tweet in tweet_all:
+        if tweet.view_count is None:
+            tweet.view_count = '0'
         tweet_detail = {
             'id' : tweet.id,
             'user_id' : tweet.user.id,

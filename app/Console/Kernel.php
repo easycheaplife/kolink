@@ -13,8 +13,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule): void
     {
 		$schedule->command('app:email-command')->everySecond();
-		$schedule->command('app:transaction-command')->everyMinute();
-		$schedule->command('app:twitter-command')->everyMinute();
+		$schedule->command('app:transaction-command')->everyTenMinutes();
+		$schedule->command('app:twitter-command')->everyTenMinutes();
 		$schedule->command('app:etherscan-command')->everyTenMinutes();
 		$schedule->command('app:kol-command')->daily();
     }
