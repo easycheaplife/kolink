@@ -453,7 +453,7 @@ class TwitterService extends Service
 
 	public function get_user_tweets($user_id)
 	{
-		$url = config('config.twitter_service_url_base') . "/twitter/get_user_tweets?user_id=$user_id&debug=1" ;
+		$url = config('config.twitter_service_url_base') . "/twitter/get_user_tweets?user_id=$user_id" ;
 		try {
 			$headers = [];
 			$response = Http::withHeaders($headers)
