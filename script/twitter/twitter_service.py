@@ -88,6 +88,37 @@ get_user_data_res = {
         "message": ""
         }
 
+get_user_tweets_res = {
+        "code": 0,
+        "data": [
+            {
+                "created_at": "Thu Jun 13 13:02:51 +0000 2024",
+                "favorite_count": 43,
+                "full_text": "text1",
+                "id": "1801238806273953875",
+                "reply_count": 24,
+                "retweet_count": 4,
+                "user_id": "1369245899344412678",
+                "user_name": "Mr.Bai \u767d\u5148\u751f",
+                "user_screen_name": "Baisircrypto",
+                "view_count": "14584"
+                },
+            {
+                "created_at": "Thu Jun 13 11:09:18 +0000 2024",
+                "favorite_count": 33,
+                "full_text": "text2",
+                "id": "1801210232124973188",
+                "reply_count": 23,
+                "retweet_count": 15,
+                "user_id": "1369245899344412678",
+                "user_name": "Mr.Bai \u767d\u5148\u751f",
+                "user_screen_name": "Baisircrypto",
+                "view_count": "9793"
+                }
+            ],
+        "message": ""
+        }
+
 @app.route('/twitter/login', methods=['GET'])
 def login():
 ## You can comment this `login`` part out after the first time you run the script (and you have the `cookies.json`` file)
@@ -223,6 +254,49 @@ def get_user_data():
     } 
     response['data'] = user_json
     logging.info(user_json)
+    return response
+
+@app.route('/twitter/get_user_tweets', methods=['GET'])
+def get_user_tweets():
+    debug = request.args.get('debug', 0)
+
+    if debug:
+        return get_user_tweets_res
+
+    user_id = request.args.get('user_id')
+    client.load_cookies(path='cookies.json');
+    tweets = client.get_user_tweets(user_id, 'Tweets', count=40)
+    logging.info("get_user_tweets,user_id:" + str(user_id))
+
+    tweet_all = []
+    for tweet in tweets:
+        tweet_all.append(tweet)
+    more_tweets = tweets.next()
+    for tweet in more_tweets:
+        tweet_all.append(tweet)
+
+    tweet_data = []
+    for tweet in tweet_all:
+        tweet_detail = {
+            'id' : tweet.id,
+            'user_id' : tweet.user.id,
+            'user_name' : tweet.user.name,
+            'user_screen_name' : tweet.user.screen_name,
+            'full_text' : tweet.full_text,
+            'reply_count' : tweet.reply_count,
+            'favorite_count' : tweet.favorite_count,
+            'view_count' : tweet.view_count,
+            'retweet_count' : tweet.retweet_count,
+            'created_at' : tweet.created_at,
+        }
+        tweet_data.append(tweet_detail)
+    response = {
+        "code": 0,
+        "message": "",
+        "data": {}
+    }
+    logging.info(tweet_data)
+    response['data'] = tweet_data
     return response
     
 if __name__ == '__main__':
