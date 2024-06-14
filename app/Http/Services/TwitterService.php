@@ -11,6 +11,7 @@ use App\Constants\ErrorCodes;
 use App\Constants\ErrorDescs;
 use App\Models\TwitterUserModel;
 use App\Models\TwitterUserDataModel;
+use App\Models\TweetModel;
 use App\Http\Services\KolService;
 use App\Http\Services\EtherscanService;
 use App\Http\Services\RewardService;
@@ -366,7 +367,7 @@ class TwitterService extends Service
 
 	public function insert_user_from_xlsx($screen_name, $language)
 	{
-		$url = "http://127.0.0.1:8020/twitter/get_user?screen_name=$screen_name" ;
+		$url = config('config.twitter_service_url_base') . "/twitter/get_user?screen_name=$screen_name" ;
 		try {
 			$headers = [];
 			$response = Http::withHeaders($headers)
@@ -427,7 +428,7 @@ class TwitterService extends Service
 
 	public function get_user_data($screen_name)
 	{
-		$url = "http://127.0.0.1:8020/twitter/get_user_data?screen_name=$screen_name" ;
+		$url = config('config.twitter_service_url_base') . "/twitter/get_user_data?screen_name=$screen_name" ;
 		try {
 			$headers = [];
 			$response = Http::withHeaders($headers)
@@ -448,6 +449,36 @@ class TwitterService extends Service
 			Log::error($e);
 		}  
 		return $this->res;
+	}
+
+	public function get_user_tweets($user_id)
+	{
+		$url = config('config.twitter_service_url_base') . "/twitter/get_user_tweets?user_id=$user_id&debug=1" ;
+		try {
+			$headers = [];
+			$response = Http::withHeaders($headers)
+				->get($url);
+			if ($response->successful()) {
+				$data = $response->json();
+				$this->res['data'] = $data['data'];
+			}
+			else {
+				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();
+				$this->res['data'] = array();
+				Log::error($error_message);
+			}
+		} catch (\Exception $e) 
+		{   
+			$this->res['data'] = array();
+			Log::error($e);
+		}  
+		return $this->res;
+	}
+
+	public function insert_tweet($tweet)
+	{
+		$tweet_model = new TweetModel;
+		return $tweet_model->insert($tweet);
 	}
 
 }

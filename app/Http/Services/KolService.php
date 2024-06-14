@@ -496,4 +496,30 @@ class KolService extends Service
 		}
 	}
 
+	public function get_all_user_tweets()
+	{
+		$twitter_service = new TwitterService;
+		$kol_model = new KolModel;
+		$total = $kol_model->get_users_count(); 
+		$size = config('config.default_page_size');
+		$page = $total / $size;
+		for ($i = 0; $i <= $page; ++$i)
+		{
+			$kols = $kol_model->get_users($i, $size);
+			foreach ($kols as $kol)
+			{
+				$tweets = $twitter_service->get_user_tweets($kol['twitter_user_id']);
+				if (!empty($tweets['data']))
+				{
+					foreach ($tweets['data'] as $tweet)
+					{
+						$twitter_service->insert_tweet($tweet);
+					}
+				}
+				Log::info('get_all_user_tweets kol_id:' . $kol['id']);
+				sleep(120);
+			}
+		}
+	}
+
 }

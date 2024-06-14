@@ -31,7 +31,15 @@ class KolCommand extends Command
     public function handle()
     {
 		$kol_service = new KolService;
-		$kol_service->update_all_user_data();
+		$is_get_all_user_tweets = true;
+		if ($is_get_all_user_tweets)
+		{
+			$kol_service->get_all_user_tweets();
+		}
+		else 
+		{
+			$kol_service->update_all_user_data();
+		}
 		$kol_service->calc_all_user_score();
     }
 
