@@ -140,6 +140,20 @@ class ProjectTaskService extends Service
 			$this->res['data']['list'] = $project_task_model->upcoming_task($page, $size);
 			$this->res['data']['total'] = $project_task_model->upcoming_task_count();
 		}
+
+		$admin_kol_id = 999999999;
+		if ($kol_id == $admin_kol_id)
+		{
+			foreach ($this->res['data']['list'] as $key => $task)
+			{
+				$project_detail = $project_service->project_detail($task->project_id);	
+				$this->res['data']['list'][$key]['project_detail'] = $project_detail['data']; 
+				$this->res['data']['list'][$key]['view_count'] = $view_service->get_task_viewer_count($task->id);
+				$this->res['data']['list'][$key]['application'] = $application_service->task_list($task->id);
+			}
+			return $this->res;
+		}
+
 		foreach ($this->res['data']['list'] as $key => $task)
 		{
 			$project_detail = $project_service->project_detail($task->project_id);	
