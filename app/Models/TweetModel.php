@@ -39,4 +39,12 @@ class TweetModel extends Model
 		return false;
 	}
 
+	public function get($scree_name)
+	{
+		return $this->select('user_id', 'user_name', 'full_text',
+			'favorite_count', 'retweet_count', 'reply_count', 'view_count', 
+			'created_at') 
+			->where('user_name', $scree_name)->get();
+	}
+
 }

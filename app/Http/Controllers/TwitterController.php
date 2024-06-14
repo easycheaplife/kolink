@@ -81,4 +81,20 @@ class TwitterController extends Controller
 		return $service->user2($validated_data['access_token'], $debug);
 	}
 
+	public function tweets(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'screen_name' => 'required|string'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new TwitterService();
+		return $service->tweets($validated_data['screen_name']);
+	}
+
 }

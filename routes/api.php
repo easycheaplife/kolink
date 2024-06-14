@@ -145,6 +145,9 @@ Route::post('/twitter/user', [TwitterController::class, 'user']);
 Route::get('/twitter/user2', [TwitterController::class, 'user2']);
 Route::post('/twitter/user2', [TwitterController::class, 'user2']);
 
+Route::get('/twitter/tweets', [TwitterController::class, 'tweets']);
+Route::post('/twitter/tweets', [TwitterController::class, 'tweets']);
+
 Route::get('/youtube/auth', [YoutubeController::class, 'auth']);
 Route::post('/youtube/auth', [YoutubeController::class, 'auth']);
 

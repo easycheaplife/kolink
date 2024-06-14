@@ -481,4 +481,12 @@ class TwitterService extends Service
 		return $tweet_model->insert($tweet);
 	}
 
+    public function tweets($screen_name)
+	{
+		$tweet_model = new TweetModel;
+		$this->res['data'] = $tweet_model->get($screen_name);
+		return $this->res;
+	}
+
+
 }
