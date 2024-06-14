@@ -50,4 +50,22 @@ class RewardController extends Controller
 		);
 	}
 
+	public function reward_telegram(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'token' => 'required|string',
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new RewardService();
+		return $service->reward_telegram(
+			$validated_data['token']
+		);
+	}
+
 }

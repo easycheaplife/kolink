@@ -170,4 +170,22 @@ class RewardService extends Service
 		$this->add_self_reward($kol['id'], config('config.reward_task')['follow_twitter']['xp'], config('config.reward_task')['follow_twitter']['id']);	
 	}
 
+    public function reward_telegram($token)
+	{
+		$kol_service = new KolService;
+		$kol_detail = $kol_service->login($token);
+		if (empty($kol_detail['data']))
+		{
+			return $this->error_response($kol_id, ErrorCodes::ERROR_CODE_KOL_IS_NOT_EXIST,
+				ErrorDescs::ERROR_CODE_KOL_IS_NOT_EXIST);		
+		}
+		$reward_record_model = new RewardRecordModel;
+		$finish_times = $reward_record_model->completed_times($kol_detail['data']['id'],  config('config.reward_task')['join_telgram']['id']);
+		if (!$finish_times)
+		{
+			$this->add_self_reward($kol_detail['data']['id'], config('config.reward_task')['join_telgram']['xp'], config('config.reward_task')['join_telgram']['id']);	
+		}
+		return $this->res;
+	}	
+
 }

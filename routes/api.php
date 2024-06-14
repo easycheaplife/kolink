@@ -154,6 +154,9 @@ Route::post('/youtube/auth', [YoutubeController::class, 'auth']);
 Route::get('/youtube/user', [YoutubeController::class, 'user']);
 Route::post('/youtube/user', [YoutubeController::class, 'user']);
 
+Route::get('/reward/telegram', [RewardController::class, 'reward_telegram']);
+Route::post('/reward/telegram', [RewardController::class, 'reward_telegram']);
+
 Route::get('/reward/list', [RewardController::class, 'reward_list']);
 Route::post('/reward/list', [RewardController::class, 'reward_list']);
 
