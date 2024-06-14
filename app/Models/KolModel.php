@@ -118,6 +118,16 @@ class KolModel extends Model
 				$query->orderByDesc('twitter_followers');	
 			}
 		}
+		else if (3 == $sort_field)
+		{
+			if (0 == $sort_type)
+			{
+				$query->orderBy('youtube_subscriber_count');	
+			}
+			else {
+				$query->orderByDesc('youtube_subscriber_count');	
+			}
+		}
 		return $query->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_favorite_count_total', 'twitter_reply_count_total', 'twitter_retweet_count_total', 'twitter_view_count_total',
