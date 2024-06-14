@@ -176,7 +176,7 @@ class RewardService extends Service
 		$kol_detail = $kol_service->login($token);
 		if (empty($kol_detail['data']))
 		{
-			return $this->error_response($kol_id, ErrorCodes::ERROR_CODE_KOL_IS_NOT_EXIST,
+			return $this->error_response($token, ErrorCodes::ERROR_CODE_KOL_IS_NOT_EXIST,
 				ErrorDescs::ERROR_CODE_KOL_IS_NOT_EXIST);		
 		}
 		$reward_record_model = new RewardRecordModel;
