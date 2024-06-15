@@ -128,7 +128,7 @@ class KolModel extends Model
 				$query->orderByDesc('youtube_subscriber_count');	
 			}
 		}
-		return $query->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
+		return $query->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_tweet_summarize', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_favorite_count_total', 'twitter_reply_count_total', 'twitter_retweet_count_total', 'twitter_view_count_total',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
@@ -183,7 +183,7 @@ class KolModel extends Model
 
 	public function get($kol_id)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_created_at', 
+		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_tweet_summarize', 'twitter_created_at', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_favorite_count_total', 'twitter_reply_count_total', 'twitter_retweet_count_total', 'twitter_view_count_total',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
@@ -196,7 +196,7 @@ class KolModel extends Model
 
 	public function login($token)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_tweet_summarize', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_favorite_count_total', 'twitter_reply_count_total', 'twitter_retweet_count_total', 'twitter_view_count_total',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
@@ -235,7 +235,7 @@ class KolModel extends Model
 
 	public function get_by_twitter_user_id($twitter_user_id)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_tweet_summarize', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_favorite_count_total', 'twitter_reply_count_total', 'twitter_retweet_count_total', 'twitter_view_count_total',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
@@ -357,7 +357,7 @@ class KolModel extends Model
 
 	public function get_kols($kol_ids)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_tweet_summarize', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_favorite_count_total', 'twitter_reply_count_total', 'twitter_retweet_count_total', 'twitter_view_count_total',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
@@ -391,7 +391,7 @@ class KolModel extends Model
 
 	public function get_users($page, $size)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_created_at', 
+		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_tweet_summarize', 'twitter_created_at', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_favorite_count_total', 'twitter_reply_count_total', 'twitter_retweet_count_total', 'twitter_view_count_total',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
@@ -400,7 +400,6 @@ class KolModel extends Model
 			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
 			'invite_code', 'xp')
 			// ->where('email', '!=', '')
-			// ->where('id', '>=', 103)
 			->skip($page * $size)
 			->take($size)
 			->get();
@@ -423,6 +422,13 @@ class KolModel extends Model
 			'twitter_reply_count_total' => $twitter_user['public_metrics']['reply_count_total'], 
 			'twitter_retweet_count_total' => $twitter_user['public_metrics']['retweet_count_total'], 
 			'twitter_view_count_total' => $twitter_user['public_metrics']['view_count_total']]);
+	}
+
+	public function update_twitter_tweet_summarize($kol_id, $text)
+	{
+		return $this->where('id', $kol_id)->update([
+			'twitter_tweet_summarize' => $text
+		]);
 	}
 
 

@@ -127,4 +127,5 @@ return [
 	'recommend_task' => array(
 		'32' => 'https://api.kolink.io/api/file/download/1bd837da-f044-4495-a37d-199f3372d710.jpg',
 	),
+	'gemini_api_key' => 'AIzaSyAtG9i2npZwv76pMSBFKGjUbE2U485H-2o',
 ];

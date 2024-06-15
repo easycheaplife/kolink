@@ -15,6 +15,7 @@ use App\Http\Services\TwitterService;
 use App\Http\Services\YoutubeService;
 use App\Http\Services\RewardService;
 use App\Http\Services\EtherscanService;
+use App\Http\Services\AiService;
 
 
 class KolService extends Service 
@@ -518,6 +519,48 @@ class KolService extends Service
 				}
 				Log::info('get_all_user_tweets kol_id:' . $kol['id']);
 				sleep(120);
+			}
+		}
+	}
+
+	public function summarize_all_user_tweets()
+	{
+		$twitter_service = new TwitterService;
+		$ai_service = new AiService;
+		$kol_model = new KolModel;
+		$total = $kol_model->get_users_count(); 
+		$size = config('config.default_page_size');
+		$page = $total / $size;
+		$prompt = 'Summarize the text above language of the text in no more than 200 characters.';
+		for ($i = 0; $i <= $page; ++$i)
+		{
+			$kols = $kol_model->get_users($i, $size);
+			foreach ($kols as $kol)
+			{
+				$text = '';
+				$tweets = $twitter_service->tweets($kol['twitter_user_name']);
+				if (empty($tweets['data']))
+				{
+					continue;
+				}
+				foreach($tweets['data'] as $tweet)
+				{
+					$text .= $tweet['full_text'];	
+				}
+				if (empty($text))
+				{
+					continue;
+				}
+				$text = str_replace(array("'", "\"", " "), "", $text) . " $prompt"; 
+				$summarize_res = $ai_service->text_summarize($text);
+				Log::info($text);
+				if (!empty($summarize_res['data']))
+				{
+					$text_summarize = $summarize_res['data']['candidates'][0]['content']['parts'][0]['text'];
+					$kol_model->update_twitter_tweet_summarize($kol['id'], $text_summarize);
+				}
+				sleep(5);
+				Log::info('summarize_all_user_tweets kol_id:' . $kol['id']);
 			}
 		}
 	}
