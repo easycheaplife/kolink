@@ -13,11 +13,16 @@ use App\Constants\ErrorDescs;
 
 class AiService extends Service 
 {
-	public function text_summarize($text)
+	public function gemini_generate_content($text)
 	{
 		try {
 			$api_key = config('config.gemini_api_key');
-			$url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=$api_key";
+			/*
+				* gemini-1.5-flash	15RPM	
+				* gemini-1.0-pro	15RPM	
+				* gemini-1.5-pro	2RPM
+			*/
+			$url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=$api_key";
 
 			$headers = ['Content-Type' => 'application/json'];
 			$response = Http::withHeaders($headers)->post($url, [
@@ -38,12 +43,12 @@ class AiService extends Service
 			else {
 				$error_message = "http post $url failed, status:" . $response->status() . ' ' . $response->body();
 				Log::error($error_message);
-				return $this->error_response($code, ErrorCodes::ERROR_CODE_GEMINI_API_REQUEST_FAILED, $error_message);
+				return $this->error_response($response->status(), ErrorCodes::ERROR_CODE_GEMINI_API_REQUEST_FAILED, $error_message);
 			}
 		} catch (\Exception $e) 
 		{   
 			Log::error($e->getMessage());
-			return $this->error_response($code, ErrorCodes::ERROR_CODE_GEMINI_API_REQUEST_FAILED, $e->getMessage());
+			return $this->error_response(0, ErrorCodes::ERROR_CODE_GEMINI_API_REQUEST_FAILED, $e->getMessage());
 		}  
 		return $this->res;
 	}	

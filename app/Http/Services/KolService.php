@@ -531,7 +531,10 @@ class KolService extends Service
 		$total = $kol_model->get_users_count(); 
 		$size = config('config.default_page_size');
 		$page = $total / $size;
-		$prompt = 'Summarize the text above language of the text in no more than 200 characters.';
+		$prompt = 'Summarize the text above language of the text in no more than 200 characters, If no text are provided, the response should be "".';
+		$prompt = 'Based on the provided text, summarize the essence of the text while maintaining their language and content. ' . 
+			'Answer should be less than 256 words. ' . 
+			'If the content cannot be summarized, simply reply with "". ' ;
 		for ($i = 0; $i <= $page; ++$i)
 		{
 			$kols = $kol_model->get_users($i, $size);
@@ -552,14 +555,18 @@ class KolService extends Service
 					continue;
 				}
 				$text = str_replace(array("'", "\"", " "), "", $text) . " $prompt"; 
-				$summarize_res = $ai_service->text_summarize($text);
+				$summarize_res = $ai_service->gemini_generate_content($text);
 				Log::info($text);
 				if (!empty($summarize_res['data']))
 				{
+					if (!isset($summarize_res['data']['candidates'][0]['content']))
+					{
+						continue;
+					}
 					$text_summarize = $summarize_res['data']['candidates'][0]['content']['parts'][0]['text'];
 					$kol_model->update_twitter_tweet_summarize($kol['id'], $text_summarize);
 				}
-				sleep(5);
+				sleep(60);
 				Log::info('summarize_all_user_tweets kol_id:' . $kol['id']);
 			}
 		}
