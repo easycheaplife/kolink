@@ -477,6 +477,7 @@ class KolService extends Service
 				if (!empty($twitter_user['data']))
 				{
 					$kol_model->update_twitter_data($kol['id'], $twitter_user['data']);			
+					$this->update_tweets_data($kol['id'], $kol['twitter_user_name']);
 				}
 				Log::info('update_all_user_data kol_id:' . $kol['id']);
 				sleep(120);
@@ -510,17 +511,35 @@ class KolService extends Service
 			foreach ($kols as $kol)
 			{
 				$tweets = $twitter_service->get_user_tweets($kol['twitter_user_id']);
-				if (!empty($tweets['data']))
+				foreach ($tweets['data'] as $tweet)
 				{
-					foreach ($tweets['data'] as $tweet)
-					{
-						$twitter_service->insert_tweet($tweet);
-					}
+					$twitter_service->insert_tweet($tweet);
 				}
+				$this->update_tweets_data($kol['id'], $kol['twitter_user_name']);
 				Log::info('get_all_user_tweets kol_id:' . $kol['id']);
 				sleep(120);
 			}
 		}
+	}
+
+	public function update_tweets_data($kol_id, $twitter_user_name)
+	{
+		$twitter_service = new TwitterService;
+		$tweets = $twitter_service->tweets($twitter_user_name);
+		$favorite_count_total = 0;
+		$reply_count_total = 0;
+		$retweet_count_total = 0;
+		$view_count_total = 0;
+		foreach ($tweets['data'] as $tweet)
+		{
+			$favorite_count_total += $tweet['favorite_count'];	
+			$reply_count_total += $tweet['reply_count'];	
+			$retweet_count_total += $tweet['retweet_count'];	
+			$view_count_total += $tweet['view_count'];	
+		}
+		$kol_model = new KolModel;
+		$kol_model->update_tweets_data($kol_id, $favorite_count_total,
+			$reply_count_total, $retweet_count_total, $view_count_total);
 	}
 
 	public function summarize_all_user_tweets()

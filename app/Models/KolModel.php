@@ -438,4 +438,14 @@ class KolModel extends Model
 		return false;
 	}
 
+	public function update_tweets_data($kol_id, $favorite_count_total, $reply_count_total,
+		$retweet_count_total, $view_count_total)
+	{
+		return $this->where('id', $kol_id)->update([
+			'twitter_favorite_count_total' => $favorite_count_total, 
+			'twitter_reply_count_total' => $reply_count_total, 
+			'twitter_retweet_count_total' => $retweet_count_total, 
+			'twitter_view_count_total' => $view_count_total]);
+	}
+
 }
