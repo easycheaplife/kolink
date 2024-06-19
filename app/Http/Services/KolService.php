@@ -532,6 +532,14 @@ class KolService extends Service
 		$view_count_total = 0;
 		foreach ($tweets['data'] as $tweet)
 		{
+			if ($tweet['retweeted_tweet_id']) 
+			{
+				continue;
+			}
+			if ($tweet['quote_tweet_id']) 
+			{
+				continue;
+			}
 			$favorite_count_total += $tweet['favorite_count'];	
 			$reply_count_total += $tweet['reply_count'];	
 			$retweet_count_total += $tweet['retweet_count'];	

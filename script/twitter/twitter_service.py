@@ -206,9 +206,6 @@ def get_user_data():
     tweets = user.get_tweets('Tweets', count=40)
     for tweet in tweets:
         tweet_all.append(tweet)
-    more_tweets = tweets.next()
-    for tweet in more_tweets:
-        tweet_all.append(tweet)
 
     reply_count_total = 0
     favorite_count_total = 0
@@ -289,6 +286,9 @@ def get_user_tweets():
             'favorite_count' : tweet.favorite_count,
             'view_count' : tweet.view_count,
             'retweet_count' : tweet.retweet_count,
+            'quote_count' : tweet.quote_count,
+            'quote_tweet_id' : tweet.quote.id if tweet.quote is not None else 0,
+            'retweeted_tweet_id' : tweet.retweeted_tweet.id if tweet.retweeted_tweet is not None else 0,
             'created_at' : tweet.created_at,
         }
         tweet_data.append(tweet_detail)
