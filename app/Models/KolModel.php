@@ -426,10 +426,16 @@ class KolModel extends Model
 
 	public function update_twitter_tweet_summarize($kol_id, $text)
 	{
-		return $this->where('id', $kol_id)->update([
-			'twitter_tweet_summarize' => $text
-		]);
+		try {
+			return $this->where('id', $kol_id)->update([
+				'twitter_tweet_summarize' => $text
+			]);
+		}
+		catch (QueryException $e)
+		{
+			Log::error($e->getMessage());
+		}
+		return false;
 	}
-
 
 }

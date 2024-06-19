@@ -531,10 +531,11 @@ class KolService extends Service
 		$total = $kol_model->get_users_count(); 
 		$size = config('config.default_page_size');
 		$page = $total / $size;
-		$prompt = 'Summarize the text above language of the text in no more than 200 characters, If no text are provided, the response should be "".';
-		$prompt = 'Based on the provided text, summarize the essence of the text while maintaining their language and content. ' . 
-			'Answer should be less than 256 words. ' . 
-			'If the content cannot be summarized, simply reply with "". ' ;
+		$prompt = 'As an expert in analyzing social media content and generating user profiles ' .
+			'and charts based on user behavior and tendencies, analyze a user\'s recent tweets ' .
+			'on Twitter to infer their interests, lifestyle, values, etc. ' .
+			'The answer should be less than 1024 words.';
+		$ai_service->gemini_generate_content($prompt);
 		for ($i = 0; $i <= $page; ++$i)
 		{
 			$kols = $kol_model->get_users($i, $size);
@@ -546,17 +547,7 @@ class KolService extends Service
 				{
 					continue;
 				}
-				foreach($tweets['data'] as $tweet)
-				{
-					$text .= $tweet['full_text'];	
-				}
-				if (empty($text))
-				{
-					continue;
-				}
-				$text = str_replace(array("'", "\"", " "), "", $text) . " $prompt"; 
-				$summarize_res = $ai_service->gemini_generate_content($text);
-				Log::info($text);
+				$summarize_res = $ai_service->gemini_generate_content(json_encode($tweets['data']));
 				if (!empty($summarize_res['data']))
 				{
 					if (!isset($summarize_res['data']['candidates'][0]['content']))
