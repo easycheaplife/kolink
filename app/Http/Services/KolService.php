@@ -534,7 +534,7 @@ class KolService extends Service
 		$prompt = 'As an expert in analyzing social media content and generating user profiles ' .
 			'and charts based on user behavior and tendencies, analyze a user\'s recent tweets ' .
 			'on Twitter to infer their interests, lifestyle, values, etc. ' .
-			'The answer should be less than 1024 words.';
+			'The answer should be less than 512 tokens.';
 		$ai_service->gemini_generate_content($prompt);
 		for ($i = 0; $i <= $page; ++$i)
 		{

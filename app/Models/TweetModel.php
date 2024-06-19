@@ -41,10 +41,14 @@ class TweetModel extends Model
 
 	public function get($scree_name)
 	{
+		$default_size = 30;
 		return $this->select('user_id', 'user_name', 'full_text',
 			'favorite_count', 'retweet_count', 'reply_count', 'view_count', 
 			'created_at') 
-			->where('user_name', $scree_name)->get();
+			->where('user_name', $scree_name)
+			->orderByDesc('created_at')
+			->take($default_size)
+			->get();
 	}
 
 }
