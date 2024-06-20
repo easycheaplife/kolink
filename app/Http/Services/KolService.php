@@ -149,13 +149,11 @@ class KolService extends Service
 		{
 			return 0;
 		}
-		$max_statuses_count = 30;
 		$engagement = 1;
 		$reply_count_total = $kol_detail['twitter_reply_count_total'];
 		$favorite_count_total = $kol_detail['twitter_favorite_count_total'];
 		$retweet_count_total = $kol_detail['twitter_retweet_count_total'];
-		$statuses_count = $kol_detail['twitter_statuses_count'];
-		$statuses_count = $statuses_count <= $max_statuses_count ? $statuses_count : $max_statuses_count;
+		$statuses_count = $this->get_tweets_count($kol_detail['twitter_user_name']);
 		if ($statuses_count > 0)
 		{
 			$engagement = round(($reply_count_total + $favorite_count_total + $retweet_count_total) / $statuses_count, 2);	
@@ -520,6 +518,26 @@ class KolService extends Service
 				sleep(120);
 			}
 		}
+	}
+
+	public function get_tweets_count($twitter_user_name)
+	{
+		$count = 0;	
+		$twitter_service = new TwitterService;
+		$tweets = $twitter_service->tweets($twitter_user_name);
+		foreach ($tweets['data'] as $tweet)
+		{
+			if ($tweet['retweeted_tweet_id']) 
+			{
+				continue;
+			}
+			if ($tweet['quote_tweet_id']) 
+			{
+				continue;
+			}
+			++$count;
+		}
+		return $count;
 	}
 
 	public function update_tweets_data($kol_id, $twitter_user_name)

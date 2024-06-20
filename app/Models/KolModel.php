@@ -399,7 +399,6 @@ class KolModel extends Model
 			'youtube_subscriber_count', 'youtube_view_count', 'youtube_video_count',
 			'engagement_score', 'age_score', 'composite_score', 'twitter_like_count', 'invitee_code', 
 			'invite_code', 'xp')
-			->where('email', '!=', '')
 			->skip($page * $size)
 			->take($size)
 			->get();
