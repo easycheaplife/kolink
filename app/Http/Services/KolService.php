@@ -196,6 +196,7 @@ class KolService extends Service
 		{
 			$task_map[$task['id']]	= $task; 
 		}
+		$this->res['data']['list'] = [];
 		foreach ($task_applications as $application)
 		{
 			$application_task = clone $task_map[$application->task_id];
