@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->integer('project_id')->default(0);
             $table->string('title', 512)->default('');
-            $table->string('desc', 2048)->default('');
+            $table->string('desc',4096)->default('');
             $table->string('backgroud_image', 512)->default('');
             $table->integer('social_platform_id')->default(0);
             $table->integer('kol_max')->default(0);

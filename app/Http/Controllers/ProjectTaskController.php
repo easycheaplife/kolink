@@ -23,7 +23,7 @@ class ProjectTaskController extends Controller
 			$validated_data = $request->validate([
 				'project_id' => 'required|integer',
 				'title' => 'required|string',
-				'desc' => 'required|string',
+				'desc' => 'required|string|max:4096',
 				'backgroud_image' => 'required|string',
 				'social_platform_id' => 'required|integer',
 				'start_time' => 'required|integer',
@@ -137,7 +137,7 @@ class ProjectTaskController extends Controller
 			$validated_data = $request->validate([
 				'task_id' => 'required|integer',
 				'title' => 'required|string',
-				'desc' => 'required|string',
+				'desc' => 'required|string|max:4096',
 				'backgroud_image' => 'required|string',
 				'social_platform_id' => 'required|integer',
 				'start_time' => 'required|integer',

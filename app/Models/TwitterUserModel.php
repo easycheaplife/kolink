@@ -73,7 +73,7 @@ class TwitterUserModel extends Model
 			$this->name = $user['name'];
 			$this->screen_name = $user['username'];
 			$this->description = $user['description'];
-			$this->location = $user['location'];
+			$this->location = isset($user['location']) ? $user['location'] : '';
 			$this->followers_count = $user['public_metrics']['followers_count'];
 			$this->friends_count = $user['public_metrics']['following_count'];
 			$this->following_count = $user['public_metrics']['following_count'];
@@ -102,7 +102,7 @@ class TwitterUserModel extends Model
 			'name' => $user['name'], 
 			'screen_name' => $user['username'], 
 			'description' => $user['description'], 
-			'location' => $user['location'], 
+			'location' => isset($user['location']) ? $user['location'] : '', 
 			'followers_count' => $user['public_metrics']['followers_count'], 
 			'friends_count' => $user['public_metrics']['following_count'], 
 			'listed_count' => $user['public_metrics']['listed_count'], 
