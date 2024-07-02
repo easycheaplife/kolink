@@ -365,7 +365,7 @@ class TwitterService extends Service
 		$user['composite_score'] = $user['engagement_score'] + $user['age_score'] + $user['monetary_score'];
 	}
 
-	public function insert_user_from_xlsx($screen_name, $language)
+	public function insert_user_from_xlsx($screen_name)
 	{
 		$url = config('config.twitter_service_url_base') . "/twitter/get_user?screen_name=$screen_name" ;
 		try {
