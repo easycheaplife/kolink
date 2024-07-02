@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 use App\Constants\ErrorCodes;
 use App\Constants\ErrorDescs;
 use App\Models\ProjectTaskModel;
-use App\Http\Services\ProjectTaskService;
+use App\Models\RecommendTaskModel;
 use App\Http\Services\ProjectTaskViewService;
 use App\Http\Services\ProjectApplicationService;
 use App\Http\Services\ProjectService;
@@ -208,6 +208,12 @@ class ProjectTaskService extends Service
 		}
 		$application_service->task_close($task_id);
 		return $this->res;
+	}
+
+	public function recommend_task_list()
+	{
+		$recommend_task_model = new RecommendTaskModel;
+		return $recommend_task_model->list();
 	}
 
 }
