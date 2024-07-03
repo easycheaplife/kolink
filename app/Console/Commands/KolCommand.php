@@ -51,7 +51,7 @@ class KolCommand extends Command
 			$cellValues = [];
 			foreach ($row->getCellIterator() as $cell) {
 				$column = $cell->getColumn();
-				if ($column === 'C' || $column === 'D') {
+				if ($column === 'A' || $column === 'C' || $column === 'D') {
 					$cellValue = $cell->getValue();
 					if ("KOL" == $cellValue || is_null($cellValue) || "Twitter Handle" == $cellValue || '' == $cellValue)
 					{
@@ -63,8 +63,8 @@ class KolCommand extends Command
 			if (!empty($cellValues))
 			{
 				$cellValues[0] = str_replace('@', '', $cellValues[0]);
-				$twitter_service->insert_user_from_xlsx($cellValues[0], $cellValues[1]);
-				Log::info($cellValues);
+				$twitter_service->insert_user_from_xlsx($cellValues[0]);
+				Log::info("load_kol_from_twitter:" . $cellValues[0]);
 				sleep(20);
 			}
 		}
