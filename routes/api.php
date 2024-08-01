@@ -72,6 +72,9 @@ Route::post('/task/all', [ProjectTaskController::class, 'task_all']);
 Route::get('/project/task/detail', [ProjectTaskController::class, 'task_detail']);
 Route::post('/project/task/detail', [ProjectTaskController::class, 'task_detail']);
 
+Route::get('/project/task/share/detail', [ProjectTaskController::class, 'task_share']);
+Route::post('/project/task/share/detail', [ProjectTaskController::class, 'task_share']);
+
 Route::get('/project/task/setting', [ProjectTaskController::class, 'task_setting']);
 Route::post('/project/task/setting', [ProjectTaskController::class, 'task_setting']);
 

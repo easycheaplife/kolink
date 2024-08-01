@@ -342,7 +342,7 @@ class ProjectTaskApplicationService extends Service
 	public function application_eligibility($kol_id, $task_id)
 	{
 		$task_service = new ProjectTaskService;
-		$task_detail = $task_service->task_detail($task_id);
+		$task_detail = $task_service->task_data($task_id);
 		if (empty($task_detail['data']))
 		{
 			return $this->error_response($task_id, ErrorCodes::ERROR_CODE_TASK_IS_NOT_EXIST,

@@ -287,7 +287,7 @@ def get_user_tweets():
             'view_count' : tweet.view_count,
             'retweet_count' : tweet.retweet_count,
             'quote_count' : tweet.quote_count,
-            'quote_tweet_id' : tweet.quote.id if tweet.quote is not None else 0,
+            'quote_tweet_id': tweet.quote.id if hasattr(tweet, 'quote') and tweet.quote is not None else 0,
             'retweeted_tweet_id' : tweet.retweeted_tweet.id if tweet.retweeted_tweet is not None else 0,
             'created_at' : tweet.created_at,
         }
@@ -300,6 +300,42 @@ def get_user_tweets():
     logging.info(tweet_data)
     response['data'] = tweet_data
     return response
-    
+
+@app.route('/twitter/get_latest_followers', methods=['GET'])
+def get_latest_followers():
+    screen_name = request.args.get('screen_name')
+    client.load_cookies(path='cookies.json');
+    user = client.get_user_by_screen_name(screen_name)
+    logging.info("get_latest_followers,screen name" + screen_name)
+    followers = user.get_latest_followers()
+    users = []
+    for user in followers:
+        public_metrics = {
+            "followers_count" : user.followers_count,
+            "following_count" : user.following_count,
+            "listed_count" : user.listed_count,
+            "like_count" : user.favourites_count,
+            "tweet_count" : user.statuses_count,
+        }
+        user_json = {
+             "id" : user.id,
+             "name" : user.name,
+             "username" : user.screen_name,
+             "description" : user.description,
+             "profile_image_url" : user.profile_image_url,
+             "url" : user.url,
+             "public_metrics" : public_metrics,
+             "location" : user.location,
+             "created_at" : user.created_at,
+        } 
+        users.append(user_json)
+    response = {
+        "code": 0,
+        "message": "",
+        "data": {}
+    }
+    response['data'] = users
+    return response
+
 if __name__ == '__main__':
     app.run(debug=True, host=host, port=port)
