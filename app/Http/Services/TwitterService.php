@@ -15,6 +15,7 @@ use App\Models\TweetModel;
 use App\Http\Services\KolService;
 use App\Http\Services\EtherscanService;
 use App\Http\Services\RewardService;
+use App\Http\Services\AiService;
 
 
 class TwitterService extends Service 
@@ -488,5 +489,111 @@ class TwitterService extends Service
 		return $this->res;
 	}
 
+	public function tweets_content_relevance($screen_name, $keywords)
+	{
+		$ai_service = new AiService;
+		$prompt = "You are a Twitter data analyst capable of analyzing a user's recent tweets to determine the fields they focus on." . 
+			"You are fluent in multiple languages and can translate text from various languages into English." .
+			"You are provided with a set of keywords related to a specific field and the content of a user's recent tweets." .
+			"Attempt to determine the relevance between the keywords and the content, and assign a score between 0 and 100." .
+			"Please output pretty format. Maybe json format:" .
+			"{\"user_name\":\"bob\",\"keywords\":\"defi\",\"relevance_score\":66,\"explanation\":\"\"}" .
+			"Explanation for the analysis for obtaining scores, three or four aspects are generally listed." .
+			"keywords:$keywords;content:";
+		$tweets = $this->tweets($screen_name);
+		if (empty($tweets['data']))
+		{
+			return $this->res;
+		}
+		$summarize_res = $ai_service->gemini_generate_content($prompt . json_encode($tweets['data']));
+		if (!empty($summarize_res['data']))
+		{
+			if (!isset($summarize_res['data']['candidates'][0]['content']))
+			{
+				return $this->res;
+			}
+			$text_summarize = $summarize_res['data']['candidates'][0]['content']['parts'][0]['text'];
+			$text_summarize = str_replace('```json', '', $text_summarize);
+			$text_summarize = str_replace('```', '', $text_summarize);
+			$this->res['data'] = json_decode($text_summarize);
+		}
+		return $this->res;
+	}
+
+	public function metric_data(&$data)
+	{
+		$tweet_model = new TweetModel;
+		$tweets = $tweet_model->get($data['twitter_user_name']);
+		$tweet_count = count($tweets);
+		if (!$tweet_count)
+		{
+			return;
+		}
+		$total_tweet_views = 0;
+		$total_tweet_favorite_count = 0;
+		$total_tweet_retweet_count = 0;
+		$total_tweet_reply_count = 0;
+		foreach ($tweets as $tweet)
+		{
+			$total_tweet_views += $tweet['view_count'];	
+			$total_tweet_favorite_count += $tweet['favorite_count'];	
+			$total_tweet_retweet_count += $tweet['retweet_count'];	
+			$total_tweet_reply_count += $tweet['reply_count'];	
+		}
+		$data['twitter_average_post_reach'] = round($total_tweet_views / $tweet_count, 2);
+
+		$data['twitter_interaction_rate'] = round(($total_tweet_favorite_count 
+			+ $total_tweet_retweet_count
+			+ $total_tweet_reply_count) / $tweet_count, 2);
+
+		if ($data['twitter_following_count']) 
+		{
+			$data['twitter_content_likability'] = round($data['twitter_interaction_rate'] * $data['twitter_average_post_reach'] 
+				/ $data['twitter_following_count'] , 2);
+		}
+		else 
+		{
+			$data['twitter_content_likability'] = 0.0;
+		}
+		$data['twitter_average_likes_per_post'] = round($total_tweet_favorite_count / $tweet_count, 2);
+		$data['twitter_average_comments_per_post'] = round($total_tweet_reply_count / $tweet_count, 2);
+		$data['twitter_average_retweets_per_post'] = round($total_tweet_retweet_count / $tweet_count, 2);
+		$tweet_diff_day = 1;
+		if ($tweet_count >= 2)
+		{
+			$date_start = new \DateTime($tweets[$tweet_count - 1]['created_at']);
+			$date_end = new \DateTime($tweets[0]['created_at']);
+			$interval = $date_start->diff($date_end);
+			$tweet_diff_day = $interval->days;
+		}
+		$data['twitter_content_presence'] = round($tweet_diff_day / $tweet_count, 2);
+		$max_vals = array(
+			"twitter_average_post_reach" => 70342.57,
+			"twitter_interaction_rate" => 21178.45,
+			"twitter_content_likability" => 87868.63,
+			"twitter_average_likes_per_post" => 109.93,
+			"twitter_average_comments_per_post" => 112.37,
+			"twitter_average_retweets_per_post" => 21158.1,
+			"twitter_content_presence" => 48.13
+		);
+		$weights = array(
+			"twitter_average_post_reach" => 0.25,
+			"twitter_interaction_rate" => 0.20,
+			"twitter_content_likability" => 0.15,
+			"twitter_average_likes_per_post" => 0.10,
+			"twitter_average_comments_per_post" => 0.10,
+			"twitter_average_retweets_per_post" => 0.15,
+			"twitter_content_presence" => 0.05
+		);
+		$data['twitter_metric_max'] = $max_vals;
+		$data['twitter_metric_weights'] = $weights;
+		$data['twitter_impact_score'] = round($data['twitter_average_post_reach'] / $max_vals['twitter_average_post_reach'] * $weights['twitter_average_post_reach'] 
+			+ $data['twitter_interaction_rate'] / $max_vals['twitter_interaction_rate'] * $weights['twitter_interaction_rate']
+			+ $data['twitter_content_likability'] / $max_vals['twitter_content_likability'] * $weights['twitter_content_likability']
+			+ $data['twitter_average_likes_per_post'] / $max_vals['twitter_average_likes_per_post'] * $weights['twitter_average_likes_per_post']
+			+ $data['twitter_average_comments_per_post'] / $max_vals['twitter_average_comments_per_post'] * $weights['twitter_average_comments_per_post']
+			+ $data['twitter_average_retweets_per_post'] / $max_vals['twitter_average_retweets_per_post'] * $weights['twitter_average_retweets_per_post']
+			+ $data['twitter_content_presence'] / $max_vals['twitter_content_presence'] * $weights['twitter_content_presence'], 2);
+	}
 
 }

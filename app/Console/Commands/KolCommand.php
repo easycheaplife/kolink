@@ -39,6 +39,7 @@ class KolCommand extends Command
 			$kol_service->summarize_all_user_tweets();
 		}
 		$kol_service->calc_all_user_score();
+		$kol_service->calc_all_user_twitter_metric();
     }
 
 	public function load_kol_from_twitter()

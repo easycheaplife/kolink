@@ -100,6 +100,26 @@ class ProjectTaskController extends Controller
 		);
 	}
 
+	public function task_share(Request $request)
+	{
+		$kol_id = $request->input('kol_id', 0);
+		try {
+			$validated_data = $request->validate([
+				'task_id' => 'required|integer'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new ProjectTaskService();
+		return $service->task_share(
+			$validated_data['task_id'],
+			$kol_id
+		);
+	}
+
 	public function task_all(Request $request)
 	{
 		$page = $request->input('page', 0);
