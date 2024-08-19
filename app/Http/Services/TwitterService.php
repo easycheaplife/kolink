@@ -540,7 +540,7 @@ class TwitterService extends Service
 			$total_tweet_retweet_count += $tweet['retweet_count'];	
 			$total_tweet_reply_count += $tweet['reply_count'];	
 		}
-		$data['twitter_average_post_reach'] = round($total_tweet_views /$tweet_count, 2);
+		$data['twitter_average_post_reach'] = round($total_tweet_views / $tweet_count, 2);
 
 		$data['twitter_interaction_rate'] = round(($total_tweet_favorite_count 
 			+ $total_tweet_retweet_count
@@ -567,6 +567,33 @@ class TwitterService extends Service
 			$tweet_diff_day = $interval->days;
 		}
 		$data['twitter_content_presence'] = round($tweet_diff_day / $tweet_count, 2);
+		$max_vals = array(
+			"twitter_average_post_reach" => 70342.57,
+			"twitter_interaction_rate" => 21178.45,
+			"twitter_content_likability" => 87868.63,
+			"twitter_average_likes_per_post" => 109.93,
+			"twitter_average_comments_per_post" => 112.37,
+			"twitter_average_retweets_per_post" => 21158.1,
+			"twitter_content_presence" => 48.13
+		);
+		$weights = array(
+			"twitter_average_post_reach" => 0.25,
+			"twitter_interaction_rate" => 0.20,
+			"twitter_content_likability" => 0.15,
+			"twitter_average_likes_per_post" => 0.10,
+			"twitter_average_comments_per_post" => 0.10,
+			"twitter_average_retweets_per_post" => 0.15,
+			"twitter_content_presence" => 0.05
+		);
+		$data['twitter_metric_max'] = $max_vals;
+		$data['twitter_metric_weights'] = $weights;
+		$data['twitter_impact_score'] = round($data['twitter_average_post_reach'] / $max_vals['twitter_average_post_reach'] * $weights['twitter_average_post_reach'] 
+			+ $data['twitter_interaction_rate'] / $max_vals['twitter_interaction_rate'] * $weights['twitter_interaction_rate']
+			+ $data['twitter_content_likability'] / $max_vals['twitter_content_likability'] * $weights['twitter_content_likability']
+			+ $data['twitter_average_likes_per_post'] / $max_vals['twitter_average_likes_per_post'] * $weights['twitter_average_likes_per_post']
+			+ $data['twitter_average_comments_per_post'] / $max_vals['twitter_average_comments_per_post'] * $weights['twitter_average_comments_per_post']
+			+ $data['twitter_average_retweets_per_post'] / $max_vals['twitter_average_retweets_per_post'] * $weights['twitter_average_retweets_per_post']
+			+ $data['twitter_content_presence'] / $max_vals['twitter_content_presence'] * $weights['twitter_content_presence'], 2);
 	}
 
 }

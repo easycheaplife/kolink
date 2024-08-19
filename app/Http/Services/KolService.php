@@ -386,6 +386,37 @@ class KolService extends Service
 		}
 	}
 
+	public function calc_user_twitter_metric($kols)
+	{
+		$kol_model = new KolModel;
+		$twitter_service = new TwitterService;
+		$max_twitter_average_post_reach = 0;
+		$max_twitter_interaction_rate = 0;
+		$max_twitter_content_likability = 0;
+		$max_twitter_average_likes_per_post = 0;
+		$max_twitter_average_comments_per_post = 0;
+		$max_twitter_average_retweets_per_post = 0;
+		$max_twitter_content_presence = 0;
+		foreach ($kols as $kol)
+		{
+			$twitter_service->metric_data($kol);
+			$max_twitter_average_post_reach = $max_twitter_average_post_reach >= $kol['twitter_average_post_reach'] ? $max_twitter_average_post_reach : $kol['twitter_average_post_reach'];
+			$max_twitter_interaction_rate = $max_twitter_interaction_rate >= $kol['twitter_interaction_rate'] ? $max_twitter_interaction_rate: $kol['twitter_interaction_rate'];
+			$max_twitter_content_likability = $max_twitter_content_likability >= $kol['twitter_content_likability'] ? $max_twitter_content_likability: $kol['twitter_content_likability'];
+			$max_twitter_average_likes_per_post = $max_twitter_average_likes_per_post >= $kol['twitter_average_likes_per_post'] ? $max_twitter_average_likes_per_post: $kol['twitter_average_likes_per_post'];
+			$max_twitter_average_comments_per_post = $max_twitter_average_comments_per_post >= $kol['twitter_average_comments_per_post'] ? $max_twitter_average_comments_per_post: $kol['twitter_average_comments_per_post'];
+			$max_twitter_average_retweets_per_post = $max_twitter_average_retweets_per_post >= $kol['twitter_average_retweets_per_post'] ? $max_twitter_average_retweets_per_post: $kol['twitter_average_retweets_per_post'];
+			$max_twitter_content_presence = $max_twitter_content_presence >= $kol['twitter_content_presence'] ? $max_twitter_content_presence: $kol['twitter_content_presence'];
+		}
+		Log::info("max_twitter_average_post_reach:$max_twitter_average_post_reach;" .
+			"max_twitter_interaction_rate:$max_twitter_interaction_rate;" .
+			"max_twitter_content_likability:$max_twitter_content_likability;" .
+			"max_twitter_average_likes_per_post:$max_twitter_average_likes_per_post;" .
+			"max_twitter_average_comments_per_post:$max_twitter_average_comments_per_post;" .
+			"max_twitter_average_retweets_per_post:$max_twitter_average_retweets_per_post;" .
+			"max_twitter_content_likability:$max_twitter_content_presence");
+	}
+
 	public function calc_twitter_engagement_score($user, $followers_count_max, 
 		$listed_count_max, $following_count_max, $like_count_max, $statuses_count_max)
 	{
@@ -500,6 +531,19 @@ class KolService extends Service
 		{
 			$kols = $kol_model->get_users($i, $size);
 			$this->calc_user_score($kols);
+		}
+	}
+
+	public function calc_all_user_twitter_metric()
+	{
+		$kol_model = new KolModel;
+		$total = $kol_model->get_users_count(); 
+		$size = config('config.default_page_size') * 100;
+		$page = $total / $size;
+		for ($i = 0; $i <= $page; ++$i)
+		{
+			$kols = $kol_model->get_users($i, $size);
+			$this->calc_user_twitter_metric($kols);
 		}
 	}
 
