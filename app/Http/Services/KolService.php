@@ -388,7 +388,6 @@ class KolService extends Service
 
 	public function calc_user_twitter_metric($kols)
 	{
-		$kol_model = new KolModel;
 		$twitter_service = new TwitterService;
 		$max_twitter_average_post_reach = 0;
 		$max_twitter_interaction_rate = 0;
@@ -415,6 +414,27 @@ class KolService extends Service
 			"max_twitter_average_comments_per_post:$max_twitter_average_comments_per_post;" .
 			"max_twitter_average_retweets_per_post:$max_twitter_average_retweets_per_post;" .
 			"max_twitter_content_likability:$max_twitter_content_presence");
+	}
+
+	public function calc_user_twitter_content_relevance($kols)
+	{
+		$twitter_service = new TwitterService;
+		foreach ($kols as $kol)
+		{
+			foreach (config('config.category_list') as $category => $val)
+			{
+				$res = $twitter_service->tweets_content_relevance($kol['twitter_user_name'], $category);
+				if (!isset($res['data']->relevance_score))
+				{
+					sleep(60);
+					continue;
+				}	
+				$twitter_service->update_twitter_content_relevance($kol['twitter_user_id'],
+					$kol['twitter_user_name'], $val, $res['data']->relevance_score, $res['data']->explanation);
+				Log::info($res);
+			}
+			sleep(60);
+		}
 	}
 
 	public function calc_twitter_engagement_score($user, $followers_count_max, 
@@ -544,6 +564,19 @@ class KolService extends Service
 		{
 			$kols = $kol_model->get_users($i, $size);
 			$this->calc_user_twitter_metric($kols);
+		}
+	}
+
+	public function calc_all_user_twitter_content_relevance()
+	{
+		$kol_model = new KolModel;
+		$total = $kol_model->get_users_count(); 
+		$size = config('config.default_page_size');
+		$page = $total / $size;
+		for ($i = 0; $i <= $page; ++$i)
+		{
+			$kols = $kol_model->get_users($i, $size);
+			$this->calc_user_twitter_content_relevance($kols);
 		}
 	}
 

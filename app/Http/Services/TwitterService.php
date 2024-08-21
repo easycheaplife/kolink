@@ -12,6 +12,7 @@ use App\Constants\ErrorDescs;
 use App\Models\TwitterUserModel;
 use App\Models\TwitterUserDataModel;
 use App\Models\TweetModel;
+use App\Models\TwitterContentRelevanceModel;
 use App\Http\Services\KolService;
 use App\Http\Services\EtherscanService;
 use App\Http\Services\RewardService;
@@ -594,6 +595,12 @@ class TwitterService extends Service
 			+ $data['twitter_average_comments_per_post'] / $max_vals['twitter_average_comments_per_post'] * $weights['twitter_average_comments_per_post']
 			+ $data['twitter_average_retweets_per_post'] / $max_vals['twitter_average_retweets_per_post'] * $weights['twitter_average_retweets_per_post']
 			+ $data['twitter_content_presence'] / $max_vals['twitter_content_presence'] * $weights['twitter_content_presence'], 2);
+	}
+
+	public function update_twitter_content_relevance($user_id, $user_name, $category_id, $score, $explanation)
+	{
+		$twitter_content_relevance_service = new TwitterContentRelevanceModel();	
+		return $twitter_content_relevance_service->insert($user_id, $user_name, $category_id, $score, $explanation);
 	}
 
 }

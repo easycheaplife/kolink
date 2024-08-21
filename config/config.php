@@ -33,6 +33,7 @@ return [
 		'RWA' => 11,
 		'Meme' => 12,
 		'DePin' => 13,
+		'Web3' => 14,
 		'Other' => 99,
 	),
 	'region_list' => array(

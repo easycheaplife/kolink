@@ -31,6 +31,8 @@ class KolCommand extends Command
     public function handle()
     {
 		$kol_service = new KolService;
+		$kol_service->calc_all_user_twitter_content_relevance();
+		return;
 		$dayOfMonth = now()->day;
 		if ($dayOfMonth % 2 == 0) {
 			$kol_service->update_all_user_data();
