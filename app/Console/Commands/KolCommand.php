@@ -31,17 +31,17 @@ class KolCommand extends Command
     public function handle()
     {
 		$kol_service = new KolService;
-		$kol_service->calc_all_user_twitter_content_relevance();
+		$kol_service->calc_all_user_twitter_metric();
 		return;
 		$dayOfMonth = now()->day;
 		if ($dayOfMonth % 2 == 0) {
 			$kol_service->update_all_user_data();
+			$kol_service->calc_all_user_twitter_content_relevance();
 		} else {
 			$kol_service->get_all_user_tweets();
 			$kol_service->summarize_all_user_tweets();
 		}
 		$kol_service->calc_all_user_score();
-		$kol_service->calc_all_user_twitter_metric();
     }
 
 	public function load_kol_from_twitter()

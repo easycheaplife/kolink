@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\Log;
@@ -407,6 +408,15 @@ class KolService extends Service
 			$max_twitter_average_retweets_per_post = $max_twitter_average_retweets_per_post >= $kol['twitter_average_retweets_per_post'] ? $max_twitter_average_retweets_per_post: $kol['twitter_average_retweets_per_post'];
 			$max_twitter_content_presence = $max_twitter_content_presence >= $kol['twitter_content_presence'] ? $max_twitter_content_presence: $kol['twitter_content_presence'];
 		}
+
+		Redis::set('max_twitter_average_post_reach', $max_twitter_average_post_reach);
+		Redis::set('max_twitter_interaction_rate', $max_twitter_interaction_rate);
+		Redis::set('max_twitter_content_likability', $max_twitter_content_likability);
+		Redis::set('max_twitter_average_likes_per_post', $max_twitter_average_likes_per_post);
+		Redis::set('max_twitter_average_comments_per_post', $max_twitter_average_comments_per_post);
+		Redis::set('max_twitter_average_retweets_per_post', $max_twitter_average_retweets_per_post);
+		Redis::set('max_twitter_content_presence', $max_twitter_content_presence);
+
 		Log::info("max_twitter_average_post_reach:$max_twitter_average_post_reach;" .
 			"max_twitter_interaction_rate:$max_twitter_interaction_rate;" .
 			"max_twitter_content_likability:$max_twitter_content_likability;" .

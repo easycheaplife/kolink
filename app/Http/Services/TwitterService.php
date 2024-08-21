@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -569,13 +570,13 @@ class TwitterService extends Service
 		}
 		$data['twitter_content_presence'] = round($tweet_diff_day / $tweet_count, 2);
 		$max_vals = array(
-			"twitter_average_post_reach" => 70342.57,
-			"twitter_interaction_rate" => 21178.45,
-			"twitter_content_likability" => 87868.63,
-			"twitter_average_likes_per_post" => 109.93,
-			"twitter_average_comments_per_post" => 112.37,
-			"twitter_average_retweets_per_post" => 21158.1,
-			"twitter_content_presence" => 48.13
+			"twitter_average_post_reach" => Redis::get('max_twitter_average_post_reach'),
+			"twitter_interaction_rate" => Redis::get('max_twitter_interaction_rate'),
+			"twitter_content_likability" => Redis::get('max_twitter_content_likability'),
+			"twitter_average_likes_per_post" => Redis::get('max_twitter_average_likes_per_post'),
+			"twitter_average_comments_per_post" => Redis::get('max_twitter_average_comments_per_post'),
+			"twitter_average_retweets_per_post" => Redis::get('max_twitter_average_retweets_per_post'),
+			"twitter_content_presence" => Redis::get('max_twitter_content_likability')
 		);
 		$weights = array(
 			"twitter_average_post_reach" => 0.25,
