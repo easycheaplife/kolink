@@ -569,6 +569,14 @@ class TwitterService extends Service
 			$tweet_diff_day = $interval->days;
 		}
 		$data['twitter_content_presence'] = round($tweet_diff_day / $tweet_count, 2);
+		$data['twitter_content_web3_relevance'] = 0.0;
+		$twitter_content_relevance_service = new TwitterContentRelevanceModel();	
+		$res_content_relevance = $twitter_content_relevance_service->get($data['twitter_user_id'], 13);
+		if (!empty($res_content_relevance))
+		{
+			$data['twitter_content_web3_relevance'] = $res_content_relevance['score'];			
+		}
+
 		$max_vals = array(
 			"twitter_average_post_reach" => Redis::get('max_twitter_average_post_reach'),
 			"twitter_interaction_rate" => Redis::get('max_twitter_interaction_rate'),

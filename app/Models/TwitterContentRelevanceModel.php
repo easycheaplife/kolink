@@ -17,7 +17,7 @@ class TwitterContentRelevanceModel extends Model
 	{
 		try {
 			return $this->updateOrCreate(
-				['user_id' => $user_name, 'category_id' => $category_id],
+				['user_id' => $user_id, 'category_id' => $category_id],
 				[
 					'user_id' => $user_id,
 					'user_name' => $user_name,
@@ -36,7 +36,7 @@ class TwitterContentRelevanceModel extends Model
 	public function get($user_id, $category_id)
 	{
 		return $this->select('user_id', 'user_name', 'category_id', 'score', 'explanation') 
-			->where('user_id', $scree_id)
+			->where('user_id', $user_id)
 			->where('category_id', $category_id)
 			->first();
 	}
