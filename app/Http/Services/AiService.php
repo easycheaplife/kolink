@@ -22,7 +22,7 @@ class AiService extends Service
 				* gemini-1.0-pro	15RPM	
 				* gemini-1.5-pro	2RPM
 			*/
-			$url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-pro:generateContent?key=$api_key";
+			$url = "https://generativelanguage.googleapis.com/v1/models/gemini-1.5-flash:generateContent?key=$api_key";
 
 			$headers = ['Content-Type' => 'application/json'];
 			$response = Http::withHeaders($headers)->post($url, [
