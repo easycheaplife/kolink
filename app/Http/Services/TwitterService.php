@@ -596,7 +596,6 @@ class TwitterService extends Service
 			"twitter_content_presence" => 0.05
 		);
 		$data['twitter_metric_max'] = $max_vals;
-		$data['twitter_metric_weights'] = $weights;
 		$data['twitter_impact_score'] = round($data['twitter_average_post_reach'] / $max_vals['twitter_average_post_reach'] * $weights['twitter_average_post_reach'] 
 			+ $data['twitter_interaction_rate'] / $max_vals['twitter_interaction_rate'] * $weights['twitter_interaction_rate']
 			+ $data['twitter_content_likability'] / $max_vals['twitter_content_likability'] * $weights['twitter_content_likability']
@@ -604,6 +603,7 @@ class TwitterService extends Service
 			+ $data['twitter_average_comments_per_post'] / $max_vals['twitter_average_comments_per_post'] * $weights['twitter_average_comments_per_post']
 			+ $data['twitter_average_retweets_per_post'] / $max_vals['twitter_average_retweets_per_post'] * $weights['twitter_average_retweets_per_post']
 			+ $data['twitter_content_presence'] / $max_vals['twitter_content_presence'] * $weights['twitter_content_presence'], 2);
+		$data['content_relevance'] = $twitter_content_relevance_service->top($data['twitter_user_id']);
 	}
 
 	public function update_twitter_content_relevance($user_id, $user_name, $category_id, $score, $explanation)

@@ -126,4 +126,5 @@ return [
 		'join_telgram' => array('id' => 9, 'xp' => 5, 'type' => 'social'),	
 	),
 	'gemini_api_key' => 'AIzaSyAtG9i2npZwv76pMSBFKGjUbE2U485H-2o',
+	'twitter_tweets_default_size' => 30,
 ];
