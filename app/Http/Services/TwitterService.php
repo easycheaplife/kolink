@@ -589,16 +589,18 @@ class TwitterService extends Service
 			"twitter_average_likes_per_post" => Redis::get("max_twitter_average_likes_per_post:$posts"),
 			"twitter_average_comments_per_post" => Redis::get("max_twitter_average_comments_per_post:$posts"),
 			"twitter_average_retweets_per_post" => Redis::get("max_twitter_average_retweets_per_post:$posts"),
-			"twitter_content_presence" => Redis::get("max_twitter_content_likability:$posts")
+			"twitter_content_presence" => Redis::get("max_twitter_content_likability:$posts"),
+			"twitter_content_web3_relevance" => Redis::get("max_twitter_content_web3_relevance:$posts")
 		);
 		$weights = array(
-			"twitter_average_post_reach" => 0.25,
+			"twitter_average_post_reach" => 0.20,
 			"twitter_interaction_rate" => 0.20,
 			"twitter_content_likability" => 0.15,
 			"twitter_average_likes_per_post" => 0.10,
 			"twitter_average_comments_per_post" => 0.10,
 			"twitter_average_retweets_per_post" => 0.15,
-			"twitter_content_presence" => 0.05
+			"twitter_content_presence" => 0.05,
+			"twitter_content_web3_relevance" => 0.05
 		);
 		$data['twitter_metric_max'] = $max_vals;
 		$data['twitter_impact_score'] = round($data['twitter_average_post_reach'] / $max_vals['twitter_average_post_reach'] * $weights['twitter_average_post_reach'] 
@@ -607,7 +609,8 @@ class TwitterService extends Service
 			+ $data['twitter_average_likes_per_post'] / $max_vals['twitter_average_likes_per_post'] * $weights['twitter_average_likes_per_post']
 			+ $data['twitter_average_comments_per_post'] / $max_vals['twitter_average_comments_per_post'] * $weights['twitter_average_comments_per_post']
 			+ $data['twitter_average_retweets_per_post'] / $max_vals['twitter_average_retweets_per_post'] * $weights['twitter_average_retweets_per_post']
-			+ $data['twitter_content_presence'] / $max_vals['twitter_content_presence'] * $weights['twitter_content_presence'], 2);
+			+ $data['twitter_content_presence'] / $max_vals['twitter_content_presence'] * $weights['twitter_content_web3_relevance']
+			+ $data['twitter_content_web3_relevance'] / $max_vals['twitter_content_web3_relevance'] * $weights['twitter_content_presence'], 2);
 		$data['content_relevance'] = $twitter_content_relevance_service->top($data['twitter_user_id']);
 	}
 
