@@ -115,4 +115,28 @@ class TwitterController extends Controller
 			$validated_data['keywords']);
 	}
 
+	public function tweets_analysis(Request $request)
+	{
+		$default_size = config('config.twitter_tweets_default_size');
+		$posts = $request->input('posts', $default_size);
+		if (!in_array($posts, [7,30]))
+		{
+			$posts = $default_size;
+		}
+		try {
+			$validated_data = $request->validate([
+				'screen_name' => 'required|string'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new TwitterService();
+		return $service->tweets_analysis($validated_data['screen_name'],
+			$posts);
+	
+	}
+
 }

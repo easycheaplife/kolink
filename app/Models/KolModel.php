@@ -128,7 +128,7 @@ class KolModel extends Model
 				$query->orderByDesc('youtube_subscriber_count');	
 			}
 		}
-		return $query->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_tweet_summarize', 
+		return $query->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_favorite_count_total', 'twitter_reply_count_total', 'twitter_retweet_count_total', 'twitter_view_count_total',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
@@ -183,7 +183,7 @@ class KolModel extends Model
 
 	public function get($kol_id)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_tweet_summarize', 'twitter_created_at', 
+		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_created_at', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_favorite_count_total', 'twitter_reply_count_total', 'twitter_retweet_count_total', 'twitter_view_count_total',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
@@ -196,7 +196,7 @@ class KolModel extends Model
 
 	public function login($token)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_tweet_summarize', 
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_favorite_count_total', 'twitter_reply_count_total', 'twitter_retweet_count_total', 'twitter_view_count_total',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
@@ -244,6 +244,16 @@ class KolModel extends Model
 			'invite_code', 'xp')
 			->orderByDesc('id')
 			->where('twitter_user_id', $twitter_user_id)->first();
+	}
+
+	public function get_by_twitter_user_name($twitter_user_name)
+	{
+		return $this->select('twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_tweet_summarize', 
+			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
+			'twitter_favorite_count_total', 'twitter_reply_count_total', 'twitter_retweet_count_total', 'twitter_view_count_total',
+			'twitter_followers', 'twitter_like_count')
+			->orderByDesc('id')
+			->where('twitter_user_name', $twitter_user_name)->first();
 	}
 
 	public function insert_twitter_user($twitter_user)
@@ -357,7 +367,7 @@ class KolModel extends Model
 
 	public function get_kols($kol_ids)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 'twitter_tweet_summarize', 
+		return $this->select('id', 'token', 'email', 'twitter_user_name', 'twitter_avatar', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_favorite_count_total', 'twitter_reply_count_total', 'twitter_retweet_count_total', 'twitter_view_count_total',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 
@@ -391,7 +401,7 @@ class KolModel extends Model
 
 	public function get_users($page, $size)
 	{
-		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_tweet_summarize', 'twitter_created_at', 
+		return $this->select('id', 'token', 'email', 'twitter_user_id', 'twitter_user_name', 'twitter_avatar', 'twitter_created_at', 
 			'twitter_listed_count', 'twitter_like_count', 'twitter_following_count', 'twitter_statuses_count',
 			'twitter_favorite_count_total', 'twitter_reply_count_total', 'twitter_retweet_count_total', 'twitter_view_count_total',
 			'twitter_followers', 'region_id', 'language_id', 'category_id', 'monetary_score', 

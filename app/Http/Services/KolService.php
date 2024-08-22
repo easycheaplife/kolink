@@ -141,13 +141,18 @@ class KolService extends Service
 		{
 			$this->res['data']['engagement'] = $this->engagement_score($this->res['data']);
 			$this->res['data']['monetary_score'] = empty($this->res['data']['monetary_score']) ? 0 : $this->res['data']['monetary_score'];
-			$twitter_service->metric_data($this->res['data']);
 		}
 		else 
 		{
 			$this->res['data'] = array();
 		}
-		return $this->res ;
+		return $this->res;
+	}
+
+	public function get_by_twitter_user_name($twitter_user_name)
+	{
+		$kol_model = new KolModel;
+		return $kol_model->get_by_twitter_user_name($twitter_user_name);
 	}
 
 	public function engagement_score($kol_detail)
@@ -157,6 +162,7 @@ class KolService extends Service
 			return 0;
 		}
 		$engagement = 1;
+		/*
 		$reply_count_total = $kol_detail['twitter_reply_count_total'];
 		$favorite_count_total = $kol_detail['twitter_favorite_count_total'];
 		$retweet_count_total = $kol_detail['twitter_retweet_count_total'];
@@ -165,6 +171,7 @@ class KolService extends Service
 		{
 			$engagement = round(($reply_count_total + $favorite_count_total + $retweet_count_total) / $statuses_count, 2);	
 		}
+		*/
 		return $engagement;
 	}
 
@@ -387,7 +394,7 @@ class KolService extends Service
 		}
 	}
 
-	public function calc_user_twitter_metric($kols)
+	public function calc_user_twitter_metric($kols, $posts)
 	{
 		$twitter_service = new TwitterService;
 		$max_twitter_average_post_reach = 0;
@@ -400,7 +407,7 @@ class KolService extends Service
 		$max_twitter_content_web3_relevance = 0;
 		foreach ($kols as $kol)
 		{
-			$twitter_service->metric_data($kol);
+			$twitter_service->metric_data($kol, $posts);
 			$max_twitter_average_post_reach = $max_twitter_average_post_reach >= $kol['twitter_average_post_reach'] ? $max_twitter_average_post_reach : $kol['twitter_average_post_reach'];
 			$max_twitter_interaction_rate = $max_twitter_interaction_rate >= $kol['twitter_interaction_rate'] ? $max_twitter_interaction_rate: $kol['twitter_interaction_rate'];
 			$max_twitter_content_likability = $max_twitter_content_likability >= $kol['twitter_content_likability'] ? $max_twitter_content_likability: $kol['twitter_content_likability'];
@@ -410,25 +417,14 @@ class KolService extends Service
 			$max_twitter_content_presence = $max_twitter_content_presence >= $kol['twitter_content_presence'] ? $max_twitter_content_presence: $kol['twitter_content_presence'];
 			$max_twitter_content_web3_relevance = $max_twitter_content_web3_relevance >= $kol['twitter_content_web3_relevance'] ? $max_twitter_content_web3_relevance: $kol['twitter_content_web3_relevance'];
 		}
-
-		Redis::set('max_twitter_average_post_reach', $max_twitter_average_post_reach);
-		Redis::set('max_twitter_interaction_rate', $max_twitter_interaction_rate);
-		Redis::set('max_twitter_content_likability', $max_twitter_content_likability);
-		Redis::set('max_twitter_average_likes_per_post', $max_twitter_average_likes_per_post);
-		Redis::set('max_twitter_average_comments_per_post', $max_twitter_average_comments_per_post);
-		Redis::set('max_twitter_average_retweets_per_post', $max_twitter_average_retweets_per_post);
-		Redis::set('max_twitter_content_presence', $max_twitter_content_presence);
-		Redis::set('max_twitter_content_web3_relevance', $max_twitter_content_web3_relevance);
-
-		Log::info("max_twitter_average_post_reach:$max_twitter_average_post_reach;" .
-			"max_twitter_interaction_rate:$max_twitter_interaction_rate;" .
-			"max_twitter_content_likability:$max_twitter_content_likability;" .
-			"max_twitter_average_likes_per_post:$max_twitter_average_likes_per_post;" .
-			"max_twitter_average_comments_per_post:$max_twitter_average_comments_per_post;" .
-			"max_twitter_average_retweets_per_post:$max_twitter_average_retweets_per_post;" .
-			"max_twitter_content_likability:$max_twitter_content_presence;" .
-			"max_twitter_content_web3_relevance:$max_twitter_content_web3_relevance."
-		);
+		Redis::set("max_twitter_average_post_reach:$posts", $max_twitter_average_post_reach);
+		Redis::set("max_twitter_interaction_rate:$posts", $max_twitter_interaction_rate);
+		Redis::set("max_twitter_content_likability:$posts", $max_twitter_content_likability);
+		Redis::set("max_twitter_average_likes_per_post:$posts", $max_twitter_average_likes_per_post);
+		Redis::set("max_twitter_average_comments_per_post:$posts", $max_twitter_average_comments_per_post);
+		Redis::set("max_twitter_average_retweets_per_post:$posts", $max_twitter_average_retweets_per_post);
+		Redis::set("max_twitter_content_presence:$posts", $max_twitter_content_presence);
+		Redis::set("max_twitter_content_web3_relevance:$posts", $max_twitter_content_web3_relevance);
 	}
 
 	public function calc_user_twitter_content_relevance($kols)
@@ -572,7 +568,7 @@ class KolService extends Service
 		}
 	}
 
-	public function calc_all_user_twitter_metric()
+	public function calc_all_user_twitter_metric($posts)
 	{
 		$kol_model = new KolModel;
 		$total = $kol_model->get_users_count(); 
@@ -581,7 +577,7 @@ class KolService extends Service
 		for ($i = 0; $i <= $page; ++$i)
 		{
 			$kols = $kol_model->get_users($i, $size);
-			$this->calc_user_twitter_metric($kols);
+			$this->calc_user_twitter_metric($kols, $posts);
 		}
 	}
 

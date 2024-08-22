@@ -522,27 +522,32 @@ class TwitterService extends Service
 		return $this->res;
 	}
 
-	public function metric_data(&$data)
+	public function metric_data(&$data, $posts)
 	{
 		$tweet_model = new TweetModel;
-		$tweets = $tweet_model->get($data['twitter_user_name']);
+		$tweets = $tweet_model->get($data['twitter_user_name'], $posts);
 		$tweet_count = count($tweets);
 		if (!$tweet_count)
 		{
 			return;
 		}
-		$total_tweet_views = 0;
+		$total_tweet_views_count = 0;
 		$total_tweet_favorite_count = 0;
 		$total_tweet_retweet_count = 0;
 		$total_tweet_reply_count = 0;
 		foreach ($tweets as $tweet)
 		{
-			$total_tweet_views += $tweet['view_count'];	
+			$total_tweet_views_count += $tweet['view_count'];	
 			$total_tweet_favorite_count += $tweet['favorite_count'];	
 			$total_tweet_retweet_count += $tweet['retweet_count'];	
 			$total_tweet_reply_count += $tweet['reply_count'];	
 		}
-		$data['twitter_average_post_reach'] = round($total_tweet_views / $tweet_count, 2);
+		$data['twitter_favorite_count_total'] = $total_tweet_favorite_count;
+		$data['twitter_reply_count_total'] = $total_tweet_reply_count;
+		$data['twitter_retweet_count_total'] = $total_tweet_retweet_count;
+		$data['twitter_view_count_total'] = $total_tweet_views_count;
+
+		$data['twitter_average_post_reach'] = round($total_tweet_views_count / $tweet_count, 2);
 
 		$data['twitter_interaction_rate'] = round(($total_tweet_favorite_count 
 			+ $total_tweet_retweet_count
@@ -578,13 +583,13 @@ class TwitterService extends Service
 		}
 
 		$max_vals = array(
-			"twitter_average_post_reach" => Redis::get('max_twitter_average_post_reach'),
-			"twitter_interaction_rate" => Redis::get('max_twitter_interaction_rate'),
-			"twitter_content_likability" => Redis::get('max_twitter_content_likability'),
-			"twitter_average_likes_per_post" => Redis::get('max_twitter_average_likes_per_post'),
-			"twitter_average_comments_per_post" => Redis::get('max_twitter_average_comments_per_post'),
-			"twitter_average_retweets_per_post" => Redis::get('max_twitter_average_retweets_per_post'),
-			"twitter_content_presence" => Redis::get('max_twitter_content_likability')
+			"twitter_average_post_reach" => Redis::get("max_twitter_average_post_reach:$posts"),
+			"twitter_interaction_rate" => Redis::get("max_twitter_interaction_rate:$posts"),
+			"twitter_content_likability" => Redis::get("max_twitter_content_likability:$posts"),
+			"twitter_average_likes_per_post" => Redis::get("max_twitter_average_likes_per_post:$posts"),
+			"twitter_average_comments_per_post" => Redis::get("max_twitter_average_comments_per_post:$posts"),
+			"twitter_average_retweets_per_post" => Redis::get("max_twitter_average_retweets_per_post:$posts"),
+			"twitter_content_presence" => Redis::get("max_twitter_content_likability:$posts")
 		);
 		$weights = array(
 			"twitter_average_post_reach" => 0.25,
@@ -610,6 +615,15 @@ class TwitterService extends Service
 	{
 		$twitter_content_relevance_service = new TwitterContentRelevanceModel();	
 		return $twitter_content_relevance_service->insert($user_id, $user_name, $category_id, $score, $explanation);
+	}
+
+	public function tweets_analysis($screen_name, $posts)
+	{
+		$kol_service = new KolService;
+		$kol = $kol_service->get_by_twitter_user_name($screen_name);
+		$this->metric_data($kol, $posts);
+		$this->res['data'] = $kol;
+		return $this->res;
 	}
 
 }

@@ -42,9 +42,8 @@ class TweetModel extends Model
 		return false;
 	}
 
-	public function get($scree_name)
+	public function get($scree_name, $default_size = 30)
 	{
-		$default_size = config('config.twitter_tweets_default_size');
 		return $this->select('tweet_id', 'user_id', 'user_name', 'full_text', 'quote_count',
 			'favorite_count', 'retweet_count', 'reply_count', 'view_count', 'quote_tweet_id', 
 			'retweeted_tweet_id', 'created_at') 

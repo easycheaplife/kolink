@@ -154,6 +154,9 @@ Route::post('/twitter/tweets', [TwitterController::class, 'tweets']);
 Route::get('/twitter/tweets/content/relevance', [TwitterController::class, 'tweets_content_relevance']);
 Route::post('/twitter/tweets/content/relevance', [TwitterController::class, 'tweets_content_relevance']);
 
+Route::get('/twitter/tweets/analysis', [TwitterController::class, 'tweets_analysis']);
+Route::post('/twitter/tweets/analysis', [TwitterController::class, 'tweets_analysis']);
+
 Route::get('/youtube/auth', [YoutubeController::class, 'auth']);
 Route::post('/youtube/auth', [YoutubeController::class, 'auth']);
 
