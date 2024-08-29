@@ -403,6 +403,7 @@ class KolService extends Service
 		$max_twitter_average_retweets_per_post = 0;
 		$max_twitter_content_presence = 0;
 		$max_twitter_content_web3_relevance = 0;
+		$max_twitter_impact_score = 0;
 		foreach ($kols as $kol)
 		{
 			$twitter_service->metric_data($kol, $posts);
@@ -414,6 +415,9 @@ class KolService extends Service
 			$max_twitter_average_retweets_per_post = $max_twitter_average_retweets_per_post >= $kol['twitter_average_retweets_per_post'] ? $max_twitter_average_retweets_per_post: $kol['twitter_average_retweets_per_post'];
 			$max_twitter_content_presence = $max_twitter_content_presence >= $kol['twitter_content_presence'] ? $max_twitter_content_presence: $kol['twitter_content_presence'];
 			$max_twitter_content_web3_relevance = $max_twitter_content_web3_relevance >= $kol['twitter_content_web3_relevance'] ? $max_twitter_content_web3_relevance: $kol['twitter_content_web3_relevance'];
+			$max_twitter_impact_score = $max_twitter_impact_score >= $kol['twitter_impact_score'] ? $max_twitter_impact_score: $kol['twitter_impact_score'];
+			$kol['twitter_impact_score'] = empty( $kol['twitter_impact_score']) ? 0 : $kol['twitter_impact_score'];
+			Redis::zadd("z_twitter_impact_score:$posts", $kol['twitter_impact_score'], $kol['twitter_user_name']);
 		}
 		Redis::set("max_twitter_average_post_reach:$posts", $max_twitter_average_post_reach);
 		Redis::set("max_twitter_interaction_rate:$posts", $max_twitter_interaction_rate);
@@ -423,6 +427,7 @@ class KolService extends Service
 		Redis::set("max_twitter_average_retweets_per_post:$posts", $max_twitter_average_retweets_per_post);
 		Redis::set("max_twitter_content_presence:$posts", $max_twitter_content_presence);
 		Redis::set("max_twitter_content_web3_relevance:$posts", $max_twitter_content_web3_relevance);
+		Redis::set("max_twitter_impact_score:$posts", $max_twitter_impact_score);
 	}
 
 	public function calc_user_twitter_content_relevance($kols)
@@ -764,6 +769,12 @@ class KolService extends Service
 				Log::info('summarize_all_user_tweets kol_id:' . $kol['id']);
 			}
 		}
+	}
+
+	public function get_column_count_max($column_name)
+	{
+		$kol_model = new KolModel;
+		return $kol_model->get_column_count_max($column_name);
 	}
 
 }

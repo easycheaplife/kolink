@@ -41,10 +41,11 @@ class TwitterContentRelevanceModel extends Model
 			->first();
 	}
 
-	public function top($user_id, $top_n = 5)
+	public function top($user_id, $top_n = 6)
 	{
 		return $this->select('category_id', 'score', 'explanation') 
 			->where('user_id', $user_id)
+			->where('category_id', '!=', config('config.category_list')['Web3'] ) 
 			->orderByDesc('score')
 			->take($top_n)
 			->get();
