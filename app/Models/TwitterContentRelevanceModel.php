@@ -51,4 +51,9 @@ class TwitterContentRelevanceModel extends Model
 			->get();
 	}
 
+	public function get_column_count_max($column_name)
+	{
+		return $this->select($column_name)->max($column_name);
+	}
+
 }

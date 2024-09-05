@@ -609,15 +609,34 @@ class TwitterService extends Service
 			"twitter_content_presence" => 0.05,
 			"twitter_content_web3_relevance" => 0.05
 		);
+		$data['twitter_impact_score'] = $this->calc_impact_score($data, $max_vals, $weights, 
+			$data['twitter_content_web3_relevance'], $max_vals['twitter_content_web3_relevance']);
+		$twitter_impact_score_base = 1;
+		$twitter_impact_score_diff = $twitter_impact_score_base - $max_vals['twitter_impact_score'];
+		$data['twitter_impact_score'] = $data['twitter_impact_score'] + $twitter_impact_score_diff;
+
+		$data['content_relevance'] = $twitter_content_relevance_model->top($data['twitter_user_id']);
+		$max_content_relevance = $twitter_content_relevance_model->get_column_count_max('score');
+		foreach ($data['content_relevance'] as $key => $content_relevance)
+		{
+			$data['content_relevance'][$key]['twitter_impact_score'] = $this->calc_impact_score($data, $max_vals, $weights, 
+				$content_relevance['score'], $max_vals['twitter_content_web3_relevance']) + $twitter_impact_score_diff;
+		}
+		$max_vals['twitter_impact_score'] = $max_vals['twitter_impact_score'] + $twitter_impact_score_diff;
 		$data['twitter_metric_max'] = $max_vals;
-		$data['twitter_impact_score'] = round($data['twitter_average_post_reach'] / $max_vals['twitter_average_post_reach'] * $weights['twitter_average_post_reach'] 
+	}
+
+	public function calc_impact_score($data, $max_vals, $weights, $content_relevance, $max_content_relevance)
+	{
+		return round($data['twitter_average_post_reach'] / $max_vals['twitter_average_post_reach'] * $weights['twitter_average_post_reach'] 
 			+ $data['twitter_interaction_rate'] / $max_vals['twitter_interaction_rate'] * $weights['twitter_interaction_rate']
 			+ $data['twitter_content_likability'] / $max_vals['twitter_content_likability'] * $weights['twitter_content_likability']
 			+ $data['twitter_average_likes_per_post'] / $max_vals['twitter_average_likes_per_post'] * $weights['twitter_average_likes_per_post']
 			+ $data['twitter_average_comments_per_post'] / $max_vals['twitter_average_comments_per_post'] * $weights['twitter_average_comments_per_post']
 			+ $data['twitter_average_retweets_per_post'] / $max_vals['twitter_average_retweets_per_post'] * $weights['twitter_average_retweets_per_post']
 			+ $data['twitter_content_presence'] / $max_vals['twitter_content_presence'] * $weights['twitter_content_web3_relevance']
-			+ $data['twitter_content_web3_relevance'] / $max_vals['twitter_content_web3_relevance'] * $weights['twitter_content_presence'], 2);
+			+ $content_relevance / $max_content_relevance * $weights['twitter_content_presence'], 2);
+	
 	}
 
 	public function update_twitter_content_relevance($user_id, $user_name, $category_id, $score, $explanation)
@@ -637,10 +656,6 @@ class TwitterService extends Service
 		}
 		$this->metric_data($kol, $posts);
 		$kol['twitter_impact_score_ranking'] = Redis::zrevrank("z_twitter_impact_score:$posts", $kol['twitter_user_name']) + 1;
-		$twitter_impact_score_base = 1;
-		$twitter_impact_score_diff = $twitter_impact_score_base - $kol['twitter_metric_max']['twitter_impact_score'];
-		$kol['twitter_impact_score'] = $kol['twitter_impact_score'] + $twitter_impact_score_diff;
-		$kol['content_relevance'] = $twitter_content_relevance_model->top($kol['twitter_user_id']);
 		$kol['twitter_tweet_summarize'] = json_decode($kol['twitter_tweet_summarize']);
 		$this->res['data'] = $kol;
 		return $this->res;
