@@ -134,7 +134,6 @@ class KolService extends Service
 
     public function kol_detail($kol_id)
 	{
-		$twitter_service = new TwitterService;
 		$kol_model = new KolModel;
 		$this->res['data'] = $kol_model->get($kol_id);
 		if (!empty($this->res['data']))
@@ -145,6 +144,18 @@ class KolService extends Service
 		else 
 		{
 			$this->res['data'] = array();
+		}
+		return $this->res;
+	}
+
+    public function kol_search($keywords)
+	{
+		$kol_model = new KolModel;
+		$this->res['data'] = $kol_model->search($keywords);
+		foreach ($this->res['data'] as $key => $val)
+		{
+			$this->res['data'][$key]['engagement'] = $this->engagement_score($this->res['data'][$key]);
+			$this->res['data'][$key]['monetary_score'] = empty($this->res['data'][$key]['monetary_score']) ? 0 : $this->res['data'][$key]['monetary_score'];
 		}
 		return $this->res;
 	}

@@ -502,6 +502,14 @@ class TwitterService extends Service
 			"{\"user_name\":\"bob\",\"keywords\":\"defi\",\"relevance_score\":66,\"explanation\":\"\"}" .
 			"Explanation for the analysis for obtaining scores, three or four aspects are generally listed." .
 			"keywords:$keywords;content:";
+		$prompt = "You are a Twitter data analyst, tasked with analyzing a user's recent tweets to determine their focus areas. " .
+			"You are multilingual and can translate tweets in various languages into English. " .
+			"Based on a provided set of keywords related to a specific field and the user's tweet content, " .
+			"assess the relevance of the tweets to the keywords and assign a score between 0 and 100. " .
+			"Output the result in a structured format like JSON:" .
+			"{\"user_name\":\"bob\",\"keywords\":\"defi\",\"relevance_score\":66,\"explanation\":\"The user @twitter_user_name\'s tweets ...\"}" .
+			"When explaining the score, base the analysis on 3-4 key aspects of the tweet content, highlighting specific terms and projects where applicable." .
+			"keywords:$keywords;content:";
 		$tweets = $this->tweets($screen_name);
 		if (empty($tweets['data']))
 		{
