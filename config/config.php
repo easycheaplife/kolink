@@ -33,6 +33,7 @@ return [
 		'RWA' => 11,
 		'Meme' => 12,
 		'DePin' => 13,
+		'Web3' => 14,
 		'Other' => 99,
 	),
 	'region_list' => array(
@@ -124,7 +125,6 @@ return [
 		'follow_twitter' => array('id' => 8, 'xp' => 3, 'type' => 'social'),	
 		'join_telgram' => array('id' => 9, 'xp' => 5, 'type' => 'social'),	
 	),
-	'recommend_task' => array(
-		'32' => 'https://api.kolink.io/api/file/download/1bd837da-f044-4495-a37d-199f3372d710.jpg',
-	),
+	'gemini_api_key' => 'AIzaSyAtG9i2npZwv76pMSBFKGjUbE2U485H-2o',
+	'twitter_tweets_default_size' => 30,
 ];

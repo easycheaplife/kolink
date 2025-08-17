@@ -146,9 +146,12 @@ class ProjectService extends Service
 		}
 
 		$task_ids = [];
-		foreach (config('config.recommend_task') as $id => $banner)
+		$recommend_task_list = $task_service->recommend_task_list();
+		$recommend_task = [];
+		foreach ($recommend_task_list as $v)
 		{
-			$task_ids[] = $id;	
+			$task_ids[] = $v['task_id'];	
+			$recommend_task[$v['task_id']] = $v['url'];
 		}
 		$this->res['data']['recommend_task'] = $task_service->kol_task_list($task_ids);
 		foreach ($this->res['data']['recommend_task'] as $key => $task)
@@ -169,7 +172,7 @@ class ProjectService extends Service
 			$this->res['data']['recommend_task'][$key]['application_eligibility'] = $application_result['code'] == ErrorCodes::ERROR_CODE_SUCCESS ? 1 : 0;
 			$this->res['data']['recommend_task'][$key]['application_eligibility_desc'] = $application_result['message'];
 			$this->res['data']['recommend_task'][$key]['application_num'] = $application_service->application_kol_num($task->id);
-			$this->res['data']['recommend_task'][$key]['banner'] = config('config.recommend_task')[$task->id];
+			$this->res['data']['recommend_task'][$key]['banner'] = $recommend_task[$task->id];
 		}
 		return $this->res;
 	}

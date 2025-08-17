@@ -8,7 +8,7 @@ use Illuminate\Support\Facades\Log;
 use App\Constants\ErrorCodes;
 use App\Constants\ErrorDescs;
 use App\Models\ProjectTaskModel;
-use App\Http\Services\ProjectTaskService;
+use App\Models\RecommendTaskModel;
 use App\Http\Services\ProjectTaskViewService;
 use App\Http\Services\ProjectApplicationService;
 use App\Http\Services\ProjectService;
@@ -46,6 +46,13 @@ class ProjectTaskService extends Service
 		return $this->res;
 	}
 
+	public function task_data($task_id)
+	{
+		$project_task_model = new ProjectTaskModel;
+		$this->res['data'] = $project_task_model->detail($task_id);
+		return $this->res;
+	}
+
 	public function task_detail($task_id)
 	{
 		$project_task_model = new ProjectTaskModel;
@@ -74,6 +81,35 @@ class ProjectTaskService extends Service
 				$task['application'][$key]['kol_detail'] = array();
 			}
 		}
+
+		$this->res['data'] = $task;
+		return $this->res;
+	}
+
+	public function task_share($task_id, $kol_id)
+	{
+		$project_task_model = new ProjectTaskModel;
+		$task = $project_task_model->detail($task_id);
+		if (empty($task))
+		{
+			return $this->res;
+		}
+
+		$task_application_service = new ProjectTaskApplicationService;
+		$application = $task_application_service->kol_task_status($kol_id, $task_id);
+		if (!empty($application))
+		{
+			$task['status'] = $application['status'];
+			$task['application'] = $application;
+		}
+		else
+		{
+			$task['status'] = -1;
+			$task['application'] = array();
+		}
+		$application_result = $task_application_service->application_eligibility($kol_id, $task_id);
+		$task['application_eligibility'] = $application_result['code'] == ErrorCodes::ERROR_CODE_SUCCESS ? 1 : 0;
+		$task['application_eligibility_desc'] = $application_result['message'];
 
 		$this->res['data'] = $task;
 		return $this->res;
@@ -208,6 +244,12 @@ class ProjectTaskService extends Service
 		}
 		$application_service->task_close($task_id);
 		return $this->res;
+	}
+
+	public function recommend_task_list()
+	{
+		$recommend_task_model = new RecommendTaskModel;
+		return $recommend_task_model->list();
 	}
 
 }

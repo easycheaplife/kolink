@@ -18,7 +18,6 @@ class EtherscanService extends Service
 	{
 		$kol_service = new KolService;
 		$total = $kol_service->token_count();
-		Log::info("total:$total");
 		$size = config('config.default_page_size');
 		$page = $total / $size;
 		for ($i = 0; $i <= $page; ++$i)
@@ -47,7 +46,7 @@ class EtherscanService extends Service
 			$url = "$etherscan_url_base?module=account&action=txlist" .
 				"&address=$address&startblock=$start_block&endblock=$end_block" .
 				"&page=$page&offset=$offset&sort=asc&apikey=$etherscan_api_key";
-			Log::info($url);
+			Log::debug($url);
 			$response = Http::withHeaders($headers)
 				->timeout(config('config.http_timeout'))
 				->get($url);
@@ -70,7 +69,7 @@ class EtherscanService extends Service
 				"&address=$address" . 
 				"&page=$page&offset=$offset&startblock=$start_block" . 
 				"&endblock=$end_block&sort=asc&apikey=$etherscan_api_key";
-			Log::info($url);
+			Log::debug($url);
 			$response = Http::withHeaders($headers)
 				->timeout(config('config.http_timeout'))
 				->get($url);
@@ -95,7 +94,7 @@ class EtherscanService extends Service
 			$response = Http::withHeaders($headers)
 				->timeout(config('config.http_timeout'))
 				->get($url);
-			Log::info($url);
+			Log::debug($url);
 			if ($response->successful()) {
 				$data = $response->json();
 				Log::debug($data);
@@ -105,7 +104,7 @@ class EtherscanService extends Service
 				}
 				$etherscan_service = new EtherscanModel;
 				$etherscan_service->insert($address, $created_at, $token_count, $nft_count);
-				Log::info("address_info===address:$address,created_at:$created_at,token_count:$token_count,nft_count:$nft_count");
+				Log::debug("address_info===address:$address,created_at:$created_at,token_count:$token_count,nft_count:$nft_count");
 			}
 			else {
 				$error_message = "http get $url failed, status:" . $response->status() . ' ' . $response->body();

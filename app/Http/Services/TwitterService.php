@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Http\Request;
 use Illuminate\Database\UniqueConstraintViolationException;
@@ -12,9 +13,11 @@ use App\Constants\ErrorDescs;
 use App\Models\TwitterUserModel;
 use App\Models\TwitterUserDataModel;
 use App\Models\TweetModel;
+use App\Models\TwitterContentRelevanceModel;
 use App\Http\Services\KolService;
 use App\Http\Services\EtherscanService;
 use App\Http\Services\RewardService;
+use App\Http\Services\AiService;
 
 
 class TwitterService extends Service 
@@ -365,7 +368,7 @@ class TwitterService extends Service
 		$user['composite_score'] = $user['engagement_score'] + $user['age_score'] + $user['monetary_score'];
 	}
 
-	public function insert_user_from_xlsx($screen_name, $language)
+	public function insert_user_from_xlsx($screen_name)
 	{
 		$url = config('config.twitter_service_url_base') . "/twitter/get_user?screen_name=$screen_name" ;
 		try {
@@ -488,5 +491,182 @@ class TwitterService extends Service
 		return $this->res;
 	}
 
+	public function tweets_content_relevance($screen_name, $keywords)
+	{
+		$ai_service = new AiService;
+		$prompt = "You are a Twitter data analyst capable of analyzing a user's recent tweets to determine the fields they focus on." . 
+			"You are fluent in multiple languages and can translate text from various languages into English." .
+			"You are provided with a set of keywords related to a specific field and the content of a user's recent tweets." .
+			"Attempt to determine the relevance between the keywords and the content, and assign a score between 0 and 100." .
+			"Please output pretty format. Maybe json format:" .
+			"{\"user_name\":\"bob\",\"keywords\":\"defi\",\"relevance_score\":66,\"explanation\":\"\"}" .
+			"Explanation for the analysis for obtaining scores, three or four aspects are generally listed." .
+			"keywords:$keywords;content:";
+		$prompt = "You are a Twitter data analyst, tasked with analyzing a user's recent tweets to determine their focus areas. " .
+			"You are multilingual and can translate tweets in various languages into English. " .
+			"Based on a provided set of keywords related to a specific field and the user's tweet content, " .
+			"assess the relevance of the tweets to the keywords and assign a score between 0 and 100. " .
+			"Output the result in a structured format like JSON:" .
+			"{\"user_name\":\"bob\",\"keywords\":\"defi\",\"relevance_score\":66,\"explanation\":\"The user @twitter_user_name\'s tweets ...\"}" .
+			"When explaining the score, base the analysis on 3-4 key aspects of the tweet content, highlighting specific terms and projects where applicable." .
+			"keywords:$keywords;content:";
+		$tweets = $this->tweets($screen_name);
+		if (empty($tweets['data']))
+		{
+			return $this->res;
+		}
+		$summarize_res = $ai_service->gemini_generate_content($prompt . json_encode($tweets['data']));
+		if (!empty($summarize_res['data']))
+		{
+			if (!isset($summarize_res['data']['candidates'][0]['content']))
+			{
+				return $this->res;
+			}
+			$text_summarize = $summarize_res['data']['candidates'][0]['content']['parts'][0]['text'];
+			$text_summarize = str_replace('```json', '', $text_summarize);
+			$text_summarize = str_replace('```', '', $text_summarize);
+			$this->res['data'] = json_decode($text_summarize);
+		}
+		return $this->res;
+	}
+
+	public function metric_data(&$data, $posts)
+	{
+		$tweet_model = new TweetModel;
+		$tweets = $tweet_model->get($data['twitter_user_name'], $posts);
+		$tweet_count = count($tweets);
+		if (!$tweet_count)
+		{
+			return;
+		}
+		$total_tweet_views_count = 0;
+		$total_tweet_favorite_count = 0;
+		$total_tweet_retweet_count = 0;
+		$total_tweet_reply_count = 0;
+		foreach ($tweets as $tweet)
+		{
+			$total_tweet_views_count += $tweet['view_count'];	
+			$total_tweet_favorite_count += $tweet['favorite_count'];	
+			$total_tweet_retweet_count += $tweet['retweet_count'];	
+			$total_tweet_reply_count += $tweet['reply_count'];	
+		}
+		$data['twitter_favorite_count_total'] = $total_tweet_favorite_count;
+		$data['twitter_reply_count_total'] = $total_tweet_reply_count;
+		$data['twitter_retweet_count_total'] = $total_tweet_retweet_count;
+		$data['twitter_view_count_total'] = $total_tweet_views_count;
+
+		$data['twitter_average_post_reach'] = round($total_tweet_views_count / $tweet_count, 2);
+
+		$data['twitter_interaction_rate'] = round(($total_tweet_favorite_count 
+			+ $total_tweet_retweet_count
+			+ $total_tweet_reply_count) / $tweet_count, 2);
+
+		if ($data['twitter_following_count']) 
+		{
+			$data['twitter_content_likability'] = round($data['twitter_interaction_rate'] * $data['twitter_average_post_reach'] 
+				/ $data['twitter_following_count'] , 2);
+		}
+		else 
+		{
+			$data['twitter_content_likability'] = 0.0;
+		}
+		$data['twitter_average_likes_per_post'] = round($total_tweet_favorite_count / $tweet_count, 2);
+		$data['twitter_average_comments_per_post'] = round($total_tweet_reply_count / $tweet_count, 2);
+		$data['twitter_average_retweets_per_post'] = round($total_tweet_retweet_count / $tweet_count, 2);
+		$tweet_diff_day = 1;
+		if ($tweet_count >= 2)
+		{
+			$date_start = new \DateTime($tweets[$tweet_count - 1]['created_at']);
+			$date_end = new \DateTime($tweets[0]['created_at']);
+			$interval = $date_start->diff($date_end);
+			$tweet_diff_day = $interval->days;
+		}
+		$data['twitter_content_presence'] = round($tweet_diff_day / $tweet_count, 2);
+		$data['twitter_content_web3_relevance'] = 0.0;
+		$twitter_content_relevance_model = new TwitterContentRelevanceModel();	
+		$res_content_relevance = $twitter_content_relevance_model->get($data['twitter_user_id'], 13);
+		if (!empty($res_content_relevance))
+		{
+			$data['twitter_content_web3_relevance'] = $res_content_relevance['score'];			
+		}
+
+		$kol_service = new KolService;
+		$max_vals = array(
+			"twitter_followers" => $kol_service->get_column_count_max('twitter_followers'),
+			"twitter_average_post_reach" => Redis::get("max_twitter_average_post_reach:$posts"),
+			"twitter_interaction_rate" => Redis::get("max_twitter_interaction_rate:$posts"),
+			"twitter_content_likability" => Redis::get("max_twitter_content_likability:$posts"),
+			"twitter_average_likes_per_post" => Redis::get("max_twitter_average_likes_per_post:$posts"),
+			"twitter_average_comments_per_post" => Redis::get("max_twitter_average_comments_per_post:$posts"),
+			"twitter_average_retweets_per_post" => Redis::get("max_twitter_average_retweets_per_post:$posts"),
+			"twitter_content_presence" => Redis::get("max_twitter_content_presence:$posts"),
+			"twitter_content_web3_relevance" => Redis::get("max_twitter_content_web3_relevance:$posts"),
+			"twitter_impact_score" => Redis::get("max_twitter_impact_score:$posts")
+		);
+		if (empty($max_vals['twitter_average_post_reach']))
+		{
+			return;
+		}
+		$weights = array(
+			"twitter_average_post_reach" => 0.20,
+			"twitter_interaction_rate" => 0.20,
+			"twitter_content_likability" => 0.15,
+			"twitter_average_likes_per_post" => 0.10,
+			"twitter_average_comments_per_post" => 0.10,
+			"twitter_average_retweets_per_post" => 0.15,
+			"twitter_content_presence" => 0.05,
+			"twitter_content_web3_relevance" => 0.05
+		);
+		$data['twitter_impact_score'] = $this->calc_impact_score($data, $max_vals, $weights, 
+			$data['twitter_content_web3_relevance'], $max_vals['twitter_content_web3_relevance']);
+		$twitter_impact_score_base = 1;
+		$twitter_impact_score_diff = $twitter_impact_score_base - $max_vals['twitter_impact_score'];
+		$data['twitter_impact_score'] = $data['twitter_impact_score'] + $twitter_impact_score_diff;
+
+		$data['content_relevance'] = $twitter_content_relevance_model->top($data['twitter_user_id']);
+		$max_content_relevance = $twitter_content_relevance_model->get_column_count_max('score');
+		foreach ($data['content_relevance'] as $key => $content_relevance)
+		{
+			$data['content_relevance'][$key]['twitter_impact_score'] = $this->calc_impact_score($data, $max_vals, $weights, 
+				$content_relevance['score'], $max_vals['twitter_content_web3_relevance']) + $twitter_impact_score_diff;
+		}
+		$max_vals['twitter_impact_score'] = $max_vals['twitter_impact_score'] + $twitter_impact_score_diff;
+		$data['twitter_metric_max'] = $max_vals;
+	}
+
+	public function calc_impact_score($data, $max_vals, $weights, $content_relevance, $max_content_relevance)
+	{
+		return round($data['twitter_average_post_reach'] / $max_vals['twitter_average_post_reach'] * $weights['twitter_average_post_reach'] 
+			+ $data['twitter_interaction_rate'] / $max_vals['twitter_interaction_rate'] * $weights['twitter_interaction_rate']
+			+ $data['twitter_content_likability'] / $max_vals['twitter_content_likability'] * $weights['twitter_content_likability']
+			+ $data['twitter_average_likes_per_post'] / $max_vals['twitter_average_likes_per_post'] * $weights['twitter_average_likes_per_post']
+			+ $data['twitter_average_comments_per_post'] / $max_vals['twitter_average_comments_per_post'] * $weights['twitter_average_comments_per_post']
+			+ $data['twitter_average_retweets_per_post'] / $max_vals['twitter_average_retweets_per_post'] * $weights['twitter_average_retweets_per_post']
+			+ $data['twitter_content_presence'] / $max_vals['twitter_content_presence'] * $weights['twitter_content_web3_relevance']
+			+ $content_relevance / $max_content_relevance * $weights['twitter_content_presence'], 2);
+	
+	}
+
+	public function update_twitter_content_relevance($user_id, $user_name, $category_id, $score, $explanation)
+	{
+		$twitter_content_relevance_model = new TwitterContentRelevanceModel();	
+		return $twitter_content_relevance_model->insert($user_id, $user_name, $category_id, $score, $explanation);
+	}
+
+	public function tweets_analysis($screen_name, $posts)
+	{
+		$kol_service = new KolService;
+		$twitter_content_relevance_model = new TwitterContentRelevanceModel();	
+		$kol = $kol_service->get_by_twitter_user_name($screen_name);
+		if (empty($kol))
+		{
+			return $this->res;
+		}
+		$this->metric_data($kol, $posts);
+		$kol['twitter_impact_score_ranking'] = Redis::zrevrank("z_twitter_impact_score:$posts", $kol['twitter_user_name']) + 1;
+		$kol['twitter_tweet_summarize'] = json_decode($kol['twitter_tweet_summarize']);
+		$this->res['data'] = $kol;
+		return $this->res;
+	}
 
 }

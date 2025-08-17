@@ -2,6 +2,7 @@
 
 namespace App\Http\Services;
 
+use Illuminate\Support\Facades\Redis;
 use Illuminate\Support\Facades\Http;
 use Illuminate\Database\UniqueConstraintViolationException;
 use Illuminate\Support\Facades\Log;
@@ -15,6 +16,7 @@ use App\Http\Services\TwitterService;
 use App\Http\Services\YoutubeService;
 use App\Http\Services\RewardService;
 use App\Http\Services\EtherscanService;
+use App\Http\Services\AiService;
 
 
 class KolService extends Service 
@@ -139,7 +141,29 @@ class KolService extends Service
 			$this->res['data']['engagement'] = $this->engagement_score($this->res['data']);
 			$this->res['data']['monetary_score'] = empty($this->res['data']['monetary_score']) ? 0 : $this->res['data']['monetary_score'];
 		}
+		else 
+		{
+			$this->res['data'] = array();
+		}
 		return $this->res;
+	}
+
+    public function kol_search($keywords)
+	{
+		$kol_model = new KolModel;
+		$this->res['data'] = $kol_model->search($keywords);
+		foreach ($this->res['data'] as $key => $val)
+		{
+			$this->res['data'][$key]['engagement'] = $this->engagement_score($this->res['data'][$key]);
+			$this->res['data'][$key]['monetary_score'] = empty($this->res['data'][$key]['monetary_score']) ? 0 : $this->res['data'][$key]['monetary_score'];
+		}
+		return $this->res;
+	}
+
+	public function get_by_twitter_user_name($twitter_user_name)
+	{
+		$kol_model = new KolModel;
+		return $kol_model->get_by_twitter_user_name($twitter_user_name);
 	}
 
 	public function engagement_score($kol_detail)
@@ -148,16 +172,14 @@ class KolService extends Service
 		{
 			return 0;
 		}
-		$max_statuses_count = 30;
 		$engagement = 1;
 		$reply_count_total = $kol_detail['twitter_reply_count_total'];
 		$favorite_count_total = $kol_detail['twitter_favorite_count_total'];
 		$retweet_count_total = $kol_detail['twitter_retweet_count_total'];
-		$statuses_count = $kol_detail['twitter_statuses_count'];
-		$statuses_count = $statuses_count <= $max_statuses_count ? $statuses_count : $max_statuses_count;
+		$statuses_count = $this->get_tweets_count($kol_detail['twitter_user_name']);
 		if ($statuses_count > 0)
 		{
-			$engagement = round(($reply_count_total + $favorite_count_total + $retweet_count_total) / $statuses_count, 2);	
+			$engagement = round(($reply_count_total + $favorite_count_total + $retweet_count_total) / $statuses_count, 2);
 		}
 		return $engagement;
 	}
@@ -197,6 +219,7 @@ class KolService extends Service
 		{
 			$task_map[$task['id']]	= $task; 
 		}
+		$this->res['data']['list'] = [];
 		foreach ($task_applications as $application)
 		{
 			$application_task = clone $task_map[$application->task_id];
@@ -380,6 +403,68 @@ class KolService extends Service
 		}
 	}
 
+	public function calc_user_twitter_metric($kols, $posts)
+	{
+		$twitter_service = new TwitterService;
+		$max_twitter_average_post_reach = 0;
+		$max_twitter_interaction_rate = 0;
+		$max_twitter_content_likability = 0;
+		$max_twitter_average_likes_per_post = 0;
+		$max_twitter_average_comments_per_post = 0;
+		$max_twitter_average_retweets_per_post = 0;
+		$max_twitter_content_presence = 0;
+		$max_twitter_content_web3_relevance = 0;
+		$max_twitter_impact_score = 0;
+		foreach ($kols as $kol)
+		{
+			$twitter_service->metric_data($kol, $posts);
+			$max_twitter_average_post_reach = $max_twitter_average_post_reach >= $kol['twitter_average_post_reach'] ? $max_twitter_average_post_reach : $kol['twitter_average_post_reach'];
+			$max_twitter_interaction_rate = $max_twitter_interaction_rate >= $kol['twitter_interaction_rate'] ? $max_twitter_interaction_rate: $kol['twitter_interaction_rate'];
+			$max_twitter_content_likability = $max_twitter_content_likability >= $kol['twitter_content_likability'] ? $max_twitter_content_likability: $kol['twitter_content_likability'];
+			$max_twitter_average_likes_per_post = $max_twitter_average_likes_per_post >= $kol['twitter_average_likes_per_post'] ? $max_twitter_average_likes_per_post: $kol['twitter_average_likes_per_post'];
+			$max_twitter_average_comments_per_post = $max_twitter_average_comments_per_post >= $kol['twitter_average_comments_per_post'] ? $max_twitter_average_comments_per_post: $kol['twitter_average_comments_per_post'];
+			$max_twitter_average_retweets_per_post = $max_twitter_average_retweets_per_post >= $kol['twitter_average_retweets_per_post'] ? $max_twitter_average_retweets_per_post: $kol['twitter_average_retweets_per_post'];
+			$max_twitter_content_presence = $max_twitter_content_presence >= $kol['twitter_content_presence'] ? $max_twitter_content_presence: $kol['twitter_content_presence'];
+			$max_twitter_content_web3_relevance = $max_twitter_content_web3_relevance >= $kol['twitter_content_web3_relevance'] ? $max_twitter_content_web3_relevance: $kol['twitter_content_web3_relevance'];
+			$max_twitter_impact_score = $max_twitter_impact_score >= $kol['twitter_impact_score'] ? $max_twitter_impact_score: $kol['twitter_impact_score'];
+			$kol['twitter_impact_score'] = empty( $kol['twitter_impact_score']) ? 0 : $kol['twitter_impact_score'];
+			Redis::zadd("z_twitter_impact_score:$posts", $kol['twitter_impact_score'], $kol['twitter_user_name']);
+		}
+		Redis::set("max_twitter_average_post_reach:$posts", $max_twitter_average_post_reach);
+		Redis::set("max_twitter_interaction_rate:$posts", $max_twitter_interaction_rate);
+		Redis::set("max_twitter_content_likability:$posts", $max_twitter_content_likability);
+		Redis::set("max_twitter_average_likes_per_post:$posts", $max_twitter_average_likes_per_post);
+		Redis::set("max_twitter_average_comments_per_post:$posts", $max_twitter_average_comments_per_post);
+		Redis::set("max_twitter_average_retweets_per_post:$posts", $max_twitter_average_retweets_per_post);
+		Redis::set("max_twitter_content_presence:$posts", $max_twitter_content_presence);
+		Redis::set("max_twitter_content_web3_relevance:$posts", $max_twitter_content_web3_relevance);
+		Redis::set("max_twitter_impact_score:$posts", $max_twitter_impact_score);
+	}
+
+	public function calc_user_twitter_content_relevance($kols)
+	{
+		$twitter_service = new TwitterService;
+		$category_list = array_merge([], config('config.category_list'));
+		unset($category_list['All']);
+		unset($category_list['Other']);
+		foreach ($category_list as $category => $val)
+		{
+			foreach ($kols as $kol)
+			{
+				$res = $twitter_service->tweets_content_relevance($kol['twitter_user_name'], $category);
+				if (!isset($res['data']->relevance_score))
+				{
+					sleep(60);
+					continue;
+				}	
+				$twitter_service->update_twitter_content_relevance($kol['twitter_user_id'],
+					$kol['twitter_user_name'], $val, $res['data']->relevance_score, $res['data']->explanation);
+				Log::info($res);
+				sleep(60);
+			}
+		}
+	}
+
 	public function calc_twitter_engagement_score($user, $followers_count_max, 
 		$listed_count_max, $following_count_max, $like_count_max, $statuses_count_max)
 	{
@@ -476,6 +561,7 @@ class KolService extends Service
 				if (!empty($twitter_user['data']))
 				{
 					$kol_model->update_twitter_data($kol['id'], $twitter_user['data']);			
+					$this->update_tweets_data($kol['id'], $kol['twitter_user_name']);
 				}
 				Log::info('update_all_user_data kol_id:' . $kol['id']);
 				sleep(120);
@@ -496,6 +582,32 @@ class KolService extends Service
 		}
 	}
 
+	public function calc_all_user_twitter_metric($posts)
+	{
+		$kol_model = new KolModel;
+		$total = $kol_model->get_users_count(); 
+		$size = config('config.default_page_size') * 100;
+		$page = $total / $size;
+		for ($i = 0; $i <= $page; ++$i)
+		{
+			$kols = $kol_model->get_users($i, $size);
+			$this->calc_user_twitter_metric($kols, $posts);
+		}
+	}
+
+	public function calc_all_user_twitter_content_relevance()
+	{
+		$kol_model = new KolModel;
+		$total = $kol_model->get_users_count(); 
+		$size = config('config.default_page_size');
+		$page = $total / $size;
+		for ($i = 0; $i <= $page; ++$i)
+		{
+			$kols = $kol_model->get_users($i, $size);
+			$this->calc_user_twitter_content_relevance($kols);
+		}
+	}
+
 	public function get_all_user_tweets()
 	{
 		$twitter_service = new TwitterService;
@@ -509,17 +621,171 @@ class KolService extends Service
 			foreach ($kols as $kol)
 			{
 				$tweets = $twitter_service->get_user_tweets($kol['twitter_user_id']);
-				if (!empty($tweets['data']))
+				foreach ($tweets['data'] as $tweet)
 				{
-					foreach ($tweets['data'] as $tweet)
-					{
-						$twitter_service->insert_tweet($tweet);
-					}
+					$twitter_service->insert_tweet($tweet);
 				}
+				$this->update_tweets_data($kol['id'], $kol['twitter_user_name']);
 				Log::info('get_all_user_tweets kol_id:' . $kol['id']);
 				sleep(120);
 			}
 		}
+	}
+
+	public function get_tweets_count($twitter_user_name)
+	{
+		$count = 0;	
+		$twitter_service = new TwitterService;
+		$tweets = $twitter_service->tweets($twitter_user_name);
+		foreach ($tweets['data'] as $tweet)
+		{
+			if ($tweet['retweeted_tweet_id']) 
+			{
+				continue;
+			}
+			if ($tweet['quote_tweet_id']) 
+			{
+				continue;
+			}
+			++$count;
+		}
+		return $count;
+	}
+
+	public function update_tweets_data($kol_id, $twitter_user_name)
+	{
+		$twitter_service = new TwitterService;
+		$tweets = $twitter_service->tweets($twitter_user_name);
+		$favorite_count_total = 0;
+		$reply_count_total = 0;
+		$retweet_count_total = 0;
+		$view_count_total = 0;
+		foreach ($tweets['data'] as $tweet)
+		{
+			if ($tweet['retweeted_tweet_id']) 
+			{
+				continue;
+			}
+			if ($tweet['quote_tweet_id']) 
+			{
+				continue;
+			}
+			$favorite_count_total += $tweet['favorite_count'];	
+			$reply_count_total += $tweet['reply_count'];	
+			$retweet_count_total += $tweet['retweet_count'];	
+			$view_count_total += $tweet['view_count'];	
+		}
+		$kol_model = new KolModel;
+		$kol_model->update_tweets_data($kol_id, $favorite_count_total,
+			$reply_count_total, $retweet_count_total, $view_count_total);
+	}
+
+	public function summarize_all_user_tweets()
+	{
+		$twitter_service = new TwitterService;
+		$ai_service = new AiService;
+		$kol_model = new KolModel;
+		$total = $kol_model->get_users_count(); 
+		$size = config('config.default_page_size');
+		$page = $total / $size;
+		$prompt = 'As an expert in analyzing social media content and generating user profiles ' .
+			'and charts based on user behavior and tendencies, analyze a user\'s recent tweets ' .
+			'on Twitter to infer their interests, lifestyle, values, etc. ' .
+			'The answer should be less than 512 tokens.';
+		$prompt = "Instructions:" .
+			"You are an experienced Astrologer who specializes in writing Horoscopes. Act like a horoscope teller." .
+			"Your job is to read the data provided below. This Twitter data is the only data you get to understand this person. You can make assumptions. Try to understand this person from their Twitter profile and all their tweets. You can sound a little controversial." .
+			"After understanding them, answer the following questions. You can make assumptions." .
+			"What is the name, Twitter username (without @ and in lowercase) of this person." .
+			"Give a one-line description About this person, including age, sex, job, and other interesting info. This can be drawn from the profile picture. Start the sentence with \"Based on our AI agent's analysis of your tweets....\"" .
+			"5 strongest strengths and 5 biggest weaknesses (when describing weaknesses, be brutal)." .
+			"Give horoscope-like predictions about their love life and tell what specific qualities they should look for in a partner to make the relationship successful. Keep this positive and only a single paragraph." .
+			"Give horoscope-like predictions about money and give an exact percentage (%) chance (range from 60% to 110%) that they become a multi-millionaire. You can increment the value by 1%. The percentage doesn't have to end with 5 or 0. Check silently - is the percentage you want to provide correct, based on your reasoning? If yes, produce it. If not, change it." .
+			"Give horoscope-like predictions about health. Keep this optimistic and only a single paragraph." .
+			"After understanding them, tell them what is their biggest goal in life. This should be completely positive." .
+			"Guess how they are to work with, from a colleague’s perspective. Make this spicy and a little controversial." .
+			"Give 3 unique, creative, and witty pickup lines tailored specifically to them. Focus on their interests and what they convey through their tweets. Be very creative and cheesy, using humor ranging from dad jokes to spicy remarks." .
+			"Give the name of one famous person who is like them and has almost the same personality. Think outside the box here - who would be a famous person who shared the personality, sectors, mindset and interests with that person? Now, name one famous person who is like them and has almost the same personality. Don't provide just people who are typical. Be creative. Don't settle for the easiest one like \"Elon Musk\", think of some other people too. Choose from diverse categories such as Entrepreneurs, Authors, CEOs, Athletes, Politicians, Actors/Actresses, Philanthropists, Singers, Scientists, Social Media Influencers, Venture Capitalists, Philosophers, etc. Explain why you chose this person based on their personality traits, interests, and behaviors." .
+			"Previous Life. Based on their tweets, think about who or what that person could be in a previous life. Refer to the “About” section to find a similar profile from the past. Who might they have shared a personality and mindset with? Name one person. Be humorous, witty, and bold. Explain your choice." .
+			"Animal. Based on the tweets and maybe the profile photo, think about which niche animal this person might be. Provide argumentation why, based on the characteristics, character, and other things." .
+			"Under a 50-dollar thing, they would benefit from the most. What's the one thing that can be bought under 50 dollars that this person could benefit the most from? Make it very personal and accurate when it comes to the price. But be extremely creative. Try to suggest a thing this person wouldn't think of themselves." .
+			"Career. Describe what that person was born to do. What should that person devote their life to? Explain why and how they can achieve that, what the stars are telling." .
+			"Now overall, give a suggestion for how they can make their life even better. Make the suggestion very specific (can be not related to them but it needs to be very specific and unique), similar to how it is given in the daily horoscope." .
+			"Roast. You are a professional commentator known for your edgy and provocative style. Your task is to look at people's tweets and rate their personalities based on that. Be edgy and provocative, be mean a little. Don't be cringy. Here's a good attempt of a roast: \"\"\"Alright, let's break this down. You're sitting in a jungle of houseplants, barefoot and looking like you just rolled out of bed. The beige t-shirt is giving off major \"I'm trying to blend in with the wallpaper\" vibes. And those black pants? They scream \"I couldn't be bothered to find something that matches.\" But hey, at least you look comfortable. Comfort is key, right? Just maybe not when you're trying to make a fashion statement.\"\"\"" .
+			"Emojis - Describe a person using only emojis." .
+			"Be creative like a horoscope teller." .
+			"Inputs:" .
+			"@Scrape tweets.scrape_profile.output" .
+			"@Scrape tweets.scrape_tweets.output" .
+			"Output the result as valid JSON, strictly adhering to the defined schema. Ensure there are no markdown codes or additional elements included in the output." .
+			"You can bold important information within the strings." .
+			"Do not add anything else. Do not add markdown. Return ONLY plain JSON." .
+			"[output]
+			{
+				name,
+				about,
+				emojis(5-8 emojis),
+				roast,
+				strengths(A list of 5 or more strengths):
+				[
+					{	
+						title,
+						subtitle
+					}
+				],
+				weaknesses(A list of 5 or more weaknesses):
+				[
+					{
+						title,
+						subtitle
+					}
+				],
+				loveLife,
+				money,
+				health,
+				biggestGoal,
+				colleaguePerspective,
+				pickupLines(A list of 3 or more pickup lines),
+				famousPersonComparison,
+				previousLife,
+				animal,
+				fiftyDollarThing,
+				career,
+				lifeSuggestion
+			}";
+		for ($i = 0; $i <= $page; ++$i)
+		{
+			$kols = $kol_model->get_users($i, $size);
+			foreach ($kols as $kol)
+			{
+				$text = '';
+				$tweets = $twitter_service->tweets($kol['twitter_user_name']);
+				if (empty($tweets['data']))
+				{
+					continue;
+				}
+				$summarize_res = $ai_service->gemini_generate_content($prompt . json_encode($tweets['data']));
+				if (!empty($summarize_res['data']))
+				{
+					if (!isset($summarize_res['data']['candidates'][0]['content']))
+					{
+						continue;
+					}
+					$text_summarize = $summarize_res['data']['candidates'][0]['content']['parts'][0]['text'];
+					$text_summarize = str_replace('```json', '', $text_summarize);
+					$text_summarize = str_replace('```', '', $text_summarize);
+					$kol_model->update_twitter_tweet_summarize($kol['id'], $text_summarize);
+				}
+				sleep(60);
+				Log::info('summarize_all_user_tweets kol_id:' . $kol['id']);
+			}
+		}
+	}
+
+	public function get_column_count_max($column_name)
+	{
+		$kol_model = new KolModel;
+		return $kol_model->get_column_count_max($column_name);
 	}
 
 }

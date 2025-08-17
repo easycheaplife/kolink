@@ -18,6 +18,7 @@ return new class extends Migration
             $table->bigInteger('twitter_user_id')->default(0);
             $table->string('twitter_user_name', 64)->default('');
             $table->string('twitter_avatar', 512)->default('');
+            $table->string('twitter_tweet_summarize', 1024)->default('');
             $table->integer('twitter_followers')->default(0);
             $table->integer('twitter_like_count')->default(0);
             $table->integer('twitter_following_count')->default(0);

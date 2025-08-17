@@ -72,6 +72,9 @@ Route::post('/task/all', [ProjectTaskController::class, 'task_all']);
 Route::get('/project/task/detail', [ProjectTaskController::class, 'task_detail']);
 Route::post('/project/task/detail', [ProjectTaskController::class, 'task_detail']);
 
+Route::get('/project/task/share/detail', [ProjectTaskController::class, 'task_share']);
+Route::post('/project/task/share/detail', [ProjectTaskController::class, 'task_share']);
+
 Route::get('/project/task/setting', [ProjectTaskController::class, 'task_setting']);
 Route::post('/project/task/setting', [ProjectTaskController::class, 'task_setting']);
 
@@ -120,6 +123,9 @@ Route::post('/kol/list', [KolController::class, 'kol_list']);
 Route::get('/kol/task/list', [KolController::class, 'kol_task_list']);
 Route::post('/kol/task/list', [KolController::class, 'kol_task_list']);
 
+Route::get('/kol/search', [KolController::class, 'kol_search']);
+Route::post('/kol/search', [KolController::class, 'kol_search']);
+
 Route::get('/config/list', [ConfigController::class, 'list']);
 Route::post('/config/list', [ConfigController::class, 'list']);
 
@@ -127,8 +133,8 @@ Route::post('/file/upload', [FileController::class, 'upload']);
 
 Route::get('/file/download/{file_name}', [FileController::class, 'download']);
 
-Route::get('/taansaction/hash', [TransactionController::class, 'transation_hash']);
-Route::post('/taansaction/hash', [TransactionController::class, 'transation_hash']);
+Route::get('/transaction/hash', [TransactionController::class, 'transation_hash']);
+Route::post('/transaction/hash', [TransactionController::class, 'transation_hash']);
 
 Route::get('/transation/list', [TransactionController::class, 'transation_list']);
 Route::post('/transation/list', [TransactionController::class, 'transation_list']);
@@ -147,6 +153,12 @@ Route::post('/twitter/user2', [TwitterController::class, 'user2']);
 
 Route::get('/twitter/tweets', [TwitterController::class, 'tweets']);
 Route::post('/twitter/tweets', [TwitterController::class, 'tweets']);
+
+Route::get('/twitter/tweets/content/relevance', [TwitterController::class, 'tweets_content_relevance']);
+Route::post('/twitter/tweets/content/relevance', [TwitterController::class, 'tweets_content_relevance']);
+
+Route::get('/twitter/tweets/analysis', [TwitterController::class, 'tweets_analysis']);
+Route::post('/twitter/tweets/analysis', [TwitterController::class, 'tweets_analysis']);
 
 Route::get('/youtube/auth', [YoutubeController::class, 'auth']);
 Route::post('/youtube/auth', [YoutubeController::class, 'auth']);

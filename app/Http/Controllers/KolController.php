@@ -163,4 +163,23 @@ class KolController extends Controller
 			$channel_id);
 	}
 
+	public function kol_search(Request $request)
+	{
+		try {
+			$validated_data = $request->validate([
+				'keywords' => 'required|string'
+			]);
+		}
+		catch (ValidationException $e)
+		{
+			return $this->error_response($request->ip(),
+				ErrorCodes::ERROR_CODE_INPUT_PARAM_ERROR, $e->getMessage());
+		}
+		$service = new KolService();
+		return $service->kol_search(
+			$validated_data['keywords']
+		);
+	}
+
+
 }

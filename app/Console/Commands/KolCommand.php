@@ -31,16 +31,17 @@ class KolCommand extends Command
     public function handle()
     {
 		$kol_service = new KolService;
-		$is_get_all_user_tweets = true;
-		if ($is_get_all_user_tweets)
-		{
-			$kol_service->get_all_user_tweets();
-		}
-		else 
-		{
+		$dayOfMonth = now()->day;
+		if ($dayOfMonth % 2 != 0) {
 			$kol_service->update_all_user_data();
+			$kol_service->calc_all_user_twitter_content_relevance();
+		} else {
+			$kol_service->get_all_user_tweets();
+			$kol_service->summarize_all_user_tweets();
 		}
 		$kol_service->calc_all_user_score();
+		$kol_service->calc_all_user_twitter_metric(7);
+		$kol_service->calc_all_user_twitter_metric(30);
     }
 
 	public function load_kol_from_twitter()
@@ -53,7 +54,7 @@ class KolCommand extends Command
 			$cellValues = [];
 			foreach ($row->getCellIterator() as $cell) {
 				$column = $cell->getColumn();
-				if ($column === 'C' || $column === 'D') {
+				if ($column === 'A' || $column === 'C' || $column === 'D') {
 					$cellValue = $cell->getValue();
 					if ("KOL" == $cellValue || is_null($cellValue) || "Twitter Handle" == $cellValue || '' == $cellValue)
 					{
@@ -65,8 +66,8 @@ class KolCommand extends Command
 			if (!empty($cellValues))
 			{
 				$cellValues[0] = str_replace('@', '', $cellValues[0]);
-				$twitter_service->insert_user_from_xlsx($cellValues[0], $cellValues[1]);
-				Log::info($cellValues);
+				$twitter_service->insert_user_from_xlsx($cellValues[0]);
+				Log::info("load_kol_from_twitter:" . $cellValues[0]);
 				sleep(20);
 			}
 		}
